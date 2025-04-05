@@ -1,0 +1,83 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* CSS Updated: 2025-04-04 Night (Aesthetic About Me Final) */
+
+/* Navbar Profile Picture */
+.navbar a.navbar-brand img.navbar-pfp { width: 35px !important; height: 35px !important; min-width: 35px !important; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+
+/* === Intro Overlay Styles START === */
+#intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff6ec; display: flex; align-items: center; justify-content: center; z-index: 1000; font-size: 4.5rem; font-weight: 700; color: #333; text-align: center; transform-origin: center center; will-change: transform, opacity; opacity: 1; transition: opacity 0.3s ease-out; font-family: 'Poppins', sans-serif; }
+#intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+#intro-overlay.animate { animation: transformToIntroStillVisible 1.5s cubic-bezier(0.65, 0, 0.35, 1) 1s forwards; }
+@keyframes transformToIntroStillVisible { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(var(--target-x, 0px), var(--target-y, 0px)) scale(var(--target-scale, 1)); } }
+/* === Intro Overlay Styles END === */
+
+/* --- Main Content Initial State & Fade-in --- */
+nav.navbar, section.hero { opacity: 0; transition: opacity 0.5s ease-in-out; }
+nav.navbar.visible, section.hero.visible { opacity: 1; }
+
+/* --- Basic Body and General Styles --- */
+body { margin: 0; padding: 0; background-color: #fff6ec; font-family: 'Segoe UI', sans-serif; color: #111; }
+body.no-scroll { overflow: hidden; } /* Added for intro scroll lock */
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6, .navbar-brand { font-family: 'Poppins', sans-serif; font-weight: 600; }
+.navbar-brand { font-weight: 700; }
+.hero h1 { font-weight: 700; }
+p, .nav-link, .btn, li { font-family: 'Segoe UI', sans-serif; }
+
+/* General link styling */
+.nav-link { color: #000; text-decoration: none; font-weight: 500; }
+.nav-link:hover { color: #555; }
+
+/* Navbar Specific Link Styles */
+.navbar .nav-link { position: relative; border: none; padding: 6px 10px; box-shadow: 0 2px 0 0 black; border-radius: 0; transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, border-radius 0.3s ease-in-out; }
+.navbar .nav-link:hover { color: #555; box-shadow: 0 0 0 2px black; border-radius: 8px; }
+
+/* Hero Section Styles */
+.hero { min-height: 100vh; position: relative; background-color: #fff6ec; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
+.hero-text { position: relative; z-index: 1; transform: translateY(-60px); }
+.hero h1 { font-size: 3rem; line-height: 1.3; margin-bottom: 1.5rem; }
+#typed-output { /* Inherits */ }
+.highlight { background-color: #ffcccb; padding: 0 6px; border-radius: 4px; display: inline-block; }
+.btn { font-weight: 500; font-size: 1rem; padding: 0.6rem 1.2rem; }
+
+
+/* === About Me Section Styles START === */
+#about {
+  background-color: #fff6ec; /* Match body */
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.08); /* Subtle separator */
+}
+#about h2 { /* About Me title */
+   margin-top: 0;
+}
+#about .lead { font-size: 1.15rem; color: #555; margin-bottom: 1rem; line-height: 1.7; }
+#about p { color: #333; line-height: 1.7; }
+#about h3, #about h4 { color: #2a2a2a; font-weight: 600; }
+
+/* Carousel Photo */
+.about-photo-carousel { max-height: 400px; object-fit: cover; }
+#photoCarousel .carousel-control-prev-icon, #photoCarousel .carousel-control-next-icon { background-color: rgba(0, 0, 0, 0.4); border-radius: 50%; padding: 1.1rem; background-size: 60% 60%; }
+
+/* Separated Fun Facts Area */
+#about .fun-facts-text { font-style: italic; font-size: 1.05rem; color: #444; }
+
+/* Subtle Divider */
+hr { border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0)); }
+/* === About Me Section Styles END === */
+
+
+/* Cursor style for Typed.js */
+.typed-cursor { font-size: 3rem; line-height: 1.3; color: #111; opacity: 1; animation: typedjsBlink 0.7s infinite; -webkit-animation: typedjsBlink 0.7s infinite; display: inline-block; margin-left: 2px; vertical-align: bottom; } @keyframes typedjsBlink { 50% { opacity: 0.0; } } @-webkit-keyframes typedjsBlink { 0% { opacity: 1; } 50% { opacity: 0.0; } 100% { opacity: 1; } }
+
+/* === Waving Emoji Styles START === */
+#wave-emoji { display: inline-block; transform-origin: 70% 70%; opacity: 0; transition: opacity 0.4s ease-in-out; transition-delay: 0.6s; vertical-align: baseline; } nav.navbar.visible #wave-emoji { opacity: 1; animation: waveAnimation 2.5s ease-in-out infinite; animation-delay: 0.8s; } @keyframes waveAnimation { 0% { transform: rotate( 0.0deg); } 10% { transform: rotate(14.0deg); } 20% { transform: rotate(-8.0deg); } 30% { transform: rotate(14.0deg); } 40% { transform: rotate(-4.0deg); } 50% { transform: rotate(10.0deg); } 60% { transform: rotate( 0.0deg); } 100% { transform: rotate( 0.0deg); } }
+/* === Waving Emoji Styles END === */
+
+/* === Skills Marquee Styles START === */
+.skills-marquee-container { width: 100%; overflow: hidden; position: relative; padding: 1rem 0; -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%); } .skills-track { display: flex; width: max-content; animation: marqueeAnimation 30s linear infinite; } .skills-marquee-container:hover .skills-track { animation-play-state: paused; } .skill-item { display: flex; align-items: center; padding: 0.75rem 1.5rem; margin: 0 1rem; background-color: #e9ecef; border-radius: 8px; white-space: nowrap; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.05); } .skill-item i { font-size: 1.8rem; margin-right: 0.75rem; } @keyframes marqueeAnimation { from { transform: translateX(0%); } to { transform: translateX(-50%); } }
+/* === Skills Marquee Styles END === */
+
+/* --- End of CSS File --- */
