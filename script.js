@@ -1,489 +1,306 @@
-// Contents of script.js (v6.2 - JS Animation, Dragging, Auto-Resume, Full Logic)
+// Contents of script.js (v6.25 - Attempting "Even Older" JS Logic on Current Structure)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
 
 // --- Typed.js Initialization Function ---
 function initializeTypedJs() {
-    if (typedJsInitialized) { console.log("Typed.js already initialized."); return; }
+    if (typedJsInitialized) { console.log("Typed.js already initialized. Skipping."); return; }
     typedJsInitialized = true;
     console.log("Attempting to initialize Typed.js...");
+    // Options for the typing animation
     var options = { strings: [ "I’m a computer science student", "I’m a movie lover", "I’m a passionate gamer", "I’m a problem-solver", "I’m a code enthusiast", "I’m a tech lover", "I’m a music fan", "I’m a lifelong learner", "I’m a creator", "I’m a tech geek", "I’m always coding", "I’m a digital artist", "I’m a future developer", "I’m a design thinker", "I’m a tech explorer" ], typeSpeed: 90, backSpeed: 70, backDelay: 1200, startDelay: 500, loop: true, showCursor: true };
     try {
         const targetSpan = document.getElementById('typed-output');
-        if (!targetSpan) { console.error("Target span #typed-output NOT FOUND!"); return; }
-        var typed = new Typed("#typed-output", options);
-        console.log("Typed.js instance CREATED successfully:", typed);
-    } catch (error) { console.error("Error initializing Typed.js:", error); }
-}
-
-
-// --- Main Setup on DOM Load ---
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, and Marquee.");
-
-    // --- Element References ---
-    const overlay = document.getElementById('intro-overlay');
-    const navbar = document.querySelector('nav.navbar');
-    const heroSection = document.querySelector('section.hero');
-    const targetElement = document.querySelector('.hero h1');
-    const bodyElement = document.body;
-
-    // --- Intro & AOS Logic ---
-    const hasIntroPlayed = sessionStorage.getItem('introPlayed') === 'true';
-    if (hasIntroPlayed) {
-        // Skip Intro
-        if (overlay) overlay.style.display = 'none';
-        if (navbar) navbar.classList.add('visible');
-        if (heroSection) heroSection.classList.add('visible');
-        initializeTypedJs();
-    } else {
-        // Play Intro
-         if (!overlay || !navbar || !heroSection || !targetElement) {
-            console.error("Essential elements for intro missing!");
-             if (overlay) overlay.style.display = 'none';
-             if (navbar) navbar.classList.add('visible');
-             if (heroSection) heroSection.classList.add('visible');
-             initializeTypedJs();
-             bodyElement.classList.remove('no-scroll');
-             return;
-         }
-         bodyElement.classList.add('no-scroll');
-         console.log("Waiting for fonts...");
-         document.fonts.ready.then(() => {
-             console.log("Fonts ready.");
-             setTimeout(() => {
-                console.log("Calculating intro animation...");
-                try {
-                    void overlay.offsetHeight; void targetElement.offsetHeight;
-                    let targetRect = targetElement.getBoundingClientRect();
-                    let overlayRect = overlay.getBoundingClientRect();
-                    if (!targetRect || !overlayRect || targetRect.width === 0 || overlayRect.width === 0) {
-                        throw new Error("Invalid intro rects.");
-                    }
-                    const targetX = (targetRect.left + targetRect.width / 2) - (overlayRect.left + overlayRect.width / 2);
-                    const targetY = (targetRect.top + targetRect.height / 2) - (overlayRect.top + overlayRect.height / 2);
-                    const overlayFontSize = parseFloat(window.getComputedStyle(overlay).fontSize);
-                    const targetFontSize = parseFloat(window.getComputedStyle(targetElement).fontSize);
-                    let targetScale = (overlayFontSize > 0 && targetFontSize > 0) ? (targetFontSize / overlayFontSize) : 1;
-                    targetScale = Math.max(0.1, targetScale);
-                    console.log("Intro transform params:", { targetX, targetY, targetScale });
-                    overlay.style.setProperty('--target-x', `${targetX}px`);
-                    overlay.style.setProperty('--target-y', `${targetY}px`);
-                    overlay.style.setProperty('--target-scale', targetScale);
-
-                    const animationStartTime = 1000; const animationDuration = 1500; const animationEndTime = animationStartTime + animationDuration;
-                    const contentFadeInDuration = 500; const overlayFadeOutDuration = 300;
-                    const contentFadeInDelay = animationEndTime - contentFadeInDuration;
-                    const overlayFadeOutDelay = animationEndTime; const scrollEnableDelay = overlayFadeOutDelay; const typedJsInitDelay = animationEndTime + 100;
-
-                    console.log("Triggering intro animations...");
-                    setTimeout(() => {
-                        overlay.classList.add('animate');
-                        console.log("Intro animation class added.");
-                        setTimeout(() => { if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); console.log("Content faded in."); }, contentFadeInDelay - animationStartTime);
-                        setTimeout(() => { if (overlay) overlay.classList.add('fade-out'); console.log("Overlay faded out."); }, overlayFadeOutDelay - animationStartTime);
-                        setTimeout(() => { bodyElement.classList.remove('no-scroll'); console.log("Scroll enabled."); }, scrollEnableDelay - animationStartTime);
-                        setTimeout(() => { initializeTypedJs(); }, typedJsInitDelay - animationStartTime);
-                        sessionStorage.setItem('introPlayed', 'true');
-                    }, animationStartTime);
-                } catch(e) {
-                    console.error("Error during intro animation setup:", e);
-                    if (overlay) overlay.style.display = 'none';
-                    if (navbar) navbar.classList.add('visible');
-                    if (heroSection) heroSection.classList.add('visible');
-                    initializeTypedJs();
-                    bodyElement.classList.remove('no-scroll');
-                }
-            }, 50);
-        }).catch(e => {
-            console.error("Fonts failed to load/check:", e);
-            if (overlay) overlay.style.display = 'none';
-            if (navbar) navbar.classList.add('visible');
-            if (heroSection) heroSection.classList.add('visible');
-            initializeTypedJs();
-            bodyElement.classList.remove('no-scroll');
-        });
-    }
-    // Initialize AOS
-    if (typeof AOS !== 'undefined') {
-        console.log("Initializing AOS...");
-        AOS.init({ duration: 800, once: true, offset: 50 });
-    } else { console.warn("AOS library not found."); }
-    // --- End Intro & AOS Logic ---
-
-
-    // === Popover Logic ===
-    let pfpPopoverTimeoutId = null;
-
-    function getPopoverPlacement() {
-        return window.matchMedia("(min-width: 992px)").matches ? 'bottom' : 'left';
-    }
-
-    function setupPfpPopover() {
-        const pfpImage = document.getElementById('navbarPfpImage');
-        if (!pfpImage) {
-            console.warn("PFP image element not found for popover setup.");
+        if (!targetSpan) {
+            console.error("Target span #typed-output NOT FOUND!");
+            typedJsInitialized = false; // Reset flag if target missing
             return;
         }
-        const desiredPlacement = getPopoverPlacement();
-        let instance = bootstrap.Popover.getInstance(pfpImage);
-        if (instance && instance._config.placement !== desiredPlacement) {
-            instance.dispose();
-            instance = null;
-            console.log("Disposed existing popover as placement needed update.");
-        }
-        if (!instance) {
-            try {
-                instance = new bootstrap.Popover(pfpImage, {
-                    customClass: 'cartoon-popover',
-                    trigger: 'manual',
-                    placement: desiredPlacement,
-                    html: true,
-                    sanitize: false
-                });
-                console.log(`PFP Popover Instance Created/Updated with placement: ${desiredPlacement}`);
-            } catch (e) {
-                console.error("Error creating PFP popover instance:", e);
-            }
-        } else {
-             console.log(`PFP Popover already initialized with correct placement: ${desiredPlacement}`);
-        }
+        console.log("Target span #typed-output found:", targetSpan);
+        var typed = new Typed("#typed-output", options);
+        console.log("Typed.js instance CREATED successfully.");
+    } catch (error) {
+        console.error("Error initializing Typed.js:", error);
+        typedJsInitialized = false; // Reset flag on error
     }
+}
 
-    try {
-        // Initialize non-PFP popovers
-        const otherPopoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]:not(#navbarPfpImage)');
-        otherPopoverTriggerList.forEach(popoverTriggerEl => {
-            new bootstrap.Popover(popoverTriggerEl);
-        });
-
-        // Initial PFP popover setup
-        setupPfpPopover();
-
-        // PFP click listener
-        const pfpImage = document.getElementById('navbarPfpImage');
-        if (pfpImage) {
-             pfpImage.addEventListener('click', () => {
-                console.log("PFP image clicked.");
-                let currentInstance = bootstrap.Popover.getInstance(pfpImage);
-                 if (!currentInstance) {
-                    console.error("Cannot get popover instance on click! Attempting re-init...");
-                    setupPfpPopover();
-                    currentInstance = bootstrap.Popover.getInstance(pfpImage);
-                    if (!currentInstance) {
-                       console.error("Re-initialization failed, cannot show popover.");
-                       return;
-                    }
-                 }
-
-                try {
-                    if (pfpPopoverTimeoutId) { clearTimeout(pfpPopoverTimeoutId); pfpPopoverTimeoutId = null; }
-
-                    const popoverElement = currentInstance.tip;
-                    let popoverIsVisible = popoverElement && popoverElement.classList.contains('show');
-
-                     if (popoverIsVisible) {
-                         console.log("Popover was shown, hiding now.");
-                         currentInstance.hide();
-                     } else {
-                        console.log("Attempting to show popover.");
-                        currentInstance.show();
-                        pfpPopoverTimeoutId = setTimeout(() => {
-                            console.log("Hiding popover after 3 seconds.");
-                            const instanceInTimeout = bootstrap.Popover.getInstance(pfpImage);
-                            if (instanceInTimeout && instanceInTimeout.tip && instanceInTimeout.tip.classList.contains('show')) {
-                                instanceInTimeout.hide();
-                            }
-                            pfpPopoverTimeoutId = null;
-                        }, 3000);
-                     }
-                } catch (e) {
-                    console.error("Error showing/hiding popover:", e);
-                    if(pfpPopoverTimeoutId) { clearTimeout(pfpPopoverTimeoutId); pfpPopoverTimeoutId = null; }
-                }
-            });
-            console.log("Click listener added to PFP image.");
-        } else {
-             console.warn("PFP image element not found for listener setup.");
-        }
-
-        // Resize listener for placement update
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                console.log("Window resized, running PFP popover setup check.");
-                setupPfpPopover();
-            }, 250);
-        });
-
-    } catch (e) {
-        console.error("Error during popover setup or listener attachment:", e);
-    }
-    // === End Popover Logic ===
-
-
-    // === JS Draggable & AutoScroll Skills Marquee Logic (v6.2 - Auto Resume) ===
+// --- Marquee Initialization Function (Using modern JS version) ---
+function initializeMarquee() {
+    console.log("Attempting to initialize Marquee...");
     const skillsMarqueeContainer = document.querySelector('.skills-marquee-container');
     const skillsTrack = document.querySelector('.skills-track');
+    const bodyElement = document.body; // Ensure bodyElement is accessible
 
-    if (skillsMarqueeContainer && skillsTrack) {
-        console.log("Initializing JS Skills Marquee (v6.2)...");
-
-        let currentX = 0;
-        let trackWidth = 0;
-        const speed = 50; // Pixels per second
-        let isAutoScrolling = false;
-        let animationFrameId = null;
-        let lastTimestamp = 0;
-
-        let pointerDown = false;
-        let dragEngaged = false;
-        let startX = 0;
-        let dragStartTranslateX = 0;
-        let blockClickEvent = false;
-        const dragThreshold = 5;
-
-        // --- NEW: Timer for auto-resuming scroll ---
-        let resumeScrollTimeoutId = null;
-        const resumeDelay = 3000; // Resume after 3000ms (3 seconds) of inactivity
-
-        // Function to calculate track width
+    if (skillsMarqueeContainer && skillsTrack && bodyElement) {
+        console.log("Marquee elements found.");
+        // --- START MARQUEE LOGIC ---
+        let currentX = 0, trackWidth = 0, speed = 50, isAutoScrolling = false, animationFrameId = null, lastTimestamp = 0;
+        let pointerDown = false, dragEngaged = false, startX = 0, dragStartTranslateX = 0, blockClickEvent = false, dragThreshold = 5;
+        let resumeScrollTimeoutId = null, resumeDelay = 3000;
+        // Function to calculate or recalculate track width
         function calculateTrackWidth() {
-             trackWidth = skillsTrack.scrollWidth / 2;
-             console.log(`Calculated trackWidth (half scrollWidth): ${trackWidth}`);
-             return trackWidth > 0;
+            // Ensure items are duplicated in HTML for seamless effect
+            if (skillsTrack.children.length > 1) {
+                 trackWidth = skillsTrack.scrollWidth / 2;
+                 console.log(`Marquee trackWidth calculated: ${trackWidth}`);
+                 return trackWidth > 0;
+            } else {
+                 console.warn("Marquee track may not have duplicated items for seamless scroll.");
+                 trackWidth = skillsTrack.scrollWidth; // Fallback if not duplicated
+                 return trackWidth > 0;
+            }
         }
-
-        // Auto Scroll Function
+        // Recursive function for autoscrolling animation
         function autoScroll(timestamp) {
             if (!isAutoScrolling || trackWidth <= 0) { animationFrameId = null; return; }
             if (lastTimestamp === 0) lastTimestamp = timestamp;
             const deltaTime = (timestamp - lastTimestamp) / 1000;
             lastTimestamp = timestamp;
-
-            if (deltaTime > 0.5) {
-                 console.warn("Large deltaTime, skipping scroll frame:", deltaTime);
-                 animationFrameId = requestAnimationFrame(autoScroll);
-                 return;
-            }
-
+            if (deltaTime > 0.5) { console.warn("Large Marquee dT, skipping frame potentially."); animationFrameId = requestAnimationFrame(autoScroll); return; }
             currentX -= speed * deltaTime;
-            if (currentX <= -trackWidth) { currentX += trackWidth; }
+            if (currentX <= -trackWidth) { currentX += trackWidth; } // Loop back
             skillsTrack.style.transform = `translateX(${currentX}px)`;
             animationFrameId = requestAnimationFrame(autoScroll);
         }
-
+        // Start the autoscroll
         function startAutoScroll() {
-            // Clear any pending resume timer *before* starting
-            if (resumeScrollTimeoutId) {
-                clearTimeout(resumeScrollTimeoutId);
-                resumeScrollTimeoutId = null;
-            }
+            if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; }
             if (isAutoScrolling || !calculateTrackWidth()) return;
-            console.log("Starting JS AutoScroll");
+            console.log("Marquee: Starting AutoScroll");
             isAutoScrolling = true;
-            lastTimestamp = 0;
+            lastTimestamp = 0; // Reset timestamp for smooth start
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             animationFrameId = requestAnimationFrame(autoScroll);
         }
-
+        // Stop the autoscroll
         function stopAutoScroll() {
-            // Clear the resume timer whenever scrolling is explicitly stopped
-            if (resumeScrollTimeoutId) {
-                clearTimeout(resumeScrollTimeoutId);
-                resumeScrollTimeoutId = null;
-                console.log("v6.2 Cleared resume timer during stopAutoScroll call.");
-            }
+            if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; console.log("Marquee: Cleared resume timer during stop."); }
             if (!isAutoScrolling) return;
-            console.log("Stopping JS AutoScroll");
+            console.log("Marquee: Stopping AutoScroll");
             isAutoScrolling = false;
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-            currentX = getTranslateX(skillsTrack); // Update state from style
+            if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+            currentX = getTranslateX(skillsTrack); // Capture current position
         }
-
-        // Helper to get current X
-        const getTranslateX = (element) => {
-           try {
-               const style = window.getComputedStyle(element);
-               const matrix = style.transform || style.webkitTransform || style.mozTransform;
-               if (matrix === 'none'|| !matrix) return 0;
-               const matrixValues = matrix.match(/matrix.*\((.+)\)/);
-               if (matrixValues && matrixValues[1]) {
-                   const values = matrixValues[1].split(',').map(s => parseFloat(s.trim()));
-                   const idx = matrix.includes('3d') ? 12 : 4;
-                   return values[idx] || 0;
-               } return 0;
-           } catch(e){ console.error("getTranslateX error", e); return 0; }
-        };
-
-        // --- Pointer Event Handlers ---
-        const onPointerDown = (e) => {
-            // --- Clear resume timer on new interaction ---
-            if (resumeScrollTimeoutId) {
-                clearTimeout(resumeScrollTimeoutId);
-                resumeScrollTimeoutId = null;
-                console.log("v6.2 Cleared resume timer on PointerDown.");
-            }
-            // ---
-
-            if (trackWidth <= 0 && !calculateTrackWidth()) { console.warn("Track width unknown."); return; }
-            pointerDown = true;
-            dragEngaged = false;
-            blockClickEvent = false;
-            startX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0);
-            stopAutoScroll(); // Stop auto-scroll on any interaction
-            skillsTrack.style.transition = 'none';
-            console.log(`v6.2 Pointer Down: startX=${startX.toFixed(2)}, AutoScroll Stopped.`);
-        };
-
-        const onPointerMove = (e) => {
-            if (!pointerDown) return;
-            const currentPointerX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0);
-            const walk = currentPointerX - startX;
-
-            if (!dragEngaged && Math.abs(walk) > dragThreshold) {
-                dragEngaged = true;
-                blockClickEvent = true;
-                dragStartTranslateX = currentX;
-                startX = currentPointerX;
-                bodyElement.classList.add('grabbing');
-                skillsTrack.classList.add('dragging');
-                console.log(`v6.2 Drag Engaged: dragStartTranslateX=${dragStartTranslateX.toFixed(2)}`);
-            }
-
-            if (dragEngaged) {
-                e.preventDefault();
-                const dragWalk = currentPointerX - startX;
-                let newTranslateX = dragStartTranslateX + dragWalk;
-                const maxTranslate = 0;
-                const minTranslate = -trackWidth;
-                newTranslateX = Math.max(minTranslate, Math.min(maxTranslate, newTranslateX));
-                skillsTrack.style.transform = `translateX(${newTranslateX}px)`;
-                currentX = newTranslateX;
-            }
-        };
-
-        const onPointerUp = (e) => {
-            if (!pointerDown) return;
-            pointerDown = false;
-
-            if (dragEngaged) {
-                 console.log(`v6.2 Drag End: Final TranslateX=${currentX.toFixed(2)}`);
-                 bodyElement.classList.remove('grabbing');
-                 skillsTrack.classList.remove('dragging');
-                 skillsTrack.style.transition = '';
-
-                 // --- Start resume timer only if drag occurred ---
-                 if (resumeScrollTimeoutId) clearTimeout(resumeScrollTimeoutId); // Clear previous just in case
-                 console.log(`v6.2 Setting timer to resume scroll in ${resumeDelay}ms`);
-                 resumeScrollTimeoutId = setTimeout(() => {
-                     console.log("v6.2 Resume timer fired.");
-                     startAutoScroll(); // Attempt to restart scroll
-                     resumeScrollTimeoutId = null;
-                 }, resumeDelay);
-                 // ---
-
-                 blockClickEvent = true;
-                 setTimeout(() => { blockClickEvent = false; }, 50);
-            } else {
-                console.log("v6.2 Pointer Up: No drag (click/tap), keeping scroll stopped.");
-                 blockClickEvent = false;
-                 // Note: Auto-resume timer is NOT set for simple clicks currently
-            }
-            dragEngaged = false;
-        };
-
-        // --- Event Listeners ---
-        skillsMarqueeContainer.addEventListener('mousedown', onPointerDown);
-        document.addEventListener('mousemove', onPointerMove);
-        document.addEventListener('mouseup', onPointerUp);
-        document.addEventListener('mouseleave', onPointerUp);
-        skillsMarqueeContainer.addEventListener('touchstart', onPointerDown, { passive: true });
-        document.addEventListener('touchmove', onPointerMove, { passive: false });
-        document.addEventListener('touchend', onPointerUp);
-        document.addEventListener('touchcancel', onPointerUp);
-        skillsTrack.addEventListener('click', (e) => {
-            if (blockClickEvent) { e.preventDefault(); e.stopPropagation(); }
-            blockClickEvent = false;
-        }, true);
-
-        // --- Resize Handling ---
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                console.log("Resizing...");
-                stopAutoScroll(); // Also clears resume timer
-                if (calculateTrackWidth()) {
-                     currentX = Math.max(-trackWidth, Math.min(0, getTranslateX(skillsTrack))); // Read actual current pos
-                     skillsTrack.style.transform = `translateX(${currentX}px)`;
-                     console.log(`Resize: New trackWidth=${trackWidth}, Read currentX=${currentX}`);
-                     // Keep stopped after resize
-                } else { console.warn("Could not calculate valid track width after resize."); }
-            }, 250);
-        });
-
-        // --- Initial Start ---
-        setTimeout(() => {
-             if(calculateTrackWidth()) {
-                 startAutoScroll();
-                 console.log("JS Skills Marquee (v6.2) Initialized and Started.");
-             } else {
-                 console.error("JS Skills Marquee: Could not calculate track width on initial load.");
-             }
-        }, 100);
-
-    } else { console.warn("Skills marquee container or track not found."); }
-    // ==================================================
-
-
-    // === Video Control Logic ===
-    const visionProModal = document.getElementById('visionProModal');
-    const visionProVideo = document.getElementById('visionProVideo');
-    const playPauseBtn = document.getElementById('videoPlayPauseBtn');
-    const playPauseIcon = playPauseBtn ? playPauseBtn.querySelector('i') : null;
-
-    function updatePlayPauseIcon() {
-        if (!visionProVideo || !playPauseIcon) return;
-        if (visionProVideo.paused || visionProVideo.ended) {
-            playPauseIcon.classList.remove('bi-pause-fill');
-            playPauseIcon.classList.add('bi-play-fill');
-            playPauseBtn.setAttribute('aria-label', 'Play Video');
-        } else {
-            playPauseIcon.classList.remove('bi-play-fill');
-            playPauseIcon.classList.add('bi-pause-fill');
-            playPauseBtn.setAttribute('aria-label', 'Pause Video');
-        }
-    }
-
-    if (visionProModal && visionProVideo && playPauseBtn && playPauseIcon) {
-        playPauseBtn.addEventListener('click', () => {
-            if (visionProVideo.paused || visionProVideo.ended) {
-                visionProVideo.play();
-            } else {
-                visionProVideo.pause();
-            }
-        });
-        visionProModal.addEventListener('shown.bs.modal', () => {
-            visionProVideo.play().catch(error => { console.warn("Video autoplay prevented:", error); updatePlayPauseIcon(); });
-        });
-        visionProModal.addEventListener('hidden.bs.modal', () => {
-            visionProVideo.pause();
-            visionProVideo.currentTime = 0; // Reset video to start
-        });
-        visionProVideo.addEventListener('play', updatePlayPauseIcon);
-        visionProVideo.addEventListener('pause', updatePlayPauseIcon);
-        visionProVideo.addEventListener('ended', updatePlayPauseIcon);
-        updatePlayPauseIcon(); // Initial state
-        console.log("Video controls initialized.");
+        // Helper to get current transform value
+        const getTranslateX = (element) => { try { const style = window.getComputedStyle(element); const matrix = style.transform || style.webkitTransform || style.mozTransform; if (matrix === 'none'|| !matrix) return 0; const matrixValues = matrix.match(/matrix.*\((.+)\)/); if (matrixValues && matrixValues[1]) { const values = matrixValues[1].split(',').map(s => parseFloat(s.trim())); const idx = matrix.includes('3d') ? 12 : 4; return values[idx] || 0; } return 0; } catch(e){ console.error("getTranslateX error", e); return 0; } };
+        // Pointer/Touch Down Event
+        const onPointerDown = (e) => { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (trackWidth <= 0 && !calculateTrackWidth()) return; pointerDown = true; dragEngaged = false; blockClickEvent = false; startX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0); stopAutoScroll(); skillsTrack.style.transition = 'none'; skillsMarqueeContainer.style.cursor = 'grabbing'; };
+        // Pointer/Touch Move Event
+        const onPointerMove = (e) => { if (!pointerDown) return; const currentPointerX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0); const walk = currentPointerX - startX; if (!dragEngaged && Math.abs(walk) > dragThreshold) { dragEngaged = true; blockClickEvent = true; dragStartTranslateX = currentX; startX = currentPointerX; bodyElement.classList.add('grabbing'); skillsTrack.classList.add('dragging'); console.log(`Marquee: Drag Engaged`); } if (dragEngaged) { e.preventDefault(); const dragWalk = currentPointerX - startX; let newTranslateX = dragStartTranslateX + dragWalk; const maxTranslate = 0; const minTranslate = -trackWidth; newTranslateX = Math.max(minTranslate, Math.min(maxTranslate, newTranslateX)); skillsTrack.style.transform = `translateX(${newTranslateX}px)`; currentX = newTranslateX; } };
+        // Pointer/Touch Up/Leave Event
+        const onPointerUp = (e) => { if (!pointerDown) return; pointerDown = false; skillsMarqueeContainer.style.cursor = 'grab'; if (dragEngaged) { console.log(`Marquee: Drag End`); bodyElement.classList.remove('grabbing'); skillsTrack.classList.remove('dragging'); skillsTrack.style.transition = ''; if (resumeScrollTimeoutId) clearTimeout(resumeScrollTimeoutId); console.log(`Marquee: Setting resume timer (${resumeDelay}ms)`); resumeScrollTimeoutId = setTimeout(() => { console.log("Marquee: Resume timer fired."); startAutoScroll(); resumeScrollTimeoutId = null; }, resumeDelay); blockClickEvent = true; setTimeout(() => { blockClickEvent = false; }, 50); } else { console.log("Marquee: Pointer Up (No drag detected)"); blockClickEvent = false; startAutoScroll(); /* Restart if no drag */ } dragEngaged = false; };
+        // Add Listeners
+        skillsMarqueeContainer.addEventListener('mousedown', onPointerDown); document.addEventListener('mousemove', onPointerMove); document.addEventListener('mouseup', onPointerUp); document.addEventListener('mouseleave', onPointerUp); skillsMarqueeContainer.addEventListener('touchstart', onPointerDown, { passive: true }); document.addEventListener('touchmove', onPointerMove, { passive: false }); document.addEventListener('touchend', onPointerUp); document.addEventListener('touchcancel', onPointerUp); skillsTrack.addEventListener('click', (e) => { if (blockClickEvent) { e.preventDefault(); e.stopPropagation(); console.log("Marquee: Click blocked due to recent drag."); } blockClickEvent = false; }, true);
+        // Handle Resize
+        let resizeTimeout; window.addEventListener('resize', () => { clearTimeout(resizeTimeout); resizeTimeout = setTimeout(() => { console.log("Marquee: Resizing..."); stopAutoScroll(); if (calculateTrackWidth()) { currentX = Math.max(-trackWidth, Math.min(0, getTranslateX(skillsTrack))); skillsTrack.style.transform = `translateX(${currentX}px)`; startAutoScroll(); console.log(`Marquee Resize: New trackWidth=${trackWidth}, currentX adjusted to ${currentX}`);} else { console.warn("Marquee Resize: Could not calculate track width after resize."); } }, 250); });
+        // Initial Start
+        if(calculateTrackWidth()) { startAutoScroll(); console.log("JS Marquee Initialized & Started."); } else { console.warn("Marquee: Initial width calculation failed, retrying..."); setTimeout(()=>{ if(calculateTrackWidth()){ startAutoScroll(); console.log("JS Marquee Started after retry."); } else { console.error("Marquee: Still cannot calculate track width after retry."); } }, 500); }
+        // --- END MARQUEE LOGIC ---
     } else {
-        console.warn("Elements for Vision Pro video controls not found.");
+        console.warn("Marquee elements not found.");
+         if (!skillsMarqueeContainer) console.warn("Missing .skills-marquee-container");
+         if (!skillsTrack) console.warn("Missing .skills-track");
+         if (!bodyElement) console.warn("Missing bodyElement reference for Marquee");
     }
-    // === End Video Logic ===
+} // --- End of initializeMarquee function ---
+
+// --- Initialize AOS ---
+function initAos() {
+     try {
+         if (typeof AOS !== 'undefined') {
+             console.log("Initializing AOS...");
+             AOS.init({ duration: 800, once: true, offset: 50 });
+         } else {
+             console.warn("AOS library not found.");
+         }
+     } catch(e) {
+         console.error("Error initializing AOS:", e);
+     }
+}
+
+// --- Main Setup on DOM Load ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Loaded. Setting up Intro and AOS.");
+
+    // --- Element References ---
+    const overlay = document.getElementById('intro-overlay');
+    const navbar = document.querySelector('nav.navbar');
+    const heroSection = document.querySelector('section.hero');
+    const targetElement = document.querySelector('.hero h1'); // Target H1 (Old Logic)
+    const bodyElement = document.body;
+
+    // --- Check if Intro Should Play ---
+    const hasIntroPlayed = sessionStorage.getItem('introPlayed') === 'true';
+
+    if (hasIntroPlayed) {
+        // --- SKIP INTRO ---
+        console.log("Intro already played. Skipping animation.");
+        if (overlay) overlay.style.display = 'none';
+        if (navbar) navbar.classList.add('visible');
+        if (heroSection) heroSection.classList.add('visible');
+        initializeTypedJs();
+        // Initialize Marquee and AOS immediately after content is visible
+        setTimeout(() => {
+             initializeMarquee();
+             initAos(); // Initialize AOS after skipping
+        }, 100); // Short delay
+
+    } else {
+        // --- PLAY INTRO (Using "Even Older" Logic Base) ---
+        console.log("Starting intro sequence (Even Older Logic Base).");
+
+        if (!overlay || !navbar || !heroSection || !targetElement || !bodyElement) {
+            console.error("Missing critical elements for intro. Skipping.");
+            if (overlay) overlay.style.display = 'none';
+            if (navbar) navbar.classList.add('visible');
+            if (heroSection) heroSection.classList.add('visible');
+            if (bodyElement) bodyElement.classList.remove('no-scroll');
+            initializeTypedJs();
+            setTimeout(() => {
+                 initializeMarquee();
+                 initAos();
+            }, 100);
+            return;
+        }
+
+        // --- 1. Disable Scrolling ---
+        console.log("Disabling scroll.");
+        bodyElement.classList.add('no-scroll');
+
+        // --- 2. Calculation Phase (Immediate, No fonts.ready/rAF) ---
+        console.log("Calculating intro parameters immediately...");
+        let targetX, targetY, targetScale = 1;
+        try {
+             try { void overlay.offsetHeight; void targetElement.offsetHeight; } catch (e) { /* ignore */ }
+
+            const targetRect = targetElement.getBoundingClientRect();
+            const overlayRect = overlay.getBoundingClientRect();
+
+            if (!targetRect || !overlayRect || overlayRect.width === 0) { // Check overlay width too
+                throw new Error("Failed to get valid bounding client rects or overlay width is zero.");
+            }
+
+            const targetCenterX = targetRect.left + targetRect.width / 2;
+            const targetCenterY = targetRect.top + targetRect.height / 2;
+            const overlayCenterX = overlayRect.left + overlayRect.width / 2;
+            const overlayCenterY = overlayRect.top + overlayRect.height / 2;
+            targetX = targetCenterX - overlayCenterX;
+            targetY = targetCenterY - overlayCenterY; // No mobile adjustment
+
+            // Font-Size Scaling
+            const overlayStyle = window.getComputedStyle(overlay);
+            const targetStyle = window.getComputedStyle(targetElement);
+            const overlayFontSize = parseFloat(overlayStyle.fontSize);
+            const targetFontSize = parseFloat(targetStyle.fontSize);
+
+            console.log(`Font Sizes - Overlay: ${overlayFontSize}px, Target H1: ${targetFontSize}px`);
+
+            if (!isNaN(overlayFontSize) && !isNaN(targetFontSize) && overlayFontSize > 0 && targetFontSize > 0) {
+                 targetScale = targetFontSize / overlayFontSize;
+            } else {
+                console.warn(`Font size calculation issue. Using default scale 1.`);
+            }
+             targetScale = Math.max(0.01, targetScale); // Ensure positive
+
+            console.log("Final Calculated transform:", { targetX: targetX.toFixed(2), targetY: targetY.toFixed(2), targetScale: targetScale.toFixed(3) });
+
+            overlay.style.setProperty('--target-x', `${targetX}px`);
+            overlay.style.setProperty('--target-y', `${targetY}px`);
+            overlay.style.setProperty('--target-scale', targetScale);
+
+        } catch (error) {
+            console.error("Error during immediate calculation:", error);
+            // Fallback: Skip intro cleanly
+            if (overlay) overlay.style.display = 'none';
+            if (navbar) navbar.classList.add('visible');
+            if (heroSection) heroSection.classList.add('visible');
+            if (bodyElement) bodyElement.classList.remove('no-scroll');
+            initializeTypedJs();
+            setTimeout(() => {
+                 initializeMarquee();
+                 initAos();
+             }, 100);
+            sessionStorage.setItem('introPlayed', 'true');
+            return;
+        }
+
+        // --- 3. Animation Trigger Phase (OLD TIMING - Relies on CSS delay) ---
+        const rootStyle = getComputedStyle(document.documentElement);
+        const getDuration = (varName, defaultValue) => {
+            const value = rootStyle.getPropertyValue(varName)?.trim();
+            if (value && value.endsWith('ms')) return parseInt(value, 10);
+            if (value && value.endsWith('s')) return parseFloat(value) * 1000;
+            console.warn(`CSS variable ${varName} not found or invalid, using default ${defaultValue}ms`);
+            return defaultValue;
+        };
+        // Read timing from CSS variables (ensure they match CSS from v6.22)
+        const animationStartTime = getDuration('--intro-animation-delay', 1000); // 1s
+        const animationDuration = getDuration('--intro-animation-duration', 1500); // 1.5s
+        const overlayFadeOutDuration = getDuration('--overlay-fade-duration', 300); // 0.3s
+        const contentFadeInDuration = getDuration('--content-fade-duration', 500); // 0.5s
+
+        const animationEndTime = animationStartTime + animationDuration; // ~2500ms (relative to when style applied)
+
+        // Calculate delays relative to DOMContentLoaded (when this script runs)
+        const contentFadeInDelay = animationEndTime - contentFadeInDuration; // ~2000ms
+        const overlayFadeOutDelay = animationEndTime; // ~2500ms
+        const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; // ~2800ms
+        const scrollEnableDelay = finalHideDelay;
+        // Schedule TypedJS init slightly after content starts appearing
+        const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100; // ~2600ms (safer)
+        // Schedule Marquee init after overlay is hidden
+        const marqueeInitDelay = finalHideDelay + 100; // ~2900ms
+        // Schedule AOS init last
+        const aosInitDelay = marqueeInitDelay + 100; // ~3000ms
+
+        console.log("Triggering .animate class (relies on CSS animation-delay)...");
+        overlay.classList.add('animate'); // Add class, CSS delay controls start
+
+        // Schedule content FADE-IN
+        setTimeout(() => {
+            console.log(`Fading in main content (Scheduled for ~${contentFadeInDelay}ms)`);
+            if (navbar) navbar.classList.add('visible');
+            if (heroSection) heroSection.classList.add('visible');
+        }, contentFadeInDelay);
+
+        // Schedule overlay FADE-OUT
+        setTimeout(() => {
+            console.log(`Fading out overlay (Scheduled for ~${overlayFadeOutDelay}ms)`);
+            if (overlay) overlay.classList.add('fade-out');
+        }, overlayFadeOutDelay);
+
+        // Schedule scroll re-enable AND final hide using visibility:hidden
+         setTimeout(() => {
+            console.log(`Re-enabling scroll and hiding overlay (Scheduled for ~${finalHideDelay}ms)`);
+            if (bodyElement) bodyElement.classList.remove('no-scroll');
+            // Use visibility: hidden like the old code
+            if (overlay) overlay.style.visibility = 'hidden';
+        }, finalHideDelay);
+
+        // Initialize Typed.js
+        setTimeout(() => {
+            console.log(`Initializing Typed.js (Scheduled for ~${typedJsInitDelay}ms)`);
+            initializeTypedJs();
+        }, typedJsInitDelay);
+
+        // Initialize Marquee
+         setTimeout(() => {
+             console.log(`Initializing Marquee (Scheduled for ~${marqueeInitDelay}ms)`);
+            initializeMarquee();
+         }, marqueeInitDelay);
+
+         // Initialize AOS
+         setTimeout(() => {
+              console.log(`Initializing AOS (Scheduled for ~${aosInitDelay}ms)`);
+             initAos();
+         }, aosInitDelay);
+
+        // --- 4. Set Flag ---
+        console.log("Setting introPlayed flag in sessionStorage.");
+        sessionStorage.setItem('introPlayed', 'true');
+
+    } // End else (Intro Will Play)
 
 }); // End DOMContentLoaded
