@@ -1,4 +1,4 @@
-// Contents of script.js (v6.27 - Added Music Classifier Video Controls)
+// Contents of script.js (v6.28 - Updated Popover to Click & Auto-Hide)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } else {
         // --- PLAY INTRO (Using "Even Older" Logic Base) ---
-        // ... (keep the existing intro playing logic from v6.25 exactly as is) ...
+        // ... (keep the existing intro playing logic exactly as is) ...
         console.log("Starting intro sequence (Even Older Logic Base).");
         if (!overlay || !navbar || !heroSection || !targetElement || !bodyElement) {
             console.error("Missing critical elements for intro. Skipping.");
@@ -143,24 +143,53 @@ document.addEventListener('DOMContentLoaded', () => {
     } // End else (Intro Will Play)
 
 
-    // === Popover Logic ===
+    // === Popover Logic (Updated for Click & Auto-Hide) ===
     const pfpImage = document.getElementById('navbarPfpImage');
+    let popoverHideTimeout = null; // Variable to store the timeout ID
+
     if (pfpImage) {
         try {
-            const popover = new bootstrap.Popover(pfpImage, { placement: 'bottom', customClass: 'cartoon-popover' });
-            let hideTimeout;
-            pfpImage.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); popover.show(); });
-            pfpImage.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { popover.hide(); }, 300); });
-            pfpImage.addEventListener('shown.bs.popover', () => {
-                const popoverElement = document.getElementById(pfpImage.getAttribute('aria-describedby'));
-                if (popoverElement) {
-                    popoverElement.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
-                    popoverElement.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { popover.hide(); }, 300); });
-                }
+            // Initialize popover with manual trigger is crucial
+            const popover = new bootstrap.Popover(pfpImage, {
+                placement: 'bottom',
+                customClass: 'cartoon-popover',
+                trigger: 'manual' // Make sure trigger is manual
             });
-            console.log("Popover logic initialized.");
-        } catch (e) { console.error("Error during popover setup:", e); }
-    } else { console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover."); }
+
+            // Add CLICK listener to the profile picture
+            pfpImage.addEventListener('click', () => {
+                console.log("PFP clicked.");
+
+                // If a hide timeout is already scheduled, clear it
+                if (popoverHideTimeout) {
+                    clearTimeout(popoverHideTimeout);
+                    console.log("Cleared existing popover hide timeout.");
+                }
+
+                // Show the popover
+                console.log("Showing popover.");
+                popover.show();
+
+                // Set a new timeout to automatically hide the popover after 3 seconds (3000ms)
+                console.log("Scheduling popover hide in 3 seconds.");
+                popoverHideTimeout = setTimeout(() => {
+                    console.log("Auto-hiding popover now.");
+                    popover.hide();
+                    popoverHideTimeout = null; // Reset the timeout ID variable
+                }, 3000); // 3000 milliseconds = 3 seconds. Adjust if needed.
+            });
+
+            // REMOVED hover listeners ('mouseenter', 'mouseleave') for pfpImage
+            // REMOVED 'shown.bs.popover' listener logic (not needed for click/auto-hide)
+
+            console.log("Popover logic initialized (Click trigger, Auto-Hide).");
+
+        } catch (e) {
+            console.error("Error during popover setup:", e);
+        }
+    } else {
+        console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover.");
+    }
     // === End Popover Logic ===
 
 
@@ -214,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === End Vision Pro Video Control Logic ===
 
 
-    // === Video Control Logic for Music Classifier (NEW) ===
+    // === Video Control Logic for Music Classifier ===
     const musicVideoPlayPauseBtn = document.getElementById('musicVideoPlayPauseBtn'); // New ID
     const musicVideoElement = document.getElementById('musicVideo'); // New ID
     const musicClassifierModalElement = document.getElementById('musicClassifierModal'); // New ID

@@ -1,4 +1,4 @@
-/* style.css (Reverting to "Even Older" Logic + Responsive Fonts + Fixes) */
+/* style.css (v. Updated Projects BG & Spacing) */
 
 :root {
     /* Shared Styles */
@@ -9,7 +9,7 @@
     --hero-text-color: #111;
     --overlay-bg-color: #fff6ec;
     --transparent-bg-color: transparent;
-  
+
     /* --- ADD RESPONSIVE SIZES BACK --- */
     /* Base Font Sizes (Desktop) */
     --title-font-size-desktop: 3rem;
@@ -18,7 +18,7 @@
     --title-font-size-mobile: 1.9rem;  /* Adjusted H1 size for mobile */
     --overlay-font-size-mobile: 2.8rem; /* Smaller overlay size for mobile */
     /* --- END ADD --- */
-  
+
     /* Timing */
     --intro-animation-delay: 1s;
     --intro-animation-duration: 1.5s;
@@ -26,14 +26,14 @@
     --content-fade-duration: 0.5s;
     --bg-fade-duration: 0.2s;
   }
-  
+
   /* Import Google Font */
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-  
+
   /* Navbar Profile Picture */
   .navbar a.navbar-brand img.navbar-pfp { width: 35px !important; height: 35px !important; min-width: 35px !important; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; cursor: pointer; }
   .navbar a.navbar-brand img.navbar-pfp:hover { transform: scale(1.1); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
-  
+
   /* === Intro Overlay Styles START === */
   #intro-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -41,7 +41,7 @@
       display: flex; align-items: center; justify-content: center;
       z-index: 1000;
       padding: 0 1rem; box-sizing: border-box;
-  
+
       /* Text Styling */
       font-family: var(--title-font-family);
       font-weight: var(--title-font-weight);
@@ -50,7 +50,7 @@
       color: var(--overlay-text-color);
       text-align: center;
       white-space: nowrap; /* Keep to prevent wrap */
-  
+
       /* Animation */
       transform-origin: center center;
       will-change: transform, opacity, background-color;
@@ -58,13 +58,13 @@
       transition: opacity var(--overlay-fade-duration) ease-out,
                   background-color var(--bg-fade-duration) ease-in;
   }
-  
+
   /* Class added by JS to trigger fade-out */
   #intro-overlay.fade-out {
       opacity: 0;
       pointer-events: none;
   }
-  
+
   /* Class added by JS to trigger transform animation */
   #intro-overlay.animate {
       background-color: var(--transparent-bg-color);
@@ -76,7 +76,7 @@
       100% { transform: translate(var(--target-x, 0px), var(--target-y, 0px)) scale(var(--target-scale, 1)); opacity: 1; }
   }
   /* === Intro Overlay Styles END === */
-  
+
   /* --- Main Content Initial State & Fade-in --- */
   nav.navbar, section.hero {
       opacity: 0;
@@ -85,12 +85,12 @@
   nav.navbar.visible, section.hero.visible {
       opacity: 1;
   }
-  
+
   /* --- Basic Body and General Styles --- */
   body { margin: 0; padding: 0; background-color: #fff6ec; font-family: 'Segoe UI', sans-serif; color: #111; }
   body.no-scroll { overflow: hidden; }
   body.grabbing { cursor: grabbing !important; }
-  
+
   /* --- Typography --- */
   h1, h2, h3, h4, h5, h6, .navbar-brand { font-family: var(--title-font-family); font-weight: 600; }
   .navbar-brand { font-weight: 700; }
@@ -106,21 +106,21 @@
   }
   #typed-output { /* Inherits styling or has its own */ }
   p, .nav-link, .btn, li { font-family: 'Segoe UI', sans-serif; }
-  
+
   /* General link styling */
   .nav-link { color: #000; text-decoration: none; font-weight: 500; }
   .nav-link:hover { color: #555; }
-  
+
   /* Navbar Specific Link Styles */
   .navbar .nav-link { position: relative; border: none; padding: 6px 10px; box-shadow: 0 2px 0 0 black; border-radius: 0; transition: box-shadow 0.3s ease-in-out, color 0.3s ease-in-out, border-radius 0.3s ease-in-out; }
   .navbar .nav-link:hover { color: #555; box-shadow: 0 0 0 2px black; border-radius: 8px; }
-  
+
   /* Hero Section Styles */
   .hero { min-height: 100vh; position: relative; background-color: #fff6ec; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
   .hero-text { position: relative; z-index: 1; transform: translateY(-60px); }
   .highlight { background-color: #ffcccb; padding: 0 6px; border-radius: 4px; display: inline-block; }
   .btn { font-weight: 500; font-size: 1rem; padding: 0.6rem 1.2rem; }
-  
+
   /* === About Me Section Styles START === */
   .section-divider.squiggle-divider { width: 60%; height: 12px; margin: 0 auto 3.5rem auto; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0,3 Q1.25,0 2.5,3 T5,3 Q6.25,6 7.5,3 T10,3' fill='none' stroke='%23CD853F' stroke-width='0.7'/%3E%3C/svg%3E"); background-size: 18px 10px; background-repeat: repeat-x; background-position: center; }
   #about { position: relative; background-color: #fff6ec; }
@@ -134,7 +134,7 @@
   #about h2 { margin-top: 0; }
   #about h3, #about h4 { color: #2a2a2a; font-weight: 600; }
   /* === About Me Section Styles END === */
-  
+
   /* Cursor style for Typed.js */
   .typed-cursor {
       font-size: var(--title-font-size-desktop); /* Match DESKTOP H1 size */
@@ -146,13 +146,13 @@
   }
   @keyframes typedjsBlink { 50% { opacity: 0.0; } }
   @-webkit-keyframes typedjsBlink { 0% { opacity: 1; } 50% { opacity: 0.0; } 100% { opacity: 1; } }
-  
+
   /* === Waving Emoji Styles START === */
   #wave-emoji { display: inline-block; transform-origin: 70% 70%; opacity: 0; transition: opacity 0.4s ease-in-out; transition-delay: 0.6s; vertical-align: baseline; margin-left: 0.25rem;}
   nav.navbar.visible #wave-emoji { opacity: 1; animation: waveAnimation 2.5s ease-in-out infinite; animation-delay: 0.8s; }
   @keyframes waveAnimation { 0% { transform: rotate( 0.0deg); } 10% { transform: rotate(14.0deg); } 20% { transform: rotate(-8.0deg); } 30% { transform: rotate(14.0deg); } 40% { transform: rotate(-4.0deg); } 50% { transform: rotate(10.0deg); } 60% { transform: rotate( 0.0deg); } 100% { transform: rotate( 0.0deg); } }
   /* === Waving Emoji Styles END === */
-  
+
   /* === Skills Marquee Styles START === */
   .skills-marquee-container { width: 100%; overflow: hidden; position: relative; padding: 1rem 0; -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 10%, rgba(0,0,0,1) 90%, rgba(0,0,0,0) 100%); cursor: grab; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
   .skills-track { display: flex; width: max-content; will-change: transform; } /* JS handles animation */
@@ -160,9 +160,12 @@
   .skill-item { display: flex; align-items: center; padding: 0.75rem 1.5rem; margin: 0 1rem; background-color: #e9ecef; border-radius: 8px; white-space: nowrap; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
   .skill-item i { font-size: 1.8rem; margin-right: 0.75rem; }
   /* === Skills Marquee Styles END === */
-  
+
   /* === Project Section Styles START === */
-  #projects { background-color: #f8f9fa !important; }
+  #projects {
+    background-color: #fffaf4; /* UPDATED: New light warm background */
+    margin-top: 4rem; /* UPDATED: Added space above the section */
+  }
   .project-card { border: none; border-radius: 15px; background-color: #ffffff; transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; overflow: hidden; }
   .project-card:hover { transform: translateY(-5px); box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
   .project-card-img { height: 200px; object-fit: cover; width: 100%; }
@@ -190,19 +193,19 @@
   .video-control-btn:hover { opacity: 0.8; color: white; }
   .video-control-btn i { position: relative; }
   /* === Project Section Styles END === */
-  
+
   #contact .btn i { vertical-align: middle; }
-  
+
   /* Footer Styles */
   footer.border-top { border-top: 1px solid #dee2e6 !important; }
-  
+
   /* === Cartoon Popover Easter Egg Styles START === */
   .cartoon-popover { --bs-popover-max-width: 200px; --bs-popover-border-color: #333; --bs-popover-border-width: 2px; --bs-popover-bg: #fefcf9; --bs-popover-box-shadow: 4px 4px 0px #aaaaaa; --bs-popover-border-radius: 12px; --bs-popover-header-display: none; --bs-popover-body-padding-x: 1rem; --bs-popover-body-padding-y: 0.75rem; --bs-popover-body-color: #333; font-family: var(--title-font-family); font-weight: 600; text-align: center; }
   .cartoon-popover > .popover-arrow::before { border-bottom-color: var(--bs-popover-border-color); border-top-color: var(--bs-popover-border-color); }
   .cartoon-popover[data-popper-placement^="left"] > .popover-arrow::before { border-left-color: var(--bs-popover-border-color); }
   .cartoon-popover[data-popper-placement^="right"] > .popover-arrow::before { border-right-color: var(--bs-popover-border-color); }
   /* === Cartoon Popover Easter Egg Styles END === */
-  
+
   /* --- ADDED MEDIA QUERY FOR RESPONSIVE FONTS --- */
   @media (max-width: 767.98px) {
     /* Apply mobile font sizes using variables */
@@ -217,5 +220,5 @@
     }
   }
   /* --- END MEDIA QUERY --- */
-  
+
   /* --- End of CSS File --- */
