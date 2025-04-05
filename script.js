@@ -1,4 +1,4 @@
-// Contents of script.js (v6.26 - Added Explicit Video Play on Modal Show)
+// Contents of script.js (v6.27 - Added Music Classifier Video Controls)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -74,7 +74,7 @@ function initAos() {
 
 // --- Main Setup on DOM Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Loaded. Setting up Intro, AOS, Popovers.");
+    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos.");
 
     // --- Element References ---
     const overlay = document.getElementById('intro-overlay');
@@ -164,86 +164,113 @@ document.addEventListener('DOMContentLoaded', () => {
     // === End Popover Logic ===
 
 
-    // === Video Control Logic ===
-    const videoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
-    const videoElement = document.getElementById('visionProVideo');
-    const visionProModalElement = document.getElementById('visionProModal'); // Get modal element ref
+    // === Video Control Logic for Vision Pro ===
+    const visionVideoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
+    const visionVideoElement = document.getElementById('visionProVideo');
+    const visionProModalElement = document.getElementById('visionProModal');
 
-    if (videoPlayPauseBtn && videoElement && visionProModalElement) { // Check modal element too
+    if (visionVideoPlayPauseBtn && visionVideoElement && visionProModalElement) {
         try {
-            const iconElement = videoPlayPauseBtn.querySelector('i');
-
-            // Function to update button icon based on video state
+            const iconElement = visionVideoPlayPauseBtn.querySelector('i');
             const updateButtonIcon = () => {
-                const isPaused = videoElement.paused || videoElement.ended;
+                const isPaused = visionVideoElement.paused || visionVideoElement.ended;
                 iconElement.classList.toggle('bi-pause-fill', !isPaused);
                 iconElement.classList.toggle('bi-play-fill', isPaused);
-                videoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-                console.log(`Video state update: ${isPaused ? 'Paused/Ended' : 'Playing'}`);
+                visionVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+                // console.log(`Vision Pro Video state update: ${isPaused ? 'Paused/Ended' : 'Playing'}`); // Less verbose logging
             };
-
-            // Event listener for the custom play/pause button
-            videoPlayPauseBtn.addEventListener('click', () => {
-                console.log("Play/Pause button clicked.");
-                if (videoElement.paused || videoElement.ended) {
-                    videoElement.play().catch(e => console.error("Error trying to play video:", e)); // Catch potential errors
+            visionVideoPlayPauseBtn.addEventListener('click', () => {
+                console.log("Vision Pro Play/Pause button clicked.");
+                if (visionVideoElement.paused || visionVideoElement.ended) {
+                    visionVideoElement.play().catch(e => console.error("Error trying to play Vision Pro video:", e));
                 } else {
-                    videoElement.pause();
+                    visionVideoElement.pause();
                 }
             });
-
-            // Update icon when video state changes naturally
-            videoElement.addEventListener('play', updateButtonIcon);
-            videoElement.addEventListener('pause', updateButtonIcon);
-            videoElement.addEventListener('ended', updateButtonIcon);
-
-            // Initial icon state check
-            updateButtonIcon();
-
-            // --- ADDED: Explicit play attempt on modal show ---
+            visionVideoElement.addEventListener('play', updateButtonIcon);
+            visionVideoElement.addEventListener('pause', updateButtonIcon);
+            visionVideoElement.addEventListener('ended', updateButtonIcon);
+            updateButtonIcon(); // Initial check
             visionProModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Vision Pro Modal shown. Attempting to play video.");
-                // Ensure muted (required for most mobile autoplay/programmatic play)
-                videoElement.muted = true;
-                // Attempt to play
-                const playPromise = videoElement.play();
+                visionVideoElement.muted = true; // Ensure muted
+                const playPromise = visionVideoElement.play();
                 if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        // Play started successfully (or was already playing)
-                        console.log("Video play() promise resolved.");
-                        updateButtonIcon(); // Ensure icon is correct
-                    }).catch(error => {
-                        // Play was prevented (common on mobile without prior interaction)
-                        console.warn("Video play() promise rejected. Autoplay likely prevented.", error);
-                        updateButtonIcon(); // Ensure icon shows 'play' if paused
-                    });
-                } else {
-                     // play() doesn't return a promise in older browsers, just try updating icon
-                     updateButtonIcon();
-                }
+                    playPromise.then(() => { console.log("Vision Pro Video play() promise resolved."); updateButtonIcon(); })
+                               .catch(error => { console.warn("Vision Pro Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
+                } else { updateButtonIcon(); }
             });
-            // --- END ADDED ---
-
-            // Pause video when modal is closed
             visionProModalElement.addEventListener('hidden.bs.modal', () => {
                  console.log("Vision Pro Modal hidden. Pausing video.");
-                if (!videoElement.paused) {
-                    videoElement.pause();
-                }
-                // Optional: Reset video to start?
-                // videoElement.currentTime = 0;
+                if (!visionVideoElement.paused) { visionVideoElement.pause(); }
             });
-
             console.log("Video controls initialized for #visionProVideo.");
-
-        } catch (e) {
-            console.error("Error setting up video controls:", e);
-        }
+        } catch (e) { console.error("Error setting up Vision Pro video controls:", e); }
     } else {
-         if (!videoPlayPauseBtn) console.warn("Video play/pause button (#videoPlayPauseBtn) not found.");
-         if (!videoElement) console.warn("Video element (#visionProVideo) not found.");
+         if (!visionVideoPlayPauseBtn) console.warn("Video play/pause button (#videoPlayPauseBtn) not found.");
+         if (!visionVideoElement) console.warn("Video element (#visionProVideo) not found.");
          if (!visionProModalElement) console.warn("Modal element (#visionProModal) not found for video control.");
     }
-    // === End Video Control Logic ===
+    // === End Vision Pro Video Control Logic ===
+
+
+    // === Video Control Logic for Music Classifier (NEW) ===
+    const musicVideoPlayPauseBtn = document.getElementById('musicVideoPlayPauseBtn'); // New ID
+    const musicVideoElement = document.getElementById('musicVideo'); // New ID
+    const musicClassifierModalElement = document.getElementById('musicClassifierModal'); // New ID
+
+    if (musicVideoPlayPauseBtn && musicVideoElement && musicClassifierModalElement) { // Check new IDs
+        try {
+            const iconElement = musicVideoPlayPauseBtn.querySelector('i'); // Find icon within this button
+            const updateButtonIcon = () => { // Function specific to this video
+                const isPaused = musicVideoElement.paused || musicVideoElement.ended;
+                iconElement.classList.toggle('bi-pause-fill', !isPaused);
+                iconElement.classList.toggle('bi-play-fill', isPaused);
+                musicVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+                // console.log(`Music Classifier Video state update: ${isPaused ? 'Paused/Ended' : 'Playing'}`); // Less verbose logging
+            };
+            musicVideoPlayPauseBtn.addEventListener('click', () => { // Event listener for this button
+                console.log("Music Classifier Play/Pause button clicked.");
+                if (musicVideoElement.paused || musicVideoElement.ended) {
+                    musicVideoElement.play().catch(e => console.error("Error trying to play Music Classifier video:", e));
+                } else {
+                    musicVideoElement.pause();
+                }
+            });
+            // Event listeners for this video element
+            musicVideoElement.addEventListener('play', updateButtonIcon);
+            musicVideoElement.addEventListener('pause', updateButtonIcon);
+            musicVideoElement.addEventListener('ended', updateButtonIcon);
+            updateButtonIcon(); // Initial check for this video
+
+            // Play attempt on modal show for this modal
+            musicClassifierModalElement.addEventListener('shown.bs.modal', () => {
+                console.log("Music Classifier Modal shown. Attempting to play video.");
+                musicVideoElement.muted = true; // Ensure muted
+                const playPromise = musicVideoElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => { console.log("Music Classifier Video play() promise resolved."); updateButtonIcon(); })
+                               .catch(error => { console.warn("Music Classifier Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
+                } else { updateButtonIcon(); } // Fallback for older browsers
+            });
+            // Pause video when this modal is closed
+            musicClassifierModalElement.addEventListener('hidden.bs.modal', () => {
+                 console.log("Music Classifier Modal hidden. Pausing video.");
+                if (!musicVideoElement.paused) { musicVideoElement.pause(); }
+                // Optional: Reset video to start?
+                // musicVideoElement.currentTime = 0;
+            });
+            console.log("Video controls initialized for #musicVideo."); // Log success for this video
+        } catch (e) {
+            console.error("Error setting up Music Classifier video controls:", e);
+        }
+    } else {
+         // Log specific warnings if elements for this video are missing
+         if (!musicVideoPlayPauseBtn) console.warn("Video play/pause button (#musicVideoPlayPauseBtn) not found.");
+         if (!musicVideoElement) console.warn("Video element (#musicVideo) not found.");
+         if (!musicClassifierModalElement) console.warn("Modal element (#musicClassifierModal) not found for video control.");
+    }
+    // === End Music Classifier Video Control Logic ===
+
 
 }); // --- End DOMContentLoaded ---
