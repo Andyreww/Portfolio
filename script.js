@@ -1,4 +1,4 @@
-// Contents of script.js (v6.28 - Updated Popover to Click & Auto-Hide)
+// Contents of script.js (v6.32 - Added NetWorkAI Video Controls)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } // End else (Intro Will Play)
 
 
-    // === Popover Logic (Updated for Click & Auto-Hide) ===
+    // === Popover Logic (Click & Auto-Hide) ===
     const pfpImage = document.getElementById('navbarPfpImage');
     let popoverHideTimeout = null; // Variable to store the timeout ID
 
@@ -179,9 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 3000); // 3000 milliseconds = 3 seconds. Adjust if needed.
             });
 
-            // REMOVED hover listeners ('mouseenter', 'mouseleave') for pfpImage
-            // REMOVED 'shown.bs.popover' listener logic (not needed for click/auto-hide)
-
             console.log("Popover logic initialized (Click trigger, Auto-Hide).");
 
         } catch (e) {
@@ -206,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 iconElement.classList.toggle('bi-pause-fill', !isPaused);
                 iconElement.classList.toggle('bi-play-fill', isPaused);
                 visionVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-                // console.log(`Vision Pro Video state update: ${isPaused ? 'Paused/Ended' : 'Playing'}`); // Less verbose logging
             };
             visionVideoPlayPauseBtn.addEventListener('click', () => {
                 console.log("Vision Pro Play/Pause button clicked.");
@@ -219,10 +215,10 @@ document.addEventListener('DOMContentLoaded', () => {
             visionVideoElement.addEventListener('play', updateButtonIcon);
             visionVideoElement.addEventListener('pause', updateButtonIcon);
             visionVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon(); // Initial check
+            updateButtonIcon();
             visionProModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Vision Pro Modal shown. Attempting to play video.");
-                visionVideoElement.muted = true; // Ensure muted
+                visionVideoElement.muted = true;
                 const playPromise = visionVideoElement.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => { console.log("Vision Pro Video play() promise resolved."); updateButtonIcon(); })
@@ -244,21 +240,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // === Video Control Logic for Music Classifier ===
-    const musicVideoPlayPauseBtn = document.getElementById('musicVideoPlayPauseBtn'); // New ID
-    const musicVideoElement = document.getElementById('musicVideo'); // New ID
-    const musicClassifierModalElement = document.getElementById('musicClassifierModal'); // New ID
+    const musicVideoPlayPauseBtn = document.getElementById('musicVideoPlayPauseBtn');
+    const musicVideoElement = document.getElementById('musicVideo');
+    const musicClassifierModalElement = document.getElementById('musicClassifierModal');
 
-    if (musicVideoPlayPauseBtn && musicVideoElement && musicClassifierModalElement) { // Check new IDs
+    if (musicVideoPlayPauseBtn && musicVideoElement && musicClassifierModalElement) {
         try {
-            const iconElement = musicVideoPlayPauseBtn.querySelector('i'); // Find icon within this button
-            const updateButtonIcon = () => { // Function specific to this video
+            const iconElement = musicVideoPlayPauseBtn.querySelector('i');
+            const updateButtonIcon = () => {
                 const isPaused = musicVideoElement.paused || musicVideoElement.ended;
                 iconElement.classList.toggle('bi-pause-fill', !isPaused);
                 iconElement.classList.toggle('bi-play-fill', isPaused);
                 musicVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-                // console.log(`Music Classifier Video state update: ${isPaused ? 'Paused/Ended' : 'Playing'}`); // Less verbose logging
             };
-            musicVideoPlayPauseBtn.addEventListener('click', () => { // Event listener for this button
+            musicVideoPlayPauseBtn.addEventListener('click', () => {
                 console.log("Music Classifier Play/Pause button clicked.");
                 if (musicVideoElement.paused || musicVideoElement.ended) {
                     musicVideoElement.play().catch(e => console.error("Error trying to play Music Classifier video:", e));
@@ -266,40 +261,138 @@ document.addEventListener('DOMContentLoaded', () => {
                     musicVideoElement.pause();
                 }
             });
-            // Event listeners for this video element
             musicVideoElement.addEventListener('play', updateButtonIcon);
             musicVideoElement.addEventListener('pause', updateButtonIcon);
             musicVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon(); // Initial check for this video
-
-            // Play attempt on modal show for this modal
+            updateButtonIcon();
             musicClassifierModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Music Classifier Modal shown. Attempting to play video.");
-                musicVideoElement.muted = true; // Ensure muted
+                musicVideoElement.muted = true;
                 const playPromise = musicVideoElement.play();
                 if (playPromise !== undefined) {
                     playPromise.then(() => { console.log("Music Classifier Video play() promise resolved."); updateButtonIcon(); })
                                .catch(error => { console.warn("Music Classifier Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
-                } else { updateButtonIcon(); } // Fallback for older browsers
+                } else { updateButtonIcon(); }
             });
-            // Pause video when this modal is closed
             musicClassifierModalElement.addEventListener('hidden.bs.modal', () => {
                  console.log("Music Classifier Modal hidden. Pausing video.");
                 if (!musicVideoElement.paused) { musicVideoElement.pause(); }
-                // Optional: Reset video to start?
-                // musicVideoElement.currentTime = 0;
             });
-            console.log("Video controls initialized for #musicVideo."); // Log success for this video
+            console.log("Video controls initialized for #musicVideo.");
         } catch (e) {
             console.error("Error setting up Music Classifier video controls:", e);
         }
     } else {
-         // Log specific warnings if elements for this video are missing
          if (!musicVideoPlayPauseBtn) console.warn("Video play/pause button (#musicVideoPlayPauseBtn) not found.");
          if (!musicVideoElement) console.warn("Video element (#musicVideo) not found.");
          if (!musicClassifierModalElement) console.warn("Modal element (#musicClassifierModal) not found for video control.");
     }
     // === End Music Classifier Video Control Logic ===
+
+
+    // === Video Control Logic for Forsaken ===
+    const forsakenVideoPlayPauseBtn = document.getElementById('forsakenVideoPlayPauseBtn');
+    const forsakenVideoElement = document.getElementById('forsakenVideo');
+    const projectThreeModalElement = document.getElementById('projectThreeModal');
+
+    if (forsakenVideoPlayPauseBtn && forsakenVideoElement && projectThreeModalElement) {
+        try {
+            const iconElement = forsakenVideoPlayPauseBtn.querySelector('i');
+            const updateButtonIcon = () => {
+                const isPaused = forsakenVideoElement.paused || forsakenVideoElement.ended;
+                iconElement.classList.toggle('bi-pause-fill', !isPaused);
+                iconElement.classList.toggle('bi-play-fill', isPaused);
+                forsakenVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+            };
+            forsakenVideoPlayPauseBtn.addEventListener('click', () => {
+                console.log("Forsaken Video Play/Pause button clicked.");
+                if (forsakenVideoElement.paused || forsakenVideoElement.ended) {
+                    forsakenVideoElement.play().catch(e => console.error("Error trying to play Forsaken video:", e));
+                } else {
+                    forsakenVideoElement.pause();
+                }
+            });
+            forsakenVideoElement.addEventListener('play', updateButtonIcon);
+            forsakenVideoElement.addEventListener('pause', updateButtonIcon);
+            forsakenVideoElement.addEventListener('ended', updateButtonIcon);
+            updateButtonIcon(); // Initial state check
+            projectThreeModalElement.addEventListener('shown.bs.modal', () => {
+                console.log("Forsaken Modal (Project Three) shown. Attempting to play video.");
+                forsakenVideoElement.muted = true;
+                const playPromise = forsakenVideoElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => { console.log("Forsaken Video play() promise resolved."); updateButtonIcon(); })
+                               .catch(error => { console.warn("Forsaken Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
+                } else { updateButtonIcon(); }
+            });
+            projectThreeModalElement.addEventListener('hidden.bs.modal', () => {
+                 console.log("Forsaken Modal (Project Three) hidden. Pausing video.");
+                if (!forsakenVideoElement.paused) { forsakenVideoElement.pause(); }
+            });
+            console.log("Video controls initialized for #forsakenVideo.");
+        } catch (e) {
+            console.error("Error setting up Forsaken video controls:", e);
+        }
+    } else {
+         if (!forsakenVideoPlayPauseBtn) console.warn("Video play/pause button (#forsakenVideoPlayPauseBtn) not found.");
+         if (!forsakenVideoElement) console.warn("Video element (#forsakenVideo) not found.");
+         if (!projectThreeModalElement) console.warn("Modal element (#projectThreeModal) not found for video control.");
+    }
+    // === End Forsaken Video Control Logic ===
+
+
+    // === Video Control Logic for NetWorkAI (NEW) ===
+    const networkAIVideoPlayPauseBtn = document.getElementById('networkAIVideoPlayPauseBtn'); // New ID
+    const networkAIVideoElement = document.getElementById('networkAIVideo'); // New ID
+    const networkAIModalElement = document.getElementById('networkAIModal'); // New ID for modal
+
+    if (networkAIVideoPlayPauseBtn && networkAIVideoElement && networkAIModalElement) { // Check new IDs
+        try {
+            const iconElement = networkAIVideoPlayPauseBtn.querySelector('i');
+            const updateButtonIcon = () => {
+                const isPaused = networkAIVideoElement.paused || networkAIVideoElement.ended;
+                iconElement.classList.toggle('bi-pause-fill', !isPaused);
+                iconElement.classList.toggle('bi-play-fill', isPaused);
+                networkAIVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+            };
+            networkAIVideoPlayPauseBtn.addEventListener('click', () => {
+                console.log("NetWorkAI Video Play/Pause button clicked.");
+                if (networkAIVideoElement.paused || networkAIVideoElement.ended) {
+                    networkAIVideoElement.play().catch(e => console.error("Error trying to play NetWorkAI video:", e));
+                } else {
+                    networkAIVideoElement.pause();
+                }
+            });
+            networkAIVideoElement.addEventListener('play', updateButtonIcon);
+            networkAIVideoElement.addEventListener('pause', updateButtonIcon);
+            networkAIVideoElement.addEventListener('ended', updateButtonIcon);
+            updateButtonIcon(); // Initial state check
+
+            // Play attempt on modal show
+            networkAIModalElement.addEventListener('shown.bs.modal', () => {
+                console.log("NetWorkAI Modal shown. Attempting to play video.");
+                networkAIVideoElement.muted = true;
+                const playPromise = networkAIVideoElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => { console.log("NetWorkAI Video play() promise resolved."); updateButtonIcon(); })
+                               .catch(error => { console.warn("NetWorkAI Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
+                } else { updateButtonIcon(); }
+            });
+            // Pause video when modal is closed
+            networkAIModalElement.addEventListener('hidden.bs.modal', () => {
+                 console.log("NetWorkAI Modal hidden. Pausing video.");
+                if (!networkAIVideoElement.paused) { networkAIVideoElement.pause(); }
+            });
+            console.log("Video controls initialized for #networkAIVideo.");
+        } catch (e) {
+            console.error("Error setting up NetWorkAI video controls:", e);
+        }
+    } else {
+         if (!networkAIVideoPlayPauseBtn) console.warn("Video play/pause button (#networkAIVideoPlayPauseBtn) not found.");
+         if (!networkAIVideoElement) console.warn("Video element (#networkAIVideo) not found.");
+         if (!networkAIModalElement) console.warn("Modal element (#networkAIModal) not found for video control.");
+    }
+    // === End NetWorkAI Video Control Logic ===
 
 
 }); // --- End DOMContentLoaded ---

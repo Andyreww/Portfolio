@@ -105,7 +105,24 @@
             </div></div>
         </div>
         <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="card project-card h-100 shadow-sm"><img src="assets/placeholder.jpg" class="card-img-top project-card-img" alt="Project Three thumbnail"><div class="card-body d-flex flex-column"><h5 class="card-title">Project Three</h5><p class="card-text small text-muted flex-grow-1">Description...</p><button type="button" class="btn btn-sm btn-outline-dark align-self-start" data-bs-toggle="modal" data-bs-target="#projectThreeModal">Learn More <i class="bi bi-arrow-right-short"></i></button></div></div>
+            <div class="card project-card h-100 shadow-sm">
+                <img src="assets/Forsaken.png" class="card-img-top project-card-img" alt="Forsaken game thumbnail">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">FORSAKEN (Game Dev)</h5>
+                    <p class="card-text small text-muted flex-grow-1">Developed 'Forsaken', a souls-like dungeon crawler in Unity featuring unique mechanics like reviving enemies and transforming into bosses.</p>
+                    <button type="button" class="btn btn-sm btn-outline-dark align-self-start" data-bs-toggle="modal" data-bs-target="#projectThreeModal">Learn More <i class="bi bi-arrow-right-short"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="300">
+             <div class="card project-card h-100 shadow-sm">
+                <img src="assets/NetworkAI.png" class="card-img-top project-card-img" alt="NetWorkAI Platform thumbnail">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">NetWorkAI</h5>
+                    <p class="card-text small text-muted flex-grow-1">A platform using AI to connect job seekers with key company contacts, moving beyond cold applications to foster meaningful networking.</p>
+                    <button type="button" class="btn btn-sm btn-outline-dark align-self-start" data-bs-toggle="modal" data-bs-target="#networkAIModal">Learn More <i class="bi bi-arrow-right-short"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -228,7 +245,128 @@
       </div>
     </div>
 
-    <div class="modal fade" id="projectThreeModal" tabindex="-1" aria-labelledby="projectThreeModalLabel" aria-hidden="true"> <div class="modal-dialog modal-lg modal-dialog-centered"> <div class="modal-content project-modal-content"> <div class="modal-header"> <h1 class="modal-title fs-5" id="projectThreeModalLabel">Project Three Details</h1> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div> <div class="modal-body"> <p>Details about Project Three...</p> </div> <div class="modal-footer"> <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button> </div> </div> </div> </div>
+    <div class="modal fade" id="projectThreeModal" tabindex="-1" aria-labelledby="projectThreeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content project-modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="projectThreeModalLabel"><i class="bi bi-controller me-2"></i>FORSAKEN - Souls-like Game Development</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p class="text-muted small mb-2 text-center">Early Build of the Game - April 7th, 2025</p>
+            <div class="video-container position-relative mb-4">
+              <video src="assets/Forsaken_vid.mp4" id="forsakenVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+              <button type="button" id="forsakenVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+            </div>
+
+            <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
+            <p class="lead">Forsaken is a souls-like game where the player navigates challenging dungeons, defeating bosses that represent the protagonist's internal conflicts from their past life. Built with Unity, the game explores themes of choice, grief, and redemption, offering unique gameplay mechanics and player agency in the final outcome.</p>
+            <hr class="my-4">
+
+            <h5 class="fw-semibold"><i class="bi bi-joystick me-2"></i>Key Mechanics</h5>
+            <p>Gameplay innovation centers around high-risk, high-reward combat and resource management:</p>
+            <ul>
+                <li>Revive slain bosses/enemies as temporary allies.</li>
+                <li>Steal enemy powers upon defeating them.</li>
+                <li>Transform into enemies for a brief period (one-time use per transformation).</li>
+                <li>Unique weapons with stats dependent on the player's current HP/Mana levels.</li>
+                <li>Killing enemies restores HP/Mana, encouraging aggressive play.</li>
+                <li>High-cost spells with cooldowns to ensure strategic use.</li>
+            </ul>
+            <hr class="my-4">
+
+            <h5 class="fw-semibold"><i class="bi bi-book-half me-2"></i>Narrative & Themes</h5>
+            <p>The player character, suffering memory loss after death, is offered a path to resurrection by two opposing gods (Life & Death) in exchange for service. As the player clears levels representing the five stages of grief (Denial, Anger, Bargaining, Depression, Acceptance), conversations with a shadowy figure reveal fragments of their past life and the true nature of the gods' divine wager.</p>
+            <blockquote class="blockquote project-blockquote mt-3">
+              <p>The core theme explores the illusion of choice, challenging the player to potentially break free from the gods' predetermined paths and forge their own destiny.</p>
+            </blockquote>
+             <hr class="my-4">
+
+             <h5 class="fw-semibold"><i class="bi bi-tools me-2"></i>Development & Role</h5>
+             <p>This game was developed as a team project using the Unity engine. My specific responsibilities included:</p>
+             <ul>
+                <li>Character Design</li>
+                <li>Core Gameplay Mechanics Implementation</li>
+                <li>Animation Integration</li>
+                <li>Non-Player Character (NPC) Logic</li>
+                <li>World Building Elements</li>
+             </ul>
+            <h5 class="fw-semibold mt-4"><i class="bi bi-unity me-2"></i>Technologies Used</h5>
+            <p>
+                <span class="badge tech-badge"><i class="devicon-unity-original colored"></i> Unity</span>
+                <span class="badge tech-badge"><i class="devicon-csharp-plain colored"></i> C#</span>
+            </p>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <span class="btn btn-dark" style="cursor: default;">
+                <i class="bi bi-calendar-event me-1"></i> Web-build coming May 10, 2025
+            </span>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="networkAIModal" tabindex="-1" aria-labelledby="networkAIModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content project-modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="networkAIModalLabel"><i class="bi bi-diagram-3-fill me-2"></i>NetWorkAI - Smart Job Networking Platform</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="video-container position-relative mb-4">
+              <video src="assets/NetworkAI_v.mp4" id="networkAIVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+              <button type="button" id="networkAIVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+            </div>
+
+            <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
+            <p class="lead">NetWorkAI addresses the common job market challenge where college students and early-career professionals face the frustrating cycle of cold applications. Instead of the "apply and pray" method, this platform provides a smarter, more personal way to connect with people behind job listings—hiring managers, alumni, or team members—giving applications context and visibility.</p>
+            <hr class="my-4">
+
+            <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>How It Works</h5>
+            <p>The platform intelligently enhances the job search process:</p>
+            <ul>
+                <li>Pulls job listings from popular sites.</li>
+                <li>Uses AI and publicly available data to identify key employees at target companies associated with those listings.</li>
+                <li>Surfaces relevant contact information where available and appropriate.</li>
+                <li>Provides users with suggested outreach strategies and templates.</li>
+                <li>Acts as a "LinkedIn power-up" focused on facilitating human connection, without requiring sign-ups from hiring managers.</li>
+            </ul>
+            <hr class="my-4">
+
+            <h5 class="fw-semibold"><i class="bi bi-graph-up-arrow me-2"></i>Features & Benefits</h5>
+            <p>NetWorkAI aims to make networking less intimidating and more effective:</p>
+            <ul>
+                <li>Increases the likelihood of securing interviews by fostering warm connections.</li>
+                <li>Helps users develop stronger, lasting professional networks.</li>
+                <li>Offers thoughtfully designed templates and personalization tools for outreach.</li>
+                <li>Includes outreach timing suggestions to maximize impact.</li>
+                <li>Removes guesswork and reduces the feeling of isolation in the job search.</li>
+            </ul>
+             <hr class="my-4">
+
+            <h5 class="fw-semibold"><i class="bi bi-bullseye me-2"></i>Project Goal</h5>
+             <blockquote class="blockquote project-blockquote mt-3">
+              <p>To make the job search less isolating and more human by shifting focus from cold applications to warm connections. NetWorkAI empowers job seekers to take control, stand out, and gain a real edge in a competitive market.</p>
+            </blockquote>
+
+            <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
+            <p>
+                <span class="badge tech-badge"><i class="devicon-python-plain colored"></i> Python</span>
+                <span class="badge tech-badge"><i class="devicon-flask-original colored"></i> Flask</span>
+                <span class="badge tech-badge"><i class="devicon-html5-plain colored"></i> HTML</span>
+                <span class="badge tech-badge"><i class="devicon-css3-plain colored"></i> CSS</span>
+                <span class="badge tech-badge"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
+                <span class="badge tech-badge"><i class="devicon-bootstrap-plain colored"></i> Bootstrap</span>
+                <span class="badge tech-badge"><i class="bi bi-robot"></i> AI/ML</span> </p>
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 </section>
@@ -255,7 +393,5 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-<script src="script.js"></script>
-
-</body>
+<script src="script.js"></script> </body>
 </html>
