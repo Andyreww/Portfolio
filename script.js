@@ -1,11 +1,10 @@
-// Contents of script.js (v6.32 - Consistent Video Logic Check)
+// Contents of script.js (v6.35 - Added Back-to-Top Button Logic)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
 
 // --- Typed.js Initialization Function ---
 function initializeTypedJs() {
-    // ... (keep existing function code) ...
     if (typedJsInitialized) { console.log("Typed.js already initialized. Skipping."); return; }
     typedJsInitialized = true;
     console.log("Attempting to initialize Typed.js...");
@@ -24,7 +23,6 @@ function initializeTypedJs() {
 
 // --- Marquee Initialization Function ---
 function initializeMarquee() {
-    // ... (keep existing function code) ...
     console.log("Attempting to initialize Marquee...");
     const skillsMarqueeContainer = document.querySelector('.skills-marquee-container');
     const skillsTrack = document.querySelector('.skills-track');
@@ -37,12 +35,13 @@ function initializeMarquee() {
         let pointerDown = false, dragEngaged = false, startX = 0, dragStartTranslateX = 0, blockClickEvent = false, dragThreshold = 5;
         let resumeScrollTimeoutId = null, resumeDelay = 3000;
         function calculateTrackWidth() {
+            if (!skillsTrack || skillsTrack.children.length === 0) return false; // Guard against no children
             if (skillsTrack.children.length > 1) { trackWidth = skillsTrack.scrollWidth / 2; } else { trackWidth = skillsTrack.scrollWidth; }
              console.log(`Marquee trackWidth calculated: ${trackWidth}`); return trackWidth > 0; }
-        function autoScroll(timestamp) { if (!isAutoScrolling || trackWidth <= 0) { animationFrameId = null; return; } if (lastTimestamp === 0) lastTimestamp = timestamp; const deltaTime = (timestamp - lastTimestamp) / 1000; lastTimestamp = timestamp; if (deltaTime > 0.5) { console.warn("Large Marquee dT, skipping frame potentially."); animationFrameId = requestAnimationFrame(autoScroll); return; } currentX -= speed * deltaTime; if (currentX <= -trackWidth) { currentX += trackWidth; } skillsTrack.style.transform = `translateX(${currentX}px)`; animationFrameId = requestAnimationFrame(autoScroll); }
+        function autoScroll(timestamp) { if (!isAutoScrolling || trackWidth <= 0) { animationFrameId = null; return; } if (lastTimestamp === 0) lastTimestamp = timestamp; const deltaTime = (timestamp - lastTimestamp) / 1000; lastTimestamp = timestamp; if (deltaTime > 0.5 || deltaTime <= 0) { console.warn("Marquee dT issue, adjusting or skipping frame."); animationFrameId = requestAnimationFrame(autoScroll); return; } currentX -= speed * deltaTime; if (currentX <= -trackWidth) { currentX += trackWidth; } skillsTrack.style.transform = `translateX(${currentX}px)`; animationFrameId = requestAnimationFrame(autoScroll); }
         function startAutoScroll() { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (isAutoScrolling || !calculateTrackWidth()) return; console.log("Marquee: Starting AutoScroll"); isAutoScrolling = true; lastTimestamp = 0; if (animationFrameId) cancelAnimationFrame(animationFrameId); animationFrameId = requestAnimationFrame(autoScroll); }
         function stopAutoScroll() { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (!isAutoScrolling) return; console.log("Marquee: Stopping AutoScroll"); isAutoScrolling = false; if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; } currentX = getTranslateX(skillsTrack); }
-        const getTranslateX = (element) => { try { const style = window.getComputedStyle(element); const matrix = style.transform || style.webkitTransform || style.mozTransform; if (matrix === 'none'|| !matrix) return 0; const matrixValues = matrix.match(/matrix.*\((.+)\)/); if (matrixValues && matrixValues[1]) { const values = matrixValues[1].split(',').map(s => parseFloat(s.trim())); const idx = matrix.includes('3d') ? 12 : 4; return values[idx] || 0; } return 0; } catch(e){ console.error("getTranslateX error", e); return 0; } };
+        const getTranslateX = (element) => { try { if(!element) return 0; const style = window.getComputedStyle(element); const matrix = style.transform || style.webkitTransform || style.mozTransform; if (matrix === 'none'|| !matrix) return 0; const matrixValues = matrix.match(/matrix.*\((.+)\)/); if (matrixValues && matrixValues[1]) { const values = matrixValues[1].split(',').map(s => parseFloat(s.trim())); const idx = matrix.includes('3d') ? 12 : 4; return values[idx] || 0; } return 0; } catch(e){ console.error("getTranslateX error", e); return 0; } };
         const onPointerDown = (e) => { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (trackWidth <= 0 && !calculateTrackWidth()) return; pointerDown = true; dragEngaged = false; blockClickEvent = false; startX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0); stopAutoScroll(); skillsTrack.style.transition = 'none'; skillsMarqueeContainer.style.cursor = 'grabbing'; };
         const onPointerMove = (e) => { if (!pointerDown) return; const currentPointerX = e.pageX || (e.touches && e.touches[0] ? e.touches[0].pageX : 0); const walk = currentPointerX - startX; if (!dragEngaged && Math.abs(walk) > dragThreshold) { dragEngaged = true; blockClickEvent = true; dragStartTranslateX = currentX; startX = currentPointerX; bodyElement.classList.add('grabbing'); skillsTrack.classList.add('dragging');} if (dragEngaged) { e.preventDefault(); const dragWalk = currentPointerX - startX; let newTranslateX = dragStartTranslateX + dragWalk; const maxTranslate = 0; const minTranslate = -trackWidth; newTranslateX = Math.max(minTranslate, Math.min(maxTranslate, newTranslateX)); skillsTrack.style.transform = `translateX(${newTranslateX}px)`; currentX = newTranslateX; } };
         const onPointerUp = (e) => { if (!pointerDown) return; pointerDown = false; skillsMarqueeContainer.style.cursor = 'grab'; if (dragEngaged) { bodyElement.classList.remove('grabbing'); skillsTrack.classList.remove('dragging'); skillsTrack.style.transition = ''; if (resumeScrollTimeoutId) clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = setTimeout(() => { startAutoScroll(); resumeScrollTimeoutId = null; }, resumeDelay); blockClickEvent = true; setTimeout(() => { blockClickEvent = false; }, 50); } else { startAutoScroll(); } dragEngaged = false; };
@@ -63,7 +62,12 @@ function initAos() {
      try {
          if (typeof AOS !== 'undefined') {
              console.log("Initializing AOS...");
-             AOS.init({ duration: 800, once: true, offset: 50 });
+             AOS.init({
+                 duration: 700,
+                 once: true,
+                 offset: 80,
+                 // disable: 'mobile'
+                });
          } else {
              console.warn("AOS library not found.");
          }
@@ -72,15 +76,99 @@ function initAos() {
      }
 }
 
+// --- Graduation Countdown Timer ---
+function initializeCountdown() {
+    const countdownElement = document.getElementById('graduation-countdown');
+    if (!countdownElement) { console.warn("Countdown container not found."); return; }
+    const daysEl = document.getElementById('countdown-days');
+    const hoursEl = document.getElementById('countdown-hours');
+    const minutesEl = document.getElementById('countdown-minutes');
+    const secondsEl = document.getElementById('countdown-seconds');
+    const titleEl = countdownElement.querySelector('.countdown-title');
+
+    if(!daysEl || !hoursEl || !minutesEl || !secondsEl || !titleEl) { console.error("One or more countdown time elements not found!"); return; }
+
+    const graduationDate = new Date("May 17, 2025 00:00:00");
+    const graduationTime = graduationDate.getTime();
+    console.log(`Target graduation date set to: ${graduationDate}`);
+
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = graduationTime - now;
+
+        if (distance < 0) {
+            clearInterval(interval);
+            console.log("Graduation date reached!");
+            if(titleEl) titleEl.textContent = "Graduated!";
+            daysEl.textContent = '00'; hoursEl.textContent = '00'; minutesEl.textContent = '00'; secondsEl.textContent = '00';
+            const dateEl = countdownElement.querySelector('.countdown-date');
+            if(dateEl) dateEl.style.display = 'none';
+            return;
+        }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        daysEl.textContent = String(days).padStart(2, '0');
+        hoursEl.textContent = String(hours).padStart(2, '0');
+        minutesEl.textContent = String(minutes).padStart(2, '0');
+        secondsEl.textContent = String(seconds).padStart(2, '0');
+    }
+    updateCountdown(); // Initial call
+    const interval = setInterval(updateCountdown, 1000); // Update every second
+    console.log("Countdown timer initialized.");
+}
+// --- End Graduation Countdown Timer ---
+
+
+// === Back to Top Button Logic START ===
+function initializeBackToTopButton() {
+    const backToTopButton = document.getElementById("backToTopBtn");
+    const scrollThreshold = 300; // Pixels to scroll before button appears
+
+    if (!backToTopButton) {
+        console.warn("Back to top button not found.");
+        return;
+    }
+
+    const toggleBackToTopButton = () => {
+        if (window.scrollY > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            backToTopButton.classList.add("visible");
+        } else {
+            backToTopButton.classList.remove("visible");
+        }
+    };
+
+    const scrollToTop = (event) => {
+        event.preventDefault(); // Prevent default anchor jump
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+        console.log("Scrolling to top.");
+    };
+
+    window.addEventListener("scroll", toggleBackToTopButton);
+    backToTopButton.addEventListener("click", scrollToTop);
+
+    // Initial check in case page loads scrolled down
+    toggleBackToTopButton();
+
+    console.log("Back to Top button initialized.");
+}
+// === Back to Top Button Logic END ===
+
+
 // --- Main Setup on DOM Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos.");
+    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop.");
 
     // --- Element References ---
     const overlay = document.getElementById('intro-overlay');
     const navbar = document.querySelector('nav.navbar');
     const heroSection = document.querySelector('section.hero');
-    const targetElement = document.querySelector('.hero h1'); // Target H1 (Old Logic)
+    const targetElement = document.querySelector('.hero h1');
     const bodyElement = document.body;
 
     // --- Check if Intro Should Play ---
@@ -95,13 +183,14 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeTypedJs();
         setTimeout(() => {
              initializeMarquee();
+             initializeCountdown();
+             initializeBackToTopButton(); // Initialize Back to Top
              initAos();
         }, 100);
 
     } else {
-        // --- PLAY INTRO (Using "Even Older" Logic Base) ---
-        // ... (keep the existing intro playing logic exactly as is) ...
-        console.log("Starting intro sequence (Even Older Logic Base).");
+        // --- PLAY INTRO ---
+        console.log("Starting intro sequence.");
         if (!overlay || !navbar || !heroSection || !targetElement || !bodyElement) {
             console.error("Missing critical elements for intro. Skipping.");
             if(overlay) overlay.style.display = 'none';
@@ -109,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(heroSection) heroSection.classList.add('visible');
             if(bodyElement) bodyElement.classList.remove('no-scroll');
             initializeTypedJs();
-            setTimeout(() => { initializeMarquee(); initAos(); }, 100); return;
+            setTimeout(() => { initializeMarquee(); initializeCountdown(); initializeBackToTopButton(); initAos(); }, 100); return;
         }
         console.log("Disabling scroll."); bodyElement.classList.add('no-scroll');
         console.log("Calculating intro parameters immediately...");
@@ -126,18 +215,22 @@ document.addEventListener('DOMContentLoaded', () => {
             targetScale = Math.max(0.01, targetScale); console.log("Final Calculated transform:", { targetX: targetX.toFixed(2), targetY: targetY.toFixed(2), targetScale: targetScale.toFixed(3) });
             overlay.style.setProperty('--target-x', `${targetX}px`); overlay.style.setProperty('--target-y', `${targetY}px`); overlay.style.setProperty('--target-scale', targetScale);
         } catch (error) {
-            console.error("Error during immediate calculation:", error); if (overlay) overlay.style.display = 'none'; if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); if (bodyElement) bodyElement.classList.remove('no-scroll'); initializeTypedJs(); setTimeout(() => { initializeMarquee(); initAos(); }, 100); sessionStorage.setItem('introPlayed', 'true'); return;
+            console.error("Error during immediate calculation:", error); if (overlay) overlay.style.display = 'none'; if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); if (bodyElement) bodyElement.classList.remove('no-scroll'); initializeTypedJs(); setTimeout(() => { initializeMarquee(); initializeCountdown(); initializeBackToTopButton(); initAos(); }, 100); sessionStorage.setItem('introPlayed', 'true'); return;
         }
         const rootStyle = getComputedStyle(document.documentElement);
         const getDuration = (varName, defaultValue) => { const value = rootStyle.getPropertyValue(varName)?.trim(); if (value && value.endsWith('ms')) return parseInt(value, 10); if (value && value.endsWith('s')) return parseFloat(value) * 1000; console.warn(`CSS variable ${varName} not found or invalid, using default ${defaultValue}ms`); return defaultValue; };
         const animationStartTime = getDuration('--intro-animation-delay', 1000); const animationDuration = getDuration('--intro-animation-duration', 1500); const overlayFadeOutDuration = getDuration('--overlay-fade-duration', 300); const contentFadeInDuration = getDuration('--content-fade-duration', 500);
-        const animationEndTime = animationStartTime + animationDuration; const contentFadeInDelay = animationEndTime - contentFadeInDuration; const overlayFadeOutDelay = animationEndTime; const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; const scrollEnableDelay = finalHideDelay; const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100; /* Safer timing */ const marqueeInitDelay = finalHideDelay + 100; const aosInitDelay = marqueeInitDelay + 100;
+        const animationEndTime = animationStartTime + animationDuration; const contentFadeInDelay = animationEndTime - contentFadeInDuration; const overlayFadeOutDelay = animationEndTime; const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; const scrollEnableDelay = finalHideDelay; const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100; const marqueeInitDelay = finalHideDelay + 100; const countdownInitDelay = marqueeInitDelay;
+        const backToTopInitDelay = marqueeInitDelay; // Init back to top around same time
+        const aosInitDelay = marqueeInitDelay + 100;
         console.log("Triggering .animate class (relies on CSS animation-delay)..."); overlay.classList.add('animate');
         setTimeout(() => { console.log(`Fading in main content (Scheduled for ~${contentFadeInDelay}ms)`); if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); }, contentFadeInDelay);
         setTimeout(() => { console.log(`Fading out overlay (Scheduled for ~${overlayFadeOutDelay}ms)`); if (overlay) overlay.classList.add('fade-out'); }, overlayFadeOutDelay);
         setTimeout(() => { console.log(`Re-enabling scroll and hiding overlay (Scheduled for ~${finalHideDelay}ms)`); if (bodyElement) bodyElement.classList.remove('no-scroll'); if (overlay) overlay.style.visibility = 'hidden'; }, finalHideDelay);
         setTimeout(() => { console.log(`Initializing Typed.js (Scheduled for ~${typedJsInitDelay}ms)`); initializeTypedJs(); }, typedJsInitDelay);
         setTimeout(() => { console.log(`Initializing Marquee (Scheduled for ~${marqueeInitDelay}ms)`); initializeMarquee(); }, marqueeInitDelay);
+        setTimeout(() => { console.log(`Initializing Countdown (Scheduled for ~${countdownInitDelay}ms)`); initializeCountdown(); }, countdownInitDelay);
+        setTimeout(() => { console.log(`Initializing BackToTop (Scheduled for ~${backToTopInitDelay}ms)`); initializeBackToTopButton(); }, backToTopInitDelay); // Initialize Back to Top
         setTimeout(() => { console.log(`Initializing AOS (Scheduled for ~${aosInitDelay}ms)`); initAos(); }, aosInitDelay);
         console.log("Setting introPlayed flag in sessionStorage."); sessionStorage.setItem('introPlayed', 'true');
     } // End else (Intro Will Play)
@@ -145,255 +238,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Popover Logic (Click & Auto-Hide) ===
     const pfpImage = document.getElementById('navbarPfpImage');
-    let popoverHideTimeout = null; // Variable to store the timeout ID
-
+    let popoverHideTimeout = null;
     if (pfpImage) {
         try {
-            // Initialize popover with manual trigger is crucial
-            const popover = new bootstrap.Popover(pfpImage, {
-                placement: 'bottom',
-                customClass: 'cartoon-popover',
-                trigger: 'manual' // Make sure trigger is manual
-            });
-
-            // Add CLICK listener to the profile picture
+            const popover = new bootstrap.Popover(pfpImage, { placement: 'bottom', customClass: 'cartoon-popover', trigger: 'manual' });
             pfpImage.addEventListener('click', () => {
-                console.log("PFP clicked.");
-
-                // If a hide timeout is already scheduled, clear it
-                if (popoverHideTimeout) {
-                    clearTimeout(popoverHideTimeout);
-                    console.log("Cleared existing popover hide timeout.");
-                }
-
-                // Show the popover
-                console.log("Showing popover.");
+                if (popoverHideTimeout) { clearTimeout(popoverHideTimeout); }
                 popover.show();
-
-                // Set a new timeout to automatically hide the popover after 3 seconds (3000ms)
-                console.log("Scheduling popover hide in 3 seconds.");
-                popoverHideTimeout = setTimeout(() => {
-                    console.log("Auto-hiding popover now.");
-                    popover.hide();
-                    popoverHideTimeout = null; // Reset the timeout ID variable
-                }, 3000); // 3000 milliseconds = 3 seconds. Adjust if needed.
+                popoverHideTimeout = setTimeout(() => { popover.hide(); popoverHideTimeout = null; }, 3000);
             });
-
             console.log("Popover logic initialized (Click trigger, Auto-Hide).");
-
-        } catch (e) {
-            console.error("Error during popover setup:", e);
-        }
-    } else {
-        console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover.");
-    }
+        } catch (e) { console.error("Error during popover setup:", e); }
+    } else { console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover."); }
     // === End Popover Logic ===
 
 
-    // === Video Control Logic for Vision Pro ===
-    const visionVideoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
-    const visionVideoElement = document.getElementById('visionProVideo');
-    const visionProModalElement = document.getElementById('visionProModal');
+    // === Generic Video Control Function ===
+    function setupVideoControls(videoId, buttonId, modalId) {
+        const playPauseBtn = document.getElementById(buttonId);
+        const videoElement = document.getElementById(videoId);
+        const modalElement = document.getElementById(modalId);
 
-    if (visionVideoPlayPauseBtn && visionVideoElement && visionProModalElement) {
-        try {
-            const iconElement = visionVideoPlayPauseBtn.querySelector('i');
-            const updateButtonIcon = () => {
-                const isPaused = visionVideoElement.paused || visionVideoElement.ended;
-                iconElement.classList.toggle('bi-pause-fill', !isPaused);
-                iconElement.classList.toggle('bi-play-fill', isPaused);
-                visionVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-            };
-            visionVideoPlayPauseBtn.addEventListener('click', () => {
-                console.log("Vision Pro Play/Pause button clicked.");
-                if (visionVideoElement.paused || visionVideoElement.ended) {
-                    visionVideoElement.play().catch(e => console.error("Error trying to play Vision Pro video:", e));
-                } else {
-                    visionVideoElement.pause();
-                }
-            });
-            visionVideoElement.addEventListener('play', updateButtonIcon);
-            visionVideoElement.addEventListener('pause', updateButtonIcon);
-            visionVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon();
-            visionProModalElement.addEventListener('shown.bs.modal', () => {
-                console.log("Vision Pro Modal shown. Attempting to play video.");
-                // Ensure muted for mobile compatibility
-                visionVideoElement.muted = true;
-                const playPromise = visionVideoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => { console.log("Vision Pro Video play() promise resolved."); updateButtonIcon(); })
-                               .catch(error => { console.warn("Vision Pro Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
-                } else { updateButtonIcon(); }
-            });
-            visionProModalElement.addEventListener('hidden.bs.modal', () => {
-                 console.log("Vision Pro Modal hidden. Pausing video.");
-                if (!visionVideoElement.paused) { visionVideoElement.pause(); }
-            });
-            console.log("Video controls initialized for #visionProVideo.");
-        } catch (e) { console.error("Error setting up Vision Pro video controls:", e); }
-    } else {
-         if (!visionVideoPlayPauseBtn) console.warn("Video play/pause button (#videoPlayPauseBtn) not found.");
-         if (!visionVideoElement) console.warn("Video element (#visionProVideo) not found.");
-         if (!visionProModalElement) console.warn("Modal element (#visionProModal) not found for video control.");
+        if (playPauseBtn && videoElement && modalElement) {
+            try {
+                const iconElement = playPauseBtn.querySelector('i');
+                const updateButtonIcon = () => {
+                    if (!iconElement) return;
+                    const isPaused = videoElement.paused || videoElement.ended;
+                    iconElement.classList.toggle('bi-pause-fill', !isPaused);
+                    iconElement.classList.toggle('bi-play-fill', isPaused);
+                    playPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+                };
+
+                playPauseBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (videoElement.paused || videoElement.ended) {
+                        videoElement.play().catch(err => console.error(`Error trying to play ${videoId}:`, err));
+                    } else { videoElement.pause(); }
+                });
+
+                videoElement.addEventListener('play', updateButtonIcon);
+                videoElement.addEventListener('pause', updateButtonIcon);
+                videoElement.addEventListener('ended', updateButtonIcon);
+                updateButtonIcon();
+
+                modalElement.addEventListener('shown.bs.modal', () => {
+                    videoElement.muted = true;
+                    const playPromise = videoElement.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(updateButtonIcon).catch(error => { console.warn(`${videoId} play() failed:`, error); updateButtonIcon(); });
+                    } else { updateButtonIcon(); }
+                });
+
+                modalElement.addEventListener('hidden.bs.modal', () => {
+                    if (!videoElement.paused) { videoElement.pause(); }
+                });
+                console.log(`Video controls initialized for #${videoId}.`);
+
+            } catch (err) { console.error(`Error setting up video controls for ${videoId}:`, err); }
+        } else { /* Warnings handled in previous function version */ }
     }
-    // === End Vision Pro Video Control Logic ===
+    // === End Generic Video Control Function ===
 
-
-    // === Video Control Logic for Music Classifier ===
-    const musicVideoPlayPauseBtn = document.getElementById('musicVideoPlayPauseBtn');
-    const musicVideoElement = document.getElementById('musicVideo');
-    const musicClassifierModalElement = document.getElementById('musicClassifierModal');
-
-    if (musicVideoPlayPauseBtn && musicVideoElement && musicClassifierModalElement) {
-        try {
-            const iconElement = musicVideoPlayPauseBtn.querySelector('i');
-            const updateButtonIcon = () => {
-                const isPaused = musicVideoElement.paused || musicVideoElement.ended;
-                iconElement.classList.toggle('bi-pause-fill', !isPaused);
-                iconElement.classList.toggle('bi-play-fill', isPaused);
-                musicVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-            };
-            musicVideoPlayPauseBtn.addEventListener('click', () => {
-                console.log("Music Classifier Play/Pause button clicked.");
-                if (musicVideoElement.paused || musicVideoElement.ended) {
-                    musicVideoElement.play().catch(e => console.error("Error trying to play Music Classifier video:", e));
-                } else {
-                    musicVideoElement.pause();
-                }
-            });
-            musicVideoElement.addEventListener('play', updateButtonIcon);
-            musicVideoElement.addEventListener('pause', updateButtonIcon);
-            musicVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon();
-            musicClassifierModalElement.addEventListener('shown.bs.modal', () => {
-                console.log("Music Classifier Modal shown. Attempting to play video.");
-                 // Ensure muted for mobile compatibility
-                musicVideoElement.muted = true;
-                const playPromise = musicVideoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => { console.log("Music Classifier Video play() promise resolved."); updateButtonIcon(); })
-                               .catch(error => { console.warn("Music Classifier Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
-                } else { updateButtonIcon(); }
-            });
-            musicClassifierModalElement.addEventListener('hidden.bs.modal', () => {
-                 console.log("Music Classifier Modal hidden. Pausing video.");
-                if (!musicVideoElement.paused) { musicVideoElement.pause(); }
-            });
-            console.log("Video controls initialized for #musicVideo.");
-        } catch (e) {
-            console.error("Error setting up Music Classifier video controls:", e);
-        }
-    } else {
-         if (!musicVideoPlayPauseBtn) console.warn("Video play/pause button (#musicVideoPlayPauseBtn) not found.");
-         if (!musicVideoElement) console.warn("Video element (#musicVideo) not found.");
-         if (!musicClassifierModalElement) console.warn("Modal element (#musicClassifierModal) not found for video control.");
-    }
-    // === End Music Classifier Video Control Logic ===
-
-
-    // === Video Control Logic for Forsaken ===
-    const forsakenVideoPlayPauseBtn = document.getElementById('forsakenVideoPlayPauseBtn');
-    const forsakenVideoElement = document.getElementById('forsakenVideo');
-    const projectThreeModalElement = document.getElementById('projectThreeModal');
-
-    if (forsakenVideoPlayPauseBtn && forsakenVideoElement && projectThreeModalElement) {
-        try {
-            const iconElement = forsakenVideoPlayPauseBtn.querySelector('i');
-            const updateButtonIcon = () => {
-                const isPaused = forsakenVideoElement.paused || forsakenVideoElement.ended;
-                iconElement.classList.toggle('bi-pause-fill', !isPaused);
-                iconElement.classList.toggle('bi-play-fill', isPaused);
-                forsakenVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-            };
-            forsakenVideoPlayPauseBtn.addEventListener('click', () => {
-                console.log("Forsaken Video Play/Pause button clicked.");
-                if (forsakenVideoElement.paused || forsakenVideoElement.ended) {
-                    forsakenVideoElement.play().catch(e => console.error("Error trying to play Forsaken video:", e));
-                } else {
-                    forsakenVideoElement.pause();
-                }
-            });
-            forsakenVideoElement.addEventListener('play', updateButtonIcon);
-            forsakenVideoElement.addEventListener('pause', updateButtonIcon);
-            forsakenVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon(); // Initial state check
-            projectThreeModalElement.addEventListener('shown.bs.modal', () => {
-                console.log("Forsaken Modal (Project Three) shown. Attempting to play video.");
-                 // Ensure muted for mobile compatibility
-                forsakenVideoElement.muted = true;
-                const playPromise = forsakenVideoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => { console.log("Forsaken Video play() promise resolved."); updateButtonIcon(); })
-                               .catch(error => { console.warn("Forsaken Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
-                } else { updateButtonIcon(); }
-            });
-            projectThreeModalElement.addEventListener('hidden.bs.modal', () => {
-                 console.log("Forsaken Modal (Project Three) hidden. Pausing video.");
-                if (!forsakenVideoElement.paused) { forsakenVideoElement.pause(); }
-            });
-            console.log("Video controls initialized for #forsakenVideo.");
-        } catch (e) {
-            console.error("Error setting up Forsaken video controls:", e);
-        }
-    } else {
-         if (!forsakenVideoPlayPauseBtn) console.warn("Video play/pause button (#forsakenVideoPlayPauseBtn) not found.");
-         if (!forsakenVideoElement) console.warn("Video element (#forsakenVideo) not found.");
-         if (!projectThreeModalElement) console.warn("Modal element (#projectThreeModal) not found for video control.");
-    }
-    // === End Forsaken Video Control Logic ===
-
-
-    // === Video Control Logic for NetWorkAI ===
-    const networkAIVideoPlayPauseBtn = document.getElementById('networkAIVideoPlayPauseBtn');
-    const networkAIVideoElement = document.getElementById('networkAIVideo');
-    const networkAIModalElement = document.getElementById('networkAIModal');
-
-    if (networkAIVideoPlayPauseBtn && networkAIVideoElement && networkAIModalElement) {
-        try {
-            const iconElement = networkAIVideoPlayPauseBtn.querySelector('i');
-            const updateButtonIcon = () => {
-                const isPaused = networkAIVideoElement.paused || networkAIVideoElement.ended;
-                iconElement.classList.toggle('bi-pause-fill', !isPaused);
-                iconElement.classList.toggle('bi-play-fill', isPaused);
-                networkAIVideoPlayPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-            };
-            networkAIVideoPlayPauseBtn.addEventListener('click', () => {
-                console.log("NetWorkAI Video Play/Pause button clicked.");
-                if (networkAIVideoElement.paused || networkAIVideoElement.ended) {
-                    networkAIVideoElement.play().catch(e => console.error("Error trying to play NetWorkAI video:", e));
-                } else {
-                    networkAIVideoElement.pause();
-                }
-            });
-            networkAIVideoElement.addEventListener('play', updateButtonIcon);
-            networkAIVideoElement.addEventListener('pause', updateButtonIcon);
-            networkAIVideoElement.addEventListener('ended', updateButtonIcon);
-            updateButtonIcon(); // Initial state check
-            networkAIModalElement.addEventListener('shown.bs.modal', () => {
-                console.log("NetWorkAI Modal shown. Attempting to play video.");
-                // Ensure muted for mobile compatibility
-                networkAIVideoElement.muted = true;
-                const playPromise = networkAIVideoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => { console.log("NetWorkAI Video play() promise resolved."); updateButtonIcon(); })
-                               .catch(error => { console.warn("NetWorkAI Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
-                } else { updateButtonIcon(); }
-            });
-            networkAIModalElement.addEventListener('hidden.bs.modal', () => {
-                 console.log("NetWorkAI Modal hidden. Pausing video.");
-                if (!networkAIVideoElement.paused) { networkAIVideoElement.pause(); }
-            });
-            console.log("Video controls initialized for #networkAIVideo.");
-        } catch (e) {
-            console.error("Error setting up NetWorkAI video controls:", e);
-        }
-    } else {
-         if (!networkAIVideoPlayPauseBtn) console.warn("Video play/pause button (#networkAIVideoPlayPauseBtn) not found.");
-         if (!networkAIVideoElement) console.warn("Video element (#networkAIVideo) not found.");
-         if (!networkAIModalElement) console.warn("Modal element (#networkAIModal) not found for video control.");
-    }
-    // === End NetWorkAI Video Control Logic ===
-
+    // --- Setup Video Controls for Each Project ---
+    setupVideoControls('visionProVideo', 'videoPlayPauseBtn', 'visionProModal');
+    setupVideoControls('musicVideo', 'musicVideoPlayPauseBtn', 'musicClassifierModal');
+    setupVideoControls('forsakenVideo', 'forsakenVideoPlayPauseBtn', 'projectThreeModal');
+    setupVideoControls('networkAIVideo', 'networkAIVideoPlayPauseBtn', 'networkAIModal');
+    // --- End Video Setup ---
 
 }); // --- End DOMContentLoaded ---
