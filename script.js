@@ -1,4 +1,4 @@
-// Contents of script.js (v6.32 - Added NetWorkAI Video Controls)
+// Contents of script.js (v6.32 - Consistent Video Logic Check)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -218,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonIcon();
             visionProModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Vision Pro Modal shown. Attempting to play video.");
+                // Ensure muted for mobile compatibility
                 visionVideoElement.muted = true;
                 const playPromise = visionVideoElement.play();
                 if (playPromise !== undefined) {
@@ -267,6 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonIcon();
             musicClassifierModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Music Classifier Modal shown. Attempting to play video.");
+                 // Ensure muted for mobile compatibility
                 musicVideoElement.muted = true;
                 const playPromise = musicVideoElement.play();
                 if (playPromise !== undefined) {
@@ -318,6 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateButtonIcon(); // Initial state check
             projectThreeModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("Forsaken Modal (Project Three) shown. Attempting to play video.");
+                 // Ensure muted for mobile compatibility
                 forsakenVideoElement.muted = true;
                 const playPromise = forsakenVideoElement.play();
                 if (playPromise !== undefined) {
@@ -341,12 +344,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // === End Forsaken Video Control Logic ===
 
 
-    // === Video Control Logic for NetWorkAI (NEW) ===
-    const networkAIVideoPlayPauseBtn = document.getElementById('networkAIVideoPlayPauseBtn'); // New ID
-    const networkAIVideoElement = document.getElementById('networkAIVideo'); // New ID
-    const networkAIModalElement = document.getElementById('networkAIModal'); // New ID for modal
+    // === Video Control Logic for NetWorkAI ===
+    const networkAIVideoPlayPauseBtn = document.getElementById('networkAIVideoPlayPauseBtn');
+    const networkAIVideoElement = document.getElementById('networkAIVideo');
+    const networkAIModalElement = document.getElementById('networkAIModal');
 
-    if (networkAIVideoPlayPauseBtn && networkAIVideoElement && networkAIModalElement) { // Check new IDs
+    if (networkAIVideoPlayPauseBtn && networkAIVideoElement && networkAIModalElement) {
         try {
             const iconElement = networkAIVideoPlayPauseBtn.querySelector('i');
             const updateButtonIcon = () => {
@@ -367,10 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
             networkAIVideoElement.addEventListener('pause', updateButtonIcon);
             networkAIVideoElement.addEventListener('ended', updateButtonIcon);
             updateButtonIcon(); // Initial state check
-
-            // Play attempt on modal show
             networkAIModalElement.addEventListener('shown.bs.modal', () => {
                 console.log("NetWorkAI Modal shown. Attempting to play video.");
+                // Ensure muted for mobile compatibility
                 networkAIVideoElement.muted = true;
                 const playPromise = networkAIVideoElement.play();
                 if (playPromise !== undefined) {
@@ -378,7 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                .catch(error => { console.warn("NetWorkAI Video play() promise rejected. Autoplay likely prevented.", error); updateButtonIcon(); });
                 } else { updateButtonIcon(); }
             });
-            // Pause video when modal is closed
             networkAIModalElement.addEventListener('hidden.bs.modal', () => {
                  console.log("NetWorkAI Modal hidden. Pausing video.");
                 if (!networkAIVideoElement.paused) { networkAIVideoElement.pause(); }
