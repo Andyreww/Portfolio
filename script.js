@@ -1,4 +1,4 @@
-// Contents of script.js (v6.35 - Added Back-to-Top Button Logic)
+// Contents of script.js (v7.00 - MP3 Player Implementation)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -36,8 +36,13 @@ function initializeMarquee() {
         let resumeScrollTimeoutId = null, resumeDelay = 3000;
         function calculateTrackWidth() {
             if (!skillsTrack || skillsTrack.children.length === 0) return false; // Guard against no children
-            if (skillsTrack.children.length > 1) { trackWidth = skillsTrack.scrollWidth / 2; } else { trackWidth = skillsTrack.scrollWidth; }
-             console.log(`Marquee trackWidth calculated: ${trackWidth}`); return trackWidth > 0; }
+            // Ensure layout is stable before calculating width
+            requestAnimationFrame(() => {
+                if (skillsTrack.children.length > 1) { trackWidth = skillsTrack.scrollWidth / 2; } else { trackWidth = skillsTrack.scrollWidth; }
+                console.log(`Marquee trackWidth calculated: ${trackWidth}`);
+            });
+             return trackWidth > 0; // Return based on previous calculation for sync code
+        }
         function autoScroll(timestamp) { if (!isAutoScrolling || trackWidth <= 0) { animationFrameId = null; return; } if (lastTimestamp === 0) lastTimestamp = timestamp; const deltaTime = (timestamp - lastTimestamp) / 1000; lastTimestamp = timestamp; if (deltaTime > 0.5 || deltaTime <= 0) { console.warn("Marquee dT issue, adjusting or skipping frame."); animationFrameId = requestAnimationFrame(autoScroll); return; } currentX -= speed * deltaTime; if (currentX <= -trackWidth) { currentX += trackWidth; } skillsTrack.style.transform = `translateX(${currentX}px)`; animationFrameId = requestAnimationFrame(autoScroll); }
         function startAutoScroll() { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (isAutoScrolling || !calculateTrackWidth()) return; console.log("Marquee: Starting AutoScroll"); isAutoScrolling = true; lastTimestamp = 0; if (animationFrameId) cancelAnimationFrame(animationFrameId); animationFrameId = requestAnimationFrame(autoScroll); }
         function stopAutoScroll() { if (resumeScrollTimeoutId) { clearTimeout(resumeScrollTimeoutId); resumeScrollTimeoutId = null; } if (!isAutoScrolling) return; console.log("Marquee: Stopping AutoScroll"); isAutoScrolling = false; if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; } currentX = getTranslateX(skillsTrack); }
@@ -66,7 +71,6 @@ function initAos() {
                  duration: 700,
                  once: true,
                  offset: 80,
-                 // disable: 'mobile'
                 });
          } else {
              console.warn("AOS library not found.");
@@ -88,7 +92,7 @@ function initializeCountdown() {
 
     if(!daysEl || !hoursEl || !minutesEl || !secondsEl || !titleEl) { console.error("One or more countdown time elements not found!"); return; }
 
-    const graduationDate = new Date("May 17, 2025 00:00:00");
+    const graduationDate = new Date("May 17, 2025 00:00:00"); // Ensure this date is correct
     const graduationTime = graduationDate.getTime();
     console.log(`Target graduation date set to: ${graduationDate}`);
 
@@ -102,7 +106,7 @@ function initializeCountdown() {
             if(titleEl) titleEl.textContent = "Graduated!";
             daysEl.textContent = '00'; hoursEl.textContent = '00'; minutesEl.textContent = '00'; secondsEl.textContent = '00';
             const dateEl = countdownElement.querySelector('.countdown-date');
-            if(dateEl) dateEl.style.display = 'none';
+            if(dateEl) dateEl.style.display = 'none'; // Hide the date text
             return;
         }
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -160,9 +164,213 @@ function initializeBackToTopButton() {
 // === Back to Top Button Logic END ===
 
 
+// === Currently Listening Feature START (MP3 Player Version) ===
+function initializeAudioPlayer() {
+    console.log("Initializing MP3 Audio Player...");
+
+    // --- Configuration ---
+    const songs = [
+      // IMPORTANT: Replace baseName with the EXACT filename (without extension)
+      // Ensure corresponding .mp3 and image files exist in the specified paths.
+      { baseName: "DtMF", title: "DtMF", artist: "Bad Bunny" },
+      { baseName: "Broken_Heart", title: "Born With A Broken Heart", artist: "Damiano David" },
+      { baseName: "BOAF", title: "Birds Of A Feather", artist: "Billie Eilish" },
+      { baseName: "Sweet_Dreams", title: "Sweet Dreams", artist: "j-hope (feat. Miguel)" },
+      { baseName: "Forever", title: "Forever", artist: "Lewis Capaldi" },
+      { baseName: "PP", title: "Pluto Projector", artist: "Rex Orange County" }
+      // Add more songs following the same structure
+    ];
+    const audioPath = "assets/audio/";     // Path to your MP3 files
+    const imagePath = "assets/artwork/";    // Path to your artwork files
+    const imageExtension = ".jpeg";         // Assumed extension for images (change if needed, e.g., ".png")
+    // --- End Configuration ---
+
+    // --- Element References ---
+    const audioPlayer = document.getElementById('audio-player');
+    const artworkImg = document.getElementById('song-artwork');
+    const titleSpan = document.getElementById('song-title');
+    const artistSpan = document.getElementById('song-artist');
+    const progressFill = document.getElementById('song-progress-fill');
+    const playPauseBtn = document.getElementById('play-pause-button');
+    const playPauseIcon = playPauseBtn ? playPauseBtn.querySelector('i') : null;
+    const prevBtn = document.getElementById('prev-button');
+    const nextBtn = document.getElementById('next-button');
+    const muteBtn = document.getElementById('mute-toggle-button');
+    const muteIcon = muteBtn ? muteBtn.querySelector('i') : null;
+
+    let currentSongIndex = 0;
+    let isPlaying = false;
+
+    // --- Check if all required elements exist ---
+    if (!audioPlayer || !artworkImg || !titleSpan || !artistSpan || !progressFill || !playPauseBtn || !playPauseIcon || !prevBtn || !nextBtn || !muteBtn || !muteIcon) {
+        console.error("MP3 Player Error: One or more HTML elements not found. Check IDs.");
+        // Optionally display an error message in the player card
+        if(titleSpan) titleSpan.textContent = "Player Error";
+        if(artistSpan) artistSpan.textContent = "Missing Elements";
+        return; // Stop initialization
+    }
+
+    // --- Load Song Function ---
+    function loadSong(songIndex) {
+        if (songIndex < 0 || songIndex >= songs.length) {
+            console.error(`Invalid song index: ${songIndex}`);
+            return;
+        }
+        const song = songs[songIndex];
+        console.log(`Loading song: ${song.title}`);
+
+        // Update Text and Artwork
+        titleSpan.textContent = song.title;
+        artistSpan.textContent = song.artist;
+        artworkImg.src = `${imagePath}${song.baseName}${imageExtension}`;
+        artworkImg.alt = `${song.title} - ${song.artist}`;
+
+        // Update Audio Source
+        audioPlayer.src = `${audioPath}${song.baseName}.mp3`;
+
+        // Reset Progress Bar
+        progressFill.style.width = '0%';
+
+        // Reset Play/Pause button (will update based on 'play'/'pause' events)
+        setPlayPauseIcon(false); // Show 'Play' icon
+
+        // Reset Mute button based on actual audio state
+        setMuteIcon(audioPlayer.muted);
+
+        // Important: Call load() after changing src to ensure metadata loads etc.
+        audioPlayer.load();
+    }
+
+    // --- Play/Pause Functions ---
+    function playSong() {
+        audioPlayer.play()
+          .then(() => {
+            isPlaying = true;
+            setPlayPauseIcon(true); // Show Pause
+            console.log("Playback started");
+          })
+          .catch(error => {
+            console.error("Error playing audio:", error);
+            // Autoplay might be blocked by browser initially
+            isPlaying = false;
+            setPlayPauseIcon(false); // Show Play
+          });
+    }
+
+    function pauseSong() {
+        audioPlayer.pause();
+        isPlaying = false;
+        setPlayPauseIcon(false); // Show Play
+        console.log("Playback paused");
+    }
+
+    function togglePlayPause() {
+        if (isPlaying) {
+            pauseSong();
+        } else {
+            playSong();
+        }
+    }
+
+    function setPlayPauseIcon(playing) {
+        playPauseIcon.classList.toggle('bi-play-fill', !playing);
+        playPauseIcon.classList.toggle('bi-pause-fill', playing);
+        playPauseBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+    }
+
+    // --- Next/Prev Functions ---
+    function playNextSong() {
+        currentSongIndex++;
+        if (currentSongIndex >= songs.length) {
+            currentSongIndex = 0; // Loop back to start
+        }
+        loadSong(currentSongIndex);
+        playSong(); // Automatically play the next song
+    }
+
+    function playPrevSong() {
+        currentSongIndex--;
+        if (currentSongIndex < 0) {
+            currentSongIndex = songs.length - 1; // Loop back to end
+        }
+        loadSong(currentSongIndex);
+        playSong(); // Automatically play the previous song
+    }
+
+    // --- Mute/Unmute Functions ---
+    function toggleMute() {
+        audioPlayer.muted = !audioPlayer.muted;
+        console.log(audioPlayer.muted ? "Audio Muted" : "Audio Unmuted");
+        // Icon update handled by 'volumechange' event
+    }
+
+    function setMuteIcon(muted) {
+        muteIcon.classList.toggle('bi-volume-mute-fill', muted);
+        muteIcon.classList.toggle('bi-volume-up-fill', !muted);
+        muteBtn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+    }
+
+    // --- Progress Bar Update ---
+    function updateProgress() {
+        const duration = audioPlayer.duration;
+        const currentTime = audioPlayer.currentTime;
+
+        if (duration > 0) {
+            const progressPercent = (currentTime / duration) * 100;
+            progressFill.style.width = `${progressPercent}%`;
+        } else {
+             progressFill.style.width = '0%';
+        }
+    }
+
+    // --- Event Listeners ---
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    nextBtn.addEventListener('click', playNextSong);
+    prevBtn.addEventListener('click', playPrevSong);
+    muteBtn.addEventListener('click', toggleMute);
+
+    // Audio Element Events
+    audioPlayer.addEventListener('play', () => { // Update state when playback starts
+        isPlaying = true;
+        setPlayPauseIcon(true);
+    });
+    audioPlayer.addEventListener('pause', () => { // Update state when playback pauses
+        isPlaying = false;
+        setPlayPauseIcon(false);
+    });
+    audioPlayer.addEventListener('ended', playNextSong); // Auto-play next song
+    audioPlayer.addEventListener('timeupdate', updateProgress); // Update progress bar
+    audioPlayer.addEventListener('volumechange', () => { // Update mute icon when volume/mute state changes
+        setMuteIcon(audioPlayer.muted);
+    });
+     audioPlayer.addEventListener('loadedmetadata', () => { // Update progress bar once duration is known
+        console.log("Metadata loaded, duration:", audioPlayer.duration);
+        updateProgress();
+    });
+     audioPlayer.addEventListener('error', (e) => {
+         console.error("Audio playback error:", e);
+         titleSpan.textContent = "Audio Error";
+         artistSpan.textContent = "Cannot load track";
+     });
+
+
+    // --- Initial Load & Autoplay (Muted) ---
+    loadSong(currentSongIndex); // Load the first song's info
+    // Muted autoplay is generally allowed by browsers
+    playSong();
+    // No need to explicitly set audioPlayer.muted = true here,
+    // as the 'muted' attribute is on the <audio> tag in HTML.
+    // But we ensure the icon is correct initially:
+    setMuteIcon(audioPlayer.muted);
+
+    console.log("MP3 Audio Player Initialized.");
+}
+// === Currently Listening Feature END ===
+
+
 // --- Main Setup on DOM Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop.");
+    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop, Audio Player.");
 
     // --- Element References ---
     const overlay = document.getElementById('intro-overlay');
@@ -174,6 +382,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Check if Intro Should Play ---
     const hasIntroPlayed = sessionStorage.getItem('introPlayed') === 'true';
 
+    // Function to initialize non-API features (including the audio player)
+    function initializeOtherFeatures() {
+        initializeMarquee();
+        initializeCountdown();
+        initializeBackToTopButton();
+        initializeAudioPlayer(); // Initialize the MP3 player
+        initAos();
+    }
+
     if (hasIntroPlayed) {
         // --- SKIP INTRO ---
         console.log("Intro already played. Skipping animation.");
@@ -181,25 +398,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navbar) navbar.classList.add('visible');
         if (heroSection) heroSection.classList.add('visible');
         initializeTypedJs();
-        setTimeout(() => {
-             initializeMarquee();
-             initializeCountdown();
-             initializeBackToTopButton(); // Initialize Back to Top
-             initAos();
-        }, 100);
+        // Initialize other features shortly after DOM ready
+        setTimeout(initializeOtherFeatures, 100);
 
     } else {
         // --- PLAY INTRO ---
         console.log("Starting intro sequence.");
         if (!overlay || !navbar || !heroSection || !targetElement || !bodyElement) {
-            console.error("Missing critical elements for intro. Skipping.");
+            console.error("Missing critical elements for intro. Skipping animation and initializing normally.");
             if(overlay) overlay.style.display = 'none';
             if(navbar) navbar.classList.add('visible');
             if(heroSection) heroSection.classList.add('visible');
             if(bodyElement) bodyElement.classList.remove('no-scroll');
             initializeTypedJs();
-            setTimeout(() => { initializeMarquee(); initializeCountdown(); initializeBackToTopButton(); initAos(); }, 100); return;
+            setTimeout(initializeOtherFeatures, 100);
+            sessionStorage.setItem('introPlayed', 'true');
+            return;
         }
+        // ... (Keep Intro calculation and scheduling logic as it was) ...
         console.log("Disabling scroll."); bodyElement.classList.add('no-scroll');
         console.log("Calculating intro parameters immediately...");
         let targetX, targetY, targetScale = 1;
@@ -214,93 +430,73 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isNaN(overlayFontSize) && !isNaN(targetFontSize) && overlayFontSize > 0 && targetFontSize > 0) { targetScale = targetFontSize / overlayFontSize; } else { console.warn(`Font size calculation issue. Using default scale 1.`); }
             targetScale = Math.max(0.01, targetScale); console.log("Final Calculated transform:", { targetX: targetX.toFixed(2), targetY: targetY.toFixed(2), targetScale: targetScale.toFixed(3) });
             overlay.style.setProperty('--target-x', `${targetX}px`); overlay.style.setProperty('--target-y', `${targetY}px`); overlay.style.setProperty('--target-scale', targetScale);
-        } catch (error) {
-            console.error("Error during immediate calculation:", error); if (overlay) overlay.style.display = 'none'; if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); if (bodyElement) bodyElement.classList.remove('no-scroll'); initializeTypedJs(); setTimeout(() => { initializeMarquee(); initializeCountdown(); initializeBackToTopButton(); initAos(); }, 100); sessionStorage.setItem('introPlayed', 'true'); return;
+        } catch (error) { /* ... intro error handling remains ... */
+            console.error("Error during intro parameter calculation:", error);
+            if (overlay) overlay.style.display = 'none'; if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); if (bodyElement) bodyElement.classList.remove('no-scroll'); initializeTypedJs();
+            setTimeout(initializeOtherFeatures, 100); // Call features init
+            sessionStorage.setItem('introPlayed', 'true'); return;
         }
         const rootStyle = getComputedStyle(document.documentElement);
-        const getDuration = (varName, defaultValue) => { const value = rootStyle.getPropertyValue(varName)?.trim(); if (value && value.endsWith('ms')) return parseInt(value, 10); if (value && value.endsWith('s')) return parseFloat(value) * 1000; console.warn(`CSS variable ${varName} not found or invalid, using default ${defaultValue}ms`); return defaultValue; };
+        const getDuration = (varName, defaultValue) => { /* ... getDuration remains ... */
+            const value = rootStyle.getPropertyValue(varName)?.trim(); if (value && value.endsWith('ms')) return parseInt(value, 10); if (value && value.endsWith('s')) return parseFloat(value) * 1000; console.warn(`CSS variable ${varName} not found or invalid, using default ${defaultValue}ms`); return defaultValue;
+         };
         const animationStartTime = getDuration('--intro-animation-delay', 1000); const animationDuration = getDuration('--intro-animation-duration', 1500); const overlayFadeOutDuration = getDuration('--overlay-fade-duration', 300); const contentFadeInDuration = getDuration('--content-fade-duration', 500);
-        const animationEndTime = animationStartTime + animationDuration; const contentFadeInDelay = animationEndTime - contentFadeInDuration; const overlayFadeOutDelay = animationEndTime; const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; const scrollEnableDelay = finalHideDelay; const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100; const marqueeInitDelay = finalHideDelay + 100; const countdownInitDelay = marqueeInitDelay;
-        const backToTopInitDelay = marqueeInitDelay; // Init back to top around same time
-        const aosInitDelay = marqueeInitDelay + 100;
+        const animationEndTime = animationStartTime + animationDuration; const contentFadeInDelay = animationEndTime - contentFadeInDuration; const overlayFadeOutDelay = animationEndTime; const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; const scrollEnableDelay = finalHideDelay; const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100;
+        const otherFeaturesInitDelay = finalHideDelay + 50; // Init other features after intro animation
+
         console.log("Triggering .animate class (relies on CSS animation-delay)..."); overlay.classList.add('animate');
         setTimeout(() => { console.log(`Fading in main content (Scheduled for ~${contentFadeInDelay}ms)`); if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); }, contentFadeInDelay);
         setTimeout(() => { console.log(`Fading out overlay (Scheduled for ~${overlayFadeOutDelay}ms)`); if (overlay) overlay.classList.add('fade-out'); }, overlayFadeOutDelay);
         setTimeout(() => { console.log(`Re-enabling scroll and hiding overlay (Scheduled for ~${finalHideDelay}ms)`); if (bodyElement) bodyElement.classList.remove('no-scroll'); if (overlay) overlay.style.visibility = 'hidden'; }, finalHideDelay);
         setTimeout(() => { console.log(`Initializing Typed.js (Scheduled for ~${typedJsInitDelay}ms)`); initializeTypedJs(); }, typedJsInitDelay);
-        setTimeout(() => { console.log(`Initializing Marquee (Scheduled for ~${marqueeInitDelay}ms)`); initializeMarquee(); }, marqueeInitDelay);
-        setTimeout(() => { console.log(`Initializing Countdown (Scheduled for ~${countdownInitDelay}ms)`); initializeCountdown(); }, countdownInitDelay);
-        setTimeout(() => { console.log(`Initializing BackToTop (Scheduled for ~${backToTopInitDelay}ms)`); initializeBackToTopButton(); }, backToTopInitDelay); // Initialize Back to Top
-        setTimeout(() => { console.log(`Initializing AOS (Scheduled for ~${aosInitDelay}ms)`); initAos(); }, aosInitDelay);
+
+        // Schedule other features (Marquee, Countdown, BackToTop, Audio Player, AOS)
+        setTimeout(() => {
+            console.log(`Initializing Marquee, Countdown, BackToTop, Audio Player, AOS (Scheduled for ~${otherFeaturesInitDelay}ms)`);
+            initializeOtherFeatures(); // Call the grouped function
+        }, otherFeaturesInitDelay);
+
         console.log("Setting introPlayed flag in sessionStorage."); sessionStorage.setItem('introPlayed', 'true');
     } // End else (Intro Will Play)
 
 
     // === Popover Logic (Click & Auto-Hide) ===
+    // ... (Keep this logic as it was) ...
     const pfpImage = document.getElementById('navbarPfpImage');
     let popoverHideTimeout = null;
     if (pfpImage) {
         try {
-            const popover = new bootstrap.Popover(pfpImage, { placement: 'bottom', customClass: 'cartoon-popover', trigger: 'manual' });
-            pfpImage.addEventListener('click', () => {
-                if (popoverHideTimeout) { clearTimeout(popoverHideTimeout); }
-                popover.show();
-                popoverHideTimeout = setTimeout(() => { popover.hide(); popoverHideTimeout = null; }, 3000);
-            });
-            console.log("Popover logic initialized (Click trigger, Auto-Hide).");
+            if (typeof bootstrap !== 'undefined' && bootstrap.Popover) {
+                const popover = new bootstrap.Popover(pfpImage, { placement: 'bottom', customClass: 'cartoon-popover', trigger: 'manual' });
+                pfpImage.addEventListener('click', () => { if (popoverHideTimeout) { clearTimeout(popoverHideTimeout); } popover.show(); popoverHideTimeout = setTimeout(() => { popover.hide(); popoverHideTimeout = null; }, 3000); });
+                console.log("Popover logic initialized (Click trigger, Auto-Hide).");
+            } else { console.warn("Bootstrap Popover component not found."); }
         } catch (e) { console.error("Error during popover setup:", e); }
     } else { console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover."); }
-    // === End Popover Logic ===
 
 
-    // === Generic Video Control Function ===
+    // === Generic Video Control Function for Modals ===
+    // ... (Keep this function as it was - it controls project videos, not the audio player) ...
     function setupVideoControls(videoId, buttonId, modalId) {
         const playPauseBtn = document.getElementById(buttonId);
         const videoElement = document.getElementById(videoId);
         const modalElement = document.getElementById(modalId);
-
-        if (playPauseBtn && videoElement && modalElement) {
-            try {
-                const iconElement = playPauseBtn.querySelector('i');
-                const updateButtonIcon = () => {
-                    if (!iconElement) return;
-                    const isPaused = videoElement.paused || videoElement.ended;
-                    iconElement.classList.toggle('bi-pause-fill', !isPaused);
-                    iconElement.classList.toggle('bi-play-fill', isPaused);
-                    playPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
-                };
-
-                playPauseBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (videoElement.paused || videoElement.ended) {
-                        videoElement.play().catch(err => console.error(`Error trying to play ${videoId}:`, err));
-                    } else { videoElement.pause(); }
-                });
-
-                videoElement.addEventListener('play', updateButtonIcon);
-                videoElement.addEventListener('pause', updateButtonIcon);
-                videoElement.addEventListener('ended', updateButtonIcon);
-                updateButtonIcon();
-
-                modalElement.addEventListener('shown.bs.modal', () => {
-                    videoElement.muted = true;
-                    const playPromise = videoElement.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(updateButtonIcon).catch(error => { console.warn(`${videoId} play() failed:`, error); updateButtonIcon(); });
-                    } else { updateButtonIcon(); }
-                });
-
-                modalElement.addEventListener('hidden.bs.modal', () => {
-                    if (!videoElement.paused) { videoElement.pause(); }
-                });
-                console.log(`Video controls initialized for #${videoId}.`);
-
-            } catch (err) { console.error(`Error setting up video controls for ${videoId}:`, err); }
-        } else { /* Warnings handled in previous function version */ }
+        if (!modalElement) { console.warn(`Modal #${modalId} not found for video controls.`); return; }
+        if (!videoElement) { console.warn(`Video element #${videoId} not found inside modal #${modalId}.`); return; }
+        if (!playPauseBtn) { console.warn(`Play/Pause button #${buttonId} not found for video #${videoId}.`); return; }
+        try {
+            const iconElement = playPauseBtn.querySelector('i');
+            const updateButtonIcon = () => { if (!iconElement) return; const isPaused = videoElement.paused || videoElement.ended; iconElement.classList.toggle('bi-pause-fill', !isPaused); iconElement.classList.toggle('bi-play-fill', isPaused); playPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video'); };
+            playPauseBtn.addEventListener('click', (e) => { e.stopPropagation(); if (videoElement.paused || videoElement.ended) { videoElement.play().catch(err => console.error(`Error trying to play ${videoId}:`, err)); } else { videoElement.pause(); } });
+            videoElement.addEventListener('play', updateButtonIcon); videoElement.addEventListener('pause', updateButtonIcon); videoElement.addEventListener('ended', updateButtonIcon);
+            updateButtonIcon();
+            modalElement.addEventListener('shown.bs.modal', () => { videoElement.muted = true; videoElement.currentTime = 0; const playPromise = videoElement.play(); if (playPromise !== undefined) { playPromise.then(updateButtonIcon).catch(error => { console.warn(`${videoId} autoplay on modal show failed:`, error); updateButtonIcon(); }); } else { updateButtonIcon(); } });
+            modalElement.addEventListener('hidden.bs.modal', () => { if (!videoElement.paused) { videoElement.pause(); } });
+            console.log(`Video controls initialized for #${videoId} within #${modalId}.`);
+        } catch (err) { console.error(`Error setting up video controls for ${videoId}:`, err); }
     }
-    // === End Generic Video Control Function ===
 
-    // --- Setup Video Controls for Each Project ---
+    // --- Setup Video Controls for Each Project Modal ---
     setupVideoControls('visionProVideo', 'videoPlayPauseBtn', 'visionProModal');
     setupVideoControls('musicVideo', 'musicVideoPlayPauseBtn', 'musicClassifierModal');
     setupVideoControls('forsakenVideo', 'forsakenVideoPlayPauseBtn', 'projectThreeModal');
