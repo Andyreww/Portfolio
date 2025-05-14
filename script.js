@@ -1,4 +1,4 @@
-// Contents of script.js (v7.00 - MP3 Player Implementation)
+// Contents of script.js (v7.05 - Autoplay on Intro End)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -8,7 +8,31 @@ function initializeTypedJs() {
     if (typedJsInitialized) { console.log("Typed.js already initialized. Skipping."); return; }
     typedJsInitialized = true;
     console.log("Attempting to initialize Typed.js...");
-    var options = { strings: [ "I’m a computer science student", "I’m a movie lover", "I’m a passionate gamer", "I’m a problem-solver", "I’m a code enthusiast", "I’m a tech lover", "I’m a music fan", "I’m a lifelong learner", "I’m a creator", "I’m a tech geek", "I’m always coding", "I’m a digital artist", "I’m a future developer", "I’m a design thinker", "I’m a tech explorer" ], typeSpeed: 90, backSpeed: 70, backDelay: 1200, startDelay: 500, loop: true, showCursor: true };
+    var options = {
+        // Updated strings array
+        strings: [
+            "I’m a computer science graduate", // Changed from 'student'
+            "I’m a movie lover",
+            "I’m a passionate gamer",
+            "I’m a problem-solver",
+            "I’m a code enthusiast",
+            "I’m a tech lover",
+            "I’m a music fan",
+            "I’m a lifelong learner",
+            "I’m a creator",
+            "I’m a tech geek",
+            "I’m always coding",
+            "I’m a future developer", // Keep this one or change? Keeping for now.
+            "I’m a design thinker",
+            "I’m a tech explorer"
+        ],
+        typeSpeed: 90,
+        backSpeed: 70,
+        backDelay: 1200,
+        startDelay: 500,
+        loop: true,
+        showCursor: true
+    };
     try {
         const targetSpan = document.getElementById('typed-output');
         if (!targetSpan) { console.error("Target span #typed-output NOT FOUND!"); typedJsInitialized = false; return; }
@@ -183,7 +207,7 @@ function initializeAudioPlayer() {
         { baseName: "BOAF", title: "Birds Of A Feather", artist: "Billie Eilish" },
         { baseName: "Forever", title: "Forever", artist: "Lewis Capaldi" },
         { baseName: "TL", title: "The Line", artist: "Twenty One Pilots" }
-      
+
     ];
     const audioPath = "assets/audio/";     // Path to your MP3 files
     const imagePath = "assets/artwork/";    // Path to your artwork files
@@ -248,17 +272,22 @@ function initializeAudioPlayer() {
 
     // --- Play/Pause Functions ---
     function playSong() {
+        // Attempt to play and handle potential errors (like autoplay blocked)
         audioPlayer.play()
           .then(() => {
+            // Playback started successfully
             isPlaying = true;
             setPlayPauseIcon(true); // Show Pause
             console.log("Playback started");
           })
           .catch(error => {
-            console.error("Error playing audio:", error);
-            // Autoplay might be blocked by browser initially
+            // Playback failed (likely due to autoplay policy)
+            console.warn("Audio playback blocked (likely autoplay policy):", error);
             isPlaying = false;
             setPlayPauseIcon(false); // Show Play
+            // You could add UI here to prompt the user to click play
+            // Example: Display a message in the player card:
+            // artistSpan.textContent = "Click Play to start music";
           });
     }
 
@@ -359,13 +388,16 @@ function initializeAudioPlayer() {
      });
 
 
-    // --- Initial Load & Autoplay (Muted) ---
+    // --- Initial Load ---
     loadSong(currentSongIndex); // Load the first song's info
-    // Muted autoplay is generally allowed by browsers
+
+    // Autoplay attempt is now primarily handled after the intro animation finishes.
+    // Keep this initial playSong() call as a fallback for users who skip the intro.
+    // It might still be blocked by desktop browsers, but it's necessary here.
     playSong();
-    // No need to explicitly set audioPlayer.muted = true here,
-    // as the 'muted' attribute is on the <audio> tag in HTML.
-    // But we ensure the icon is correct initially:
+
+
+    // Ensure the mute icon reflects the initial muted state from HTML
     setMuteIcon(audioPlayer.muted);
 
     console.log("MP3 Audio Player Initialized.");
@@ -375,7 +407,7 @@ function initializeAudioPlayer() {
 
 // --- Main Setup on DOM Load ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop, Audio Player.");
+    console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop.");
 
     // --- Element References ---
     const overlay = document.getElementById('intro-overlay');
@@ -387,12 +419,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Check if Intro Should Play ---
     const hasIntroPlayed = sessionStorage.getItem('introPlayed') === 'true';
 
-    // Function to initialize non-API features (including the audio player)
-    function initializeOtherFeatures() {
+    // Function to initialize non-API features (excluding audio player from immediate call)
+    function initializeOtherFeaturesWithoutAudio() {
         initializeMarquee();
         initializeCountdown();
         initializeBackToTopButton();
-        initializeAudioPlayer(); // Initialize the MP3 player
         initAos();
     }
 
@@ -403,8 +434,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navbar) navbar.classList.add('visible');
         if (heroSection) heroSection.classList.add('visible');
         initializeTypedJs();
-        // Initialize other features shortly after DOM ready
-        setTimeout(initializeOtherFeatures, 100);
+        // Initialize other features and the audio player shortly after DOM ready
+        setTimeout(() => {
+            initializeOtherFeaturesWithoutAudio();
+            initializeAudioPlayer(); // Initialize and attempt autoplay here
+        }, 100);
 
     } else {
         // --- PLAY INTRO ---
@@ -416,7 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if(heroSection) heroSection.classList.add('visible');
             if(bodyElement) bodyElement.classList.remove('no-scroll');
             initializeTypedJs();
-            setTimeout(initializeOtherFeatures, 100);
+             // Initialize other features and the audio player immediately on error
+            setTimeout(() => {
+                initializeOtherFeaturesWithoutAudio();
+                initializeAudioPlayer(); // Initialize and attempt autoplay here
+            }, 100);
             sessionStorage.setItem('introPlayed', 'true');
             return;
         }
@@ -438,27 +476,56 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { /* ... intro error handling remains ... */
             console.error("Error during intro parameter calculation:", error);
             if (overlay) overlay.style.display = 'none'; if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); if (bodyElement) bodyElement.classList.remove('no-scroll'); initializeTypedJs();
-            setTimeout(initializeOtherFeatures, 100); // Call features init
+             // Initialize other features and the audio player immediately on error
+            setTimeout(() => {
+                initializeOtherFeaturesWithoutAudio();
+                initializeAudioPlayer(); // Initialize and attempt autoplay here
+            }, 100);
             sessionStorage.setItem('introPlayed', 'true'); return;
         }
         const rootStyle = getComputedStyle(document.documentElement);
         const getDuration = (varName, defaultValue) => { /* ... getDuration remains ... */
             const value = rootStyle.getPropertyValue(varName)?.trim(); if (value && value.endsWith('ms')) return parseInt(value, 10); if (value && value.endsWith('s')) return parseFloat(value) * 1000; console.warn(`CSS variable ${varName} not found or invalid, using default ${defaultValue}ms`); return defaultValue;
          };
-        const animationStartTime = getDuration('--intro-animation-delay', 1000); const animationDuration = getDuration('--intro-animation-duration', 1500); const overlayFadeOutDuration = getDuration('--overlay-fade-duration', 300); const contentFadeInDuration = getDuration('--content-fade-duration', 500);
-        const animationEndTime = animationStartTime + animationDuration; const contentFadeInDelay = animationEndTime - contentFadeInDuration; const overlayFadeOutDelay = animationEndTime; const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration; const scrollEnableDelay = finalHideDelay; const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100;
-        const otherFeaturesInitDelay = finalHideDelay + 50; // Init other features after intro animation
+        const animationStartTime = getDuration('--intro-animation-delay', 1000);
+        const animationDuration = getDuration('--intro-animation-duration', 1500);
+        const overlayFadeOutDuration = getDuration('--overlay-fade-duration', 300);
+        const contentFadeInDuration = getDuration('--content-fade-duration', 500);
+
+        const animationEndTime = animationStartTime + animationDuration;
+        const contentFadeInDelay = animationEndTime - contentFadeInDuration;
+        const overlayFadeOutDelay = animationEndTime;
+        const finalHideDelay = overlayFadeOutDelay + overlayFadeOutDuration;
+        const typedJsInitDelay = contentFadeInDelay + contentFadeInDuration + 100;
+
+        // Schedule other features (excluding audio player) to initialize after content fade-in
+        const otherFeaturesInitDelay = contentFadeInDelay + contentFadeInDuration + 50;
 
         console.log("Triggering .animate class (relies on CSS animation-delay)..."); overlay.classList.add('animate');
         setTimeout(() => { console.log(`Fading in main content (Scheduled for ~${contentFadeInDelay}ms)`); if (navbar) navbar.classList.add('visible'); if (heroSection) heroSection.classList.add('visible'); }, contentFadeInDelay);
-        setTimeout(() => { console.log(`Fading out overlay (Scheduled for ~${overlayFadeOutDelay}ms)`); if (overlay) overlay.classList.add('fade-out'); }, overlayFadeOutDelay);
-        setTimeout(() => { console.log(`Re-enabling scroll and hiding overlay (Scheduled for ~${finalHideDelay}ms)`); if (bodyElement) bodyElement.classList.remove('no-scroll'); if (overlay) overlay.style.visibility = 'hidden'; }, finalHideDelay);
+
+        // Schedule the overlay fade out and final hiding
+        setTimeout(() => {
+            console.log(`Fading out overlay (Scheduled for ~${overlayFadeOutDelay}ms)`);
+            if (overlay) overlay.classList.add('fade-out');
+        }, overlayFadeOutDelay);
+
+         // Schedule the final hide, scroll enable, AND audio player initialization/autoplay
+        setTimeout(() => {
+            console.log(`Re-enabling scroll, hiding overlay, and initializing Audio Player (Scheduled for ~${finalHideDelay}ms)`);
+            if (bodyElement) bodyElement.classList.remove('no-scroll');
+            if (overlay) overlay.style.visibility = 'hidden';
+            // Initialize and attempt autoplay for the audio player here
+            initializeAudioPlayer();
+        }, finalHideDelay);
+
+
         setTimeout(() => { console.log(`Initializing Typed.js (Scheduled for ~${typedJsInitDelay}ms)`); initializeTypedJs(); }, typedJsInitDelay);
 
-        // Schedule other features (Marquee, Countdown, BackToTop, Audio Player, AOS)
+        // Schedule other features (excluding audio player)
         setTimeout(() => {
-            console.log(`Initializing Marquee, Countdown, BackToTop, Audio Player, AOS (Scheduled for ~${otherFeaturesInitDelay}ms)`);
-            initializeOtherFeatures(); // Call the grouped function
+            console.log(`Initializing Marquee, Countdown, BackToTop, AOS (Scheduled for ~${otherFeaturesInitDelay}ms)`);
+            initializeOtherFeaturesWithoutAudio(); // Call the grouped function without audio
         }, otherFeaturesInitDelay);
 
         console.log("Setting introPlayed flag in sessionStorage."); sessionStorage.setItem('introPlayed', 'true');
@@ -481,30 +548,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // === Generic Video Control Function for Modals ===
-    // ... (Keep this function as it was - it controls project videos, not the audio player) ...
+    // This function sets up play/pause controls for videos within Bootstrap modals.
     function setupVideoControls(videoId, buttonId, modalId) {
         const playPauseBtn = document.getElementById(buttonId);
         const videoElement = document.getElementById(videoId);
         const modalElement = document.getElementById(modalId);
+
+        // Check if all elements exist before proceeding
         if (!modalElement) { console.warn(`Modal #${modalId} not found for video controls.`); return; }
         if (!videoElement) { console.warn(`Video element #${videoId} not found inside modal #${modalId}.`); return; }
         if (!playPauseBtn) { console.warn(`Play/Pause button #${buttonId} not found for video #${videoId}.`); return; }
+
         try {
             const iconElement = playPauseBtn.querySelector('i');
-            const updateButtonIcon = () => { if (!iconElement) return; const isPaused = videoElement.paused || videoElement.ended; iconElement.classList.toggle('bi-pause-fill', !isPaused); iconElement.classList.toggle('bi-play-fill', isPaused); playPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video'); };
-            playPauseBtn.addEventListener('click', (e) => { e.stopPropagation(); if (videoElement.paused || videoElement.ended) { videoElement.play().catch(err => console.error(`Error trying to play ${videoId}:`, err)); } else { videoElement.pause(); } });
-            videoElement.addEventListener('play', updateButtonIcon); videoElement.addEventListener('pause', updateButtonIcon); videoElement.addEventListener('ended', updateButtonIcon);
+            if (!iconElement) { console.warn(`Icon element not found for video control button #${buttonId}.`); return; }
+
+            // Function to update the play/pause button icon
+            const updateButtonIcon = () => {
+                const isPaused = videoElement.paused || videoElement.ended;
+                iconElement.classList.toggle('bi-pause-fill', !isPaused);
+                iconElement.classList.toggle('bi-play-fill', isPaused);
+                playPauseBtn.setAttribute('aria-label', isPaused ? 'Play Video' : 'Pause Video');
+            };
+
+            // Add event listener to the play/pause button
+            playPauseBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent modal closing if click propagates
+                if (videoElement.paused || videoElement.ended) {
+                    // Attempt to play the video
+                    videoElement.play().catch(err => console.error(`Error trying to play ${videoId}:`, err));
+                } else {
+                    // Pause the video
+                    videoElement.pause();
+                }
+            });
+
+            // Add event listeners to the video element to update the button icon
+            videoElement.addEventListener('play', updateButtonIcon);
+            videoElement.addEventListener('pause', updateButtonIcon);
+            videoElement.addEventListener('ended', updateButtonIcon);
+
+            // Initial icon update based on current video state
             updateButtonIcon();
-            modalElement.addEventListener('shown.bs.modal', () => { videoElement.muted = true; videoElement.currentTime = 0; const playPromise = videoElement.play(); if (playPromise !== undefined) { playPromise.then(updateButtonIcon).catch(error => { console.warn(`${videoId} autoplay on modal show failed:`, error); updateButtonIcon(); }); } else { updateButtonIcon(); } });
-            modalElement.addEventListener('hidden.bs.modal', () => { if (!videoElement.paused) { videoElement.pause(); } });
+
+            // Event listeners for the modal itself
+            // When the modal is shown, reset and play the video (muted)
+            modalElement.addEventListener('shown.bs.modal', () => {
+                videoElement.muted = true; // Ensure muted autoplay works
+                videoElement.currentTime = 0; // Start from the beginning
+                const playPromise = videoElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(updateButtonIcon).catch(error => {
+                        // Autoplay might fail, log error and update button state
+                        console.warn(`${videoId} autoplay on modal show failed:`, error);
+                        updateButtonIcon(); // Ensure icon is correct (likely showing 'Play')
+                    });
+                } else {
+                     // Handle browsers that don't return a Promise (older browsers)
+                    updateButtonIcon();
+                }
+            });
+
+            // When the modal is hidden, pause the video
+            modalElement.addEventListener('hidden.bs.modal', () => {
+                if (!videoElement.paused) {
+                    videoElement.pause();
+                }
+            });
+
             console.log(`Video controls initialized for #${videoId} within #${modalId}.`);
-        } catch (err) { console.error(`Error setting up video controls for ${videoId}:`, err); }
+
+        } catch (err) {
+            console.error(`Error setting up video controls for ${videoId}:`, err);
+        }
     }
 
     // --- Setup Video Controls for Each Project Modal ---
+    // Setup controls for Vision Pro modal video
     setupVideoControls('visionProVideo', 'videoPlayPauseBtn', 'visionProModal');
+    // Setup controls for Music Classifier modal video
     setupVideoControls('musicVideo', 'musicVideoPlayPauseBtn', 'musicClassifierModal');
+    // Setup controls for Forsaken modal video
     setupVideoControls('forsakenVideo', 'forsakenVideoPlayPauseBtn', 'projectThreeModal');
+    // Setup controls for NetworkAI modal video
     setupVideoControls('networkAIVideo', 'networkAIVideoPlayPauseBtn', 'networkAIModal');
     // --- End Video Setup ---
 
