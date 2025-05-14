@@ -6,8 +6,83 @@
     <title>Unity Web Player | Forsaken</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Define portfolio color variables for use in this file */
+        :root {
+            --portfolio-bg-main: #fff6ec;
+            --portfolio-accent-color: #CD853F;
+            --portfolio-text-dark: #1a1a1a;
+            --portfolio-text-medium: #333333;
+            /* Add other variables if needed for consistency */
+        }
+
+        /* Style for the game title container */
+        #game-title-container {
+            position: absolute;
+            top: 20px; /* Adjust vertical position */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10; /* Ensure it's above the Unity container */
+            text-align: center;
+            width: 100%; /* Take full width for centering */
+            pointer-events: none; /* Allow clicks to pass through to the game */
+             /* Initial state for animation */
+            opacity: 0;
+            transform: translate(-50%, -50px); /* Start above its final position */
+            animation: fallDownFadeIn 1s ease-out forwards 0.5s; /* Animation */
+        }
+
+        /* Keyframes for the fall down and fade in animation */
+        @keyframes fallDownFadeIn {
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0); /* End at its final position */
+            }
+        }
+
+        /* Style for the game title text */
+        #game-title {
+            font-family: 'Poppins', sans-serif; /* Use your portfolio heading font */
+            font-weight: 700; /* Use a bold weight */
+            font-size: 3em; /* Adjust size as needed */
+            color: var(--portfolio-text-dark); /* Use your dark text color */
+            margin: 0; /* Remove default margin */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+            /* opacity is controlled by the container animation */
+        }
+
+        /* Responsive adjustments for the title */
+        @media (max-width: 991.98px) { /* Adjust for smaller screens */
+            #game-title {
+                font-size: 2.5em; /* Smaller size on tablet */
+            }
+             #game-title-container {
+                 top: 15px; /* Adjust position on tablet */
+                 transform: translate(-50%, -40px); /* Adjust start position for animation */
+                 animation: fallDownFadeIn 1s ease-out forwards 0.5s; /* Reapply animation */
+             }
+        }
+         @media (max-width: 767.98px) { /* Adjust for even smaller screens */
+            #game-title {
+                font-size: 2em; /* Even smaller size on mobile */
+            }
+             #game-title-container {
+                 top: 10px; /* Adjust position on mobile */
+                 transform: translate(-50%, -30px); /* Adjust start position for animation */
+                 animation: fallDownFadeIn 1s ease-out forwards 0.5s; /* Reapply animation */
+             }
+        }
+    </style>
   </head>
   <body>
+    <div id="game-title-container">
+        <h1 id="game-title">FORSAKEN</h1>
+    </div>
+
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -97,7 +172,7 @@
 
 
       } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        // Desktop style:
         canvas.style.width = "960px";
         canvas.style.height = "600px";
       }

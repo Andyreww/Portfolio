@@ -1,16 +1,211 @@
-body { padding: 0; margin: 0 }
-#unity-container { position: absolute }
-#unity-container.unity-desktop { left: 50%; top: 50%; transform: translate(-50%, -50%) }
-#unity-container.unity-mobile { position: fixed; width: 100%; height: 100% }
-#unity-canvas { background: #231F20 }
-.unity-mobile #unity-canvas { width: 100%; height: 100% }
-#unity-loading-bar { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: none }
-#unity-logo { width: 154px; height: 130px; background: url('unity-logo-dark.png') no-repeat center }
-#unity-progress-bar-empty { width: 141px; height: 18px; margin-top: 10px; margin-left: 6.5px; background: url('progress-bar-empty-dark.png') no-repeat center }
-#unity-progress-bar-full { width: 0%; height: 18px; margin-top: 10px; background: url('progress-bar-full-dark.png') no-repeat center }
-#unity-footer { position: relative }
-.unity-mobile #unity-footer { display: none }
-#unity-logo-title-footer { float:left; width: 102px; height: 38px; background: url('unity-logo-title-footer.png') no-repeat center }
-#unity-build-title { float: right; margin-right: 10px; line-height: 38px; font-family: arial; font-size: 18px }
-#unity-fullscreen-button { cursor:pointer; float: right; width: 38px; height: 38px; background: url('fullscreen-button.png') no-repeat center }
-#unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
+/*
+ * Updated Unity TemplateData/style.css
+ * Incorporating colors and basic styling from Andrew's portfolio.
+ */
+
+/* Define CSS Variables for the portfolio's color palette */
+:root {
+    --portfolio-bg-main: #fff6ec; /* Main background color */
+    --portfolio-accent-color: #CD853F; /* Accent color (Peru) */
+    --portfolio-text-dark: #1a1a1a; /* Dark text color */
+    --portfolio-text-medium: #333333; /* Medium text color */
+    --portfolio-shadow-base: 0 6px 24px rgba(0, 0, 0, 0.07); /* Base shadow */
+    --portfolio-card-border-radius: 20px; /* Card border radius */
+    --portfolio-border-subtle: rgba(0, 0, 0, 0.08); /* Subtle border color */
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    /* Use the portfolio's main background color */
+    background: var(--portfolio-bg-main);
+    /* Use the portfolio's body font if desired, though Unity might override some text */
+    /* font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif; */
+}
+
+#unity-container {
+    position: absolute;
+    /* Add some padding around the container if needed, or let the canvas fill it */
+    /* padding: 20px; */
+    /* Use the portfolio's border radius and shadow for the container */
+    border-radius: var(--portfolio-card-border-radius);
+    box-shadow: var(--portfolio-shadow-base);
+    overflow: hidden; /* Ensure canvas doesn't spill out of rounded corners */
+    /* Center the container */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    /* Add a subtle border */
+    border: 1px solid var(--portfolio-border-subtle);
+}
+
+#unity-container.unity-desktop {
+    /* Desktop centering handled by #unity-container */
+}
+
+#unity-container.unity-mobile {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    /* Remove border radius and shadow for mobile fullscreen */
+    border-radius: 0;
+    box-shadow: none;
+    /* Remove transform for fixed positioning */
+    left: 0;
+    top: 0;
+    transform: none;
+}
+
+/* Style the canvas background - might be visible before game loads */
+#unity-canvas {
+    /* Use a color from your palette, maybe a dark text or a subtle variation */
+    background: var(--portfolio-text-dark); /* Example: Use dark text color */
+}
+
+.unity-mobile #unity-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+#unity-loading-bar {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: none; /* Controlled by Unity JS */
+    /* Add some padding or margin if needed */
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    border-radius: 10px; /* Rounded corners for the loading bar container */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Unity logo - keep original if it matches theme, or replace */
+/* Assuming the dark logo matches the dark text color from the portfolio */
+#unity-logo {
+    width: 154px;
+    height: 130px;
+    /* Ensure correct path relative to this CSS file */
+    background: url('unity-logo-dark.png') no-repeat center;
+    background-size: contain; /* Ensure logo fits */
+}
+
+#unity-progress-bar-empty {
+    width: 141px;
+    height: 18px;
+    margin-top: 10px;
+    margin-left: 6.5px;
+    /* Use a subtle background or border for the empty bar */
+    background: rgba(0, 0, 0, 0.1); /* Light gray background */
+    border-radius: 9px; /* Half of height for pill shape */
+    overflow: hidden; /* Ensure fill stays inside */
+    position: relative; /* Needed for absolute positioning of fill */
+    /* Remove background image if using solid color */
+    /* background: none; */
+}
+
+#unity-progress-bar-full {
+    width: 0%; /* Initial width, controlled by Unity JS */
+    height: 100%; /* Fill the height of the empty bar */
+    margin-top: 0; /* Reset margin */
+    margin-left: 0; /* Reset margin */
+    /* Use the accent color for the progress bar fill */
+    background: var(--portfolio-accent-color);
+    border-radius: 9px; /* Match empty bar for pill shape */
+    transition: width 0.3s ease-out; /* Smooth animation for progress fill */
+    /* Remove background image if using solid color */
+    /* background: none; */
+    position: absolute; /* Position relative to #unity-progress-bar-empty */
+    top: 0;
+    left: 0;
+}
+
+#unity-footer {
+    position: relative;
+    /* Style the footer area */
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    padding: 0 10px; /* Add some padding */
+    height: 38px; /* Match height of elements inside */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Vertically center items */
+    justify-content: space-between; /* Space out logo/title and button */
+    /* Add subtle border top */
+    border-top: 1px solid var(--portfolio-border-subtle);
+}
+
+.unity-mobile #unity-footer {
+    display: none; /* Hide footer on mobile */
+}
+
+#unity-logo-title-footer {
+    /* Keep original if it matches theme, or replace */
+    /* Assuming the title logo matches the dark text color */
+    width: 102px;
+    height: 38px;
+    /* Ensure correct path relative to this CSS file */
+    background: url('unity-logo-title-footer.png') no-repeat left center; /* Align left */
+    background-size: contain;
+    float: none; /* Remove float */
+}
+
+#unity-build-title {
+    /* Use a text color from your palette */
+    color: var(--portfolio-text-medium); /* Example: Use medium text color */
+    /* Keep font styles or adjust */
+    line-height: 38px;
+    font-family: 'Poppins', sans-serif; /* Use your portfolio heading font */
+    font-size: 16px; /* Adjust size */
+    font-weight: 600; /* Use your heading font weight */
+    float: none; /* Remove float */
+    margin-right: 0; /* Remove margin */
+    flex-grow: 1; /* Allow title to take available space */
+    text-align: center; /* Center the title */
+}
+
+#unity-fullscreen-button {
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    /* Ensure correct path relative to this CSS file */
+    background: url('fullscreen-button.png') no-repeat center;
+    background-size: 60%; /* Adjust size of icon */
+    float: none; /* Remove float */
+    margin-left: 10px; /* Add space between title and button */
+}
+
+#unity-warning {
+    position: absolute;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%, 0); /* Center horizontally, fixed top */
+    /* Use portfolio colors for warning */
+    background: var(--portfolio-bg-card); /* White background */
+    color: var(--portfolio-text-dark); /* Dark text */
+    padding: 10px;
+    display: none; /* Controlled by Unity JS */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: var(--portfolio-shadow-base); /* Subtle shadow */
+    border: 1px solid var(--portfolio-border-subtle); /* Subtle border */
+    max-width: 90%; /* Prevent overflow on small screens */
+    text-align: center;
+    z-index: 10; /* Ensure it's above the canvas */
+}
+
+/* Style for specific warning/error types (controlled by unityShowBanner) */
+#unity-warning div {
+    padding: 5px; /* Add padding inside the message div */
+    margin: 5px 0; /* Add margin between multiple messages */
+    border-radius: 5px; /* Rounded corners for message div */
+}
+
+#unity-warning div[style*='background: red'] {
+    background: rgba(255, 0, 0, 0.1) !important; /* Use rgba for subtle red */
+    color: #a00; /* Darker red text */
+    border: 1px solid #a00;
+}
+
+#unity-warning div[style*='background: yellow'] {
+    background: rgba(255, 255, 0, 0.1) !important; /* Use rgba for subtle yellow */
+    color: #a90; /* Darker yellow/orange text */
+    border: 1px solid #a90;
+}
