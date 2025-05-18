@@ -57,31 +57,6 @@
         <a href="#contact" class="btn btn-outline-dark px-4 py-2">Contact Me</a>
       </div>
 
-      <div id="graduation-countdown" class="countdown-container mt-5" data-aos="fade-up" data-aos-delay="200">
-          <h6 class="countdown-title mb-3 opacity-75">Graduation In:</h6>
-          <div class="countdown-timer d-flex justify-content-center align-items-center gap-2 gap-sm-3">
-              <div class="time-block text-center">
-                  <span id="countdown-days" class="time-value d-block">00</span>
-                  <span class="time-label d-block">Days</span>
-              </div>
-              <div class="time-separator" aria-hidden="true">:</div>
-              <div class="time-block text-center">
-                  <span id="countdown-hours" class="time-value d-block">00</span>
-                  <span class="time-label d-block">Hours</span>
-              </div>
-              <div class="time-separator" aria-hidden="true">:</div>
-              <div class="time-block text-center">
-                  <span id="countdown-minutes" class="time-value d-block">00</span>
-                  <span class="time-label d-block">Minutes</span>
-              </div>
-              <div class="time-separator" aria-hidden="true">:</div>
-              <div class="time-block text-center">
-                  <span id="countdown-seconds" class="time-value d-block">00</span>
-                  <span class="time-label d-block">Seconds</span>
-              </div>
-          </div>
-          <p class="countdown-date small text-muted mt-2">(May 17, 2025)</p>
-      </div>
       </div> </section>
 
 <section id="about" class="py-6">
@@ -282,305 +257,305 @@
                              <div class="project-image-aspect-wrapper shadow-sm">
                                 <img src="assets/NetworkAI.png" class="project-showcase-image" alt="NetworkAI Platform thumbnail">
                              </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </div>
-
-        <div class="modal fade" id="visionProModal" tabindex="-1" aria-labelledby="visionProModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content project-modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="visionProModalLabel"> <i class="bi bi-binoculars-fill me-2"></i>Apple Vision Pro Engagement Analysis</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="video-container position-relative mb-4">
-                  <video src="assets/vision-pro-reveal.mp4" id="visionProVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
-                  <button type="button" id="videoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
-                </div>
-                <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
-                <p class="lead">This project uses the K-Means clustering algorithm to analyze engagement metrics on tweets related to the Apple Vision Pro launch. The goal was to uncover patterns in how users interacted with promotional content and discussions surrounding the product.</p>
-                <hr class="my-4">
-                <div class="row gy-4">
-                  <div class="col-md-6">
-                    <h5 class="fw-semibold"><i class="bi bi-database-check me-2"></i>Data & Preprocessing</h5>
-                    <p>The analysis utilized a Kaggle dataset containing Twitter engagement metrics (likes, retweets, replies, quotes, views, bookmarks) for tweets mentioning "Apple Vision Pro".</p>
-                    <ul>
-                      <li>Handling missing values through imputation or removal based on metric importance.</li>
-                      <li>Scaling metrics using Min-Max normalization to ensure equal weighting in the clustering algorithm.</li>
-                      <li>Selecting key metrics relevant to direct user engagement (e.g., Likes, Retweets, Replies, Views).</li>
-                    </ul>
-                  </div>
-                  <div class="col-md-6">
-                    <h5 class="fw-semibold"><i class="bi bi-arrows-angle-contract me-2"></i>Methodology & Visualization</h5>
-                    <p>The K-Means algorithm was applied to group tweets into 3 distinct clusters based on their engagement profiles. The optimal number of clusters was determined using the Elbow method.</p>
-                    <p>Clusters were visualized using 2D scatter plots generated with Matplotlib and Seaborn:</p>
-                    <ul>
-                      <li>Likes vs. Retweets</li>
-                      <li>Replies vs. Quotes</li>
-                      <li>Views vs. Bookmarks</li>
-                    </ul>
-                  </div>
-                </div>
-                <hr class="my-4">
-                <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>Conclusion & Impact</h5>
-                <blockquote class="blockquote project-blockquote mt-3">
-                  <p>The clustering results effectively segmented tweets into distinct engagement categories (e.g., high-reach/low-interaction, high-discussion, balanced engagement). These insights highlight how influential users and specific content types shape public discourse and can inform future marketing strategies.</p>
-                </blockquote>
-                <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
-                <p>
-                    <span class="badge tech-badge"><i class="devicon-python-plain"></i> Python</span>
-                    <span class="badge tech-badge">Pandas</span>
-                    <span class="badge tech-badge">Scikit-learn</span>
-                    <span class="badge tech-badge">Matplotlib</span>
-                    <span class="badge tech-badge">Seaborn</span>
-                </p>
-              </div>
-              <div class="modal-footer justify-content-between">
-                <a href="https://github.com/Andyreww/Apple-Vision-Pro-Engagement" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> <i class="bi bi-github me-1"></i> View on GitHub </a>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal fade" id="musicClassifierModal" tabindex="-1" aria-labelledby="musicClassifierModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content project-modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="musicClassifierModalLabel"><i class="bi bi-music-note-beamed me-2"></i>Music Classifier & Reccomendor</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                 <div class="video-container position-relative mb-4">
-                   <video src="assets/waveform.mp4" id="musicVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
-                   <button type="button" id="musicVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+                         </div>
+                     </div>
                  </div>
-                 <h5 class="fw-semibold"><i class="bi bi-gear-fill me-2"></i>How It Works</h5>
-                 <p class="lead">This project analyzes audio features from uploaded .wav files using Librosa and classifies the music genre via a pre-trained Keras neural network. It serves as the analysis core for a potential music recommendation system.</p>
+             </div>
+             </div>
+
+         <div class="modal fade" id="visionProModal" tabindex="-1" aria-labelledby="visionProModalLabel" aria-hidden="true">
+           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+             <div class="modal-content project-modal-content">
+               <div class="modal-header">
+                 <h1 class="modal-title fs-5" id="visionProModalLabel"> <i class="bi bi-binoculars-fill me-2"></i>Apple Vision Pro Engagement Analysis</h1>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                 <div class="video-container position-relative mb-4">
+                   <video src="assets/vision-pro-reveal.mp4" id="visionProVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+                   <button type="button" id="videoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+                 </div>
+                 <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
+                 <p class="lead">This project uses the K-Means clustering algorithm to analyze engagement metrics on tweets related to the Apple Vision Pro launch. The goal was to uncover patterns in how users interacted with promotional content and discussions surrounding the product.</p>
                  <hr class="my-4">
                  <div class="row gy-4">
-                     <div class="col-md-6">
-                        <h5 class="fw-semibold"><i class="bi bi-gear-fill me-2"></i>How It Works</h5>
-                        <p>The system processes standard .wav audio files:</p>
-                        <ul>
-                            <li>Loads audio data using Librosa.</li>
-                            <li>Extracts key audio features, primarily Mel-Frequency Cepstral Coefficients (MFCCs), which represent the short-term power spectrum of sound.</li>
-                            <li>Feeds these features into a pre-trained Convolutional Neural Network (CNN) model built with Keras/TensorFlow.</li>
-                            <li>The model predicts the most likely music genre.</li>
-                        </ul>
-                     </div>
-                     <div class="col-md-6">
-                        <h5 class="fw-semibold"><i class="bi bi-diagram-3-fill me-2"></i>Project Role</h5>
-                        <p>This component acts as the front-end analysis tool within a larger pipeline:</p>
-                        <ul>
-                            <li>Users can upload a song (.wav).</li>
-                            <li>Receives a genre prediction and potentially visual feedback (like the waveform/spectrogram shown).</li>
-                            <li>Connects to related notebooks for model training (`music_classifier.ipynb`) and data preprocessing (`music_preprocess.ipynb`).</li>
-                            <li>Provides the basis for recommending similar music.</li>
-                        </ul>
-                     </div>
+                   <div class="col-md-6">
+                     <h5 class="fw-semibold"><i class="bi bi-database-check me-2"></i>Data & Preprocessing</h5>
+                     <p>The analysis utilized a Kaggle dataset containing Twitter engagement metrics (likes, retweets, replies, quotes, views, bookmarks) for tweets mentioning "Apple Vision Pro".</p>
+                     <ul>
+                       <li>Handling missing values through imputation or removal based on metric importance.</li>
+                       <li>Scaling metrics using Min-Max normalization to ensure equal weighting in the clustering algorithm.</li>
+                       <li>Selecting key metrics relevant to direct user engagement (e.g., Likes, Retweets, Replies, Views).</li>
+                     </ul>
+                   </div>
+                   <div class="col-md-6">
+                     <h5 class="fw-semibold"><i class="bi bi-arrows-angle-contract me-2"></i>Methodology & Visualization</h5>
+                     <p>The K-Means algorithm was applied to group tweets into 3 distinct clusters based on their engagement profiles. The optimal number of clusters was determined using the Elbow method.</p>
+                     <p>Clusters were visualized using 2D scatter plots generated with Matplotlib and Seaborn:</p>
+                     <ul>
+                       <li>Likes vs. Retweets</li>
+                       <li>Replies vs. Quotes</li>
+                       <li>Views vs. Bookmarks</li>
+                     </ul>
+                   </div>
                  </div>
                  <hr class="my-4">
-                 <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>Purpose & Potential</h5>
+                 <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>Conclusion & Impact</h5>
                  <blockquote class="blockquote project-blockquote mt-3">
-                     <p>The primary goal is accurate music genre classification from raw audio. This enables applications like automated music library organization, content-based recommendation engines, and music information retrieval systems.</p>
+                   <p>The clustering results effectively segmented tweets into distinct engagement categories (e.g., high-reach/low-interaction, high-discussion, balanced engagement). These insights highlight how influential users and specific content types shape public discourse and can inform future marketing strategies.</p>
                  </blockquote>
                  <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
                  <p>
                      <span class="badge tech-badge"><i class="devicon-python-plain"></i> Python</span>
-                     <span class="badge tech-badge">Librosa</span>
-                     <span class="badge tech-badge">NumPy</span>
-                     <span class="badge tech-badge"><i class="devicon-tensorflow-original"></i> TensorFlow/Keras</span>
+                     <span class="badge tech-badge">Pandas</span>
+                     <span class="badge tech-badge">Scikit-learn</span>
                      <span class="badge tech-badge">Matplotlib</span>
-                     <span class="badge tech-badge">JSON</span>
-                     <span class="badge tech-badge">OS</span>
+                     <span class="badge tech-badge">Seaborn</span>
                  </p>
-              </div>
-              <div class="modal-footer justify-content-between">
-                 <a href="https://github.com/Andyreww/Music-Classifier-Recommender/tree/main" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> <i class="bi bi-github me-1"></i> View on GitHub </a>
+               </div>
+               <div class="modal-footer justify-content-between">
+                 <a href="https://github.com/Andyreww/Apple-Vision-Pro-Engagement" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> <i class="bi bi-github me-1"></i> View on GitHub </a>
                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal fade" id="networkAIModal" tabindex="-1" aria-labelledby="networkAIModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content project-modal-content">
-               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="networkAIModalLabel"><i class="bi bi-diagram-3-fill me-2"></i>NetworkAI - Smart Job Networking Platform</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="video-container position-relative mb-4">
-                  <video src="assets/NetworkAI_v.mp4" id="networkAIVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
-                  <button type="button" id="networkAIVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
-                </div>
-
-                <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
-                <p class="lead">NetworkAI addresses the common job market challenge where college students and early-career professionals face the frustrating cycle of cold applications. Instead of the "apply and pray" method, this platform provides a smarter, more personal way to connect with people behind job listings—hiring managers, alumni, or team members—giving applications context and visibility.</p>
-                <hr class="my-4">
-
-                <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>How It Works</h5>
-                <p>The platform intelligently enhances the job search process:</p>
-                <ul>
-                    <li>Pulls job listings from popular sites.</li>
-                    <li>Uses AI and publicly available data to identify key employees at target companies associated with those listings.</li>
-                    <li>Surfaces relevant contact information where available and appropriate.</li>
-                    <li>Provides users with suggested outreach strategies and templates.</li>
-                    <li>Acts as a "LinkedIn power-up" focused on facilitating human connection, without requiring sign-ups from hiring managers.</li>
-                </ul>
-                <hr class="my-4">
-
-                <h5 class="fw-semibold"><i class="bi bi-graph-up-arrow me-2"></i>Features & Benefits</h5>
-                <p>NetworkAI aims to make networking less intimidating and more effective:</p>
-                <ul>
-                    <li>Increases the likelihood of securing interviews by fostering warm connections.</li>
-                    <li>Helps users develop stronger, lasting professional networks.</li>
-                    <li>Offers thoughtfully designed templates and personalization tools for outreach.</li>
-                    <li>Includes outreach timing suggestions to maximize impact.</li>
-                    <li>Removes guesswork and reduces the feeling of isolation in the job search.</li>
-                </ul>
-                 <hr class="my-4">
-
-                <h5 class="fw-semibold"><i class="bi bi-bullseye me-2"></i>Project Goal</h5>
-                 <blockquote class="blockquote project-blockquote mt-3">
-                  <p>To make the job search less isolating and more human by shifting focus from cold applications to warm connections. NetworkAI empowers job seekers to take control, stand out, and gain a real edge in a competitive market.</p>
-                </blockquote>
-
-                <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
-                <p>
-                    <span class="badge tech-badge"><i class="devicon-python-plain colored"></i> Python</span>
-                    <span class="badge tech-badge"><i class="devicon-flask-original colored"></i> Flask</span>
-                    <span class="badge tech-badge"><i class="devicon-html5-plain colored"></i> HTML</span>
-                    <span class="badge tech-badge"><i class="devicon-css3-plain colored"></i> CSS</span>
-                    <span class="badge tech-badge"><i class="devicon-javascript-plain colored"></i> JavaScript</span>
-                    <span class="badge tech-badge"><i class="devicon-bootstrap-plain colored"></i> Bootstrap</span>
-                    <span class="badge tech-badge"><i class="bi bi-robot"></i> AI/ML</span> </p>
-              </div>
-              <div class="modal-footer">
-                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal fade" id="projectThreeModal" tabindex="-1" aria-labelledby="projectThreeModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content project-modal-content">
-               <div class="modal-header">
-                <h1 class="modal-title fs-5" id="projectThreeModalLabel"><i class="bi bi-controller me-2"></i>FORSAKEN - Souls-like Game Development</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p class="text-muted small mb-2 text-center">Web Build Available!</p>
-                <div class="video-container position-relative mb-4">
-                  <video src="assets/Forsaken_vid.mp4" id="forsakenVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
-                  <button type="button" id="forsakenVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
-                </div>
-
-                <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
-                <p class="lead">Forsaken is a souls-like game where the player navigates challenging dungeons, defeating bosses that represent the protagonist's internal conflicts from their past life. Built with Unity, the game explores themes of choice, grief, and redemption, offering unique gameplay mechanics and player agency in the final outcome.</p>
-                <hr class="my-4">
-
-                <h5 class="fw-semibold"><i class="bi bi-joystick me-2"></i>Key Mechanics</h5>
-                <p>Gameplay innovation centers around high-risk, high-reward combat and resource management:</p>
-                <ul>
-                    <li>Revive slain bosses/enemies as temporary allies.</li>
-                    <li>Steal enemy powers upon defeating them.</li>
-                    <li>Transform into enemies for a brief period (one-time use per transformation).</li>
-                    <li>Unique weapons with stats dependent on the player's current HP/Mana levels.</li>
-                    <li>Killing enemies restores HP/Mana, encouraging aggressive play.</li>
-                    <li>High-cost spells with cooldowns to ensure strategic use.</li>
-                </ul>
-                <hr class="my-4">
-
-                <h5 class="fw-semibold"><i class="bi bi-book-half me-2"></i>Narrative & Themes</h5>
-                <p>The player character, suffering memory loss after death, is offered a path to resurrection by two opposing gods (Life & Death) in exchange for service. As the player clears levels representing the five stages of grief (Denial, Anger, Bargaining, Depression, Acceptance), conversations with a shadowy figure reveal fragments of their past life and the true nature of the gods' divine wager.</p>
-                <blockquote class="blockquote project-blockquote mt-3">
-                  <p>The core theme explores the illusion of choice, challenging the player to potentially break free from the gods' predetermined paths and forge their own destiny.</p>
-                </blockquote>
-                 <hr class="my-4">
-
-                 <h5 class="fw-semibold"><i class="bi bi-tools me-2"></i>Development & Role</h5>
-                 <p>This game was developed as a team project using the Unity engine. My specific responsibilities included:</p>
-                 <ul>
-                    <li>Wrote modular C# scripts for reusability across different NPCs, bosses, and player abilities.</li>
-                    <li>Led & Developed implementation of inventory systems, UI, combat animations, movement mechanics, enemy behaviors, and revival mechanic to better enhance player experience.</li>
-                    <li>Collaborated with a 4-person team to balance difficulty and create an immersive gameplay loop.</li>
-                 </ul>
-                <h5 class="fw-semibold mt-4"><i class="bi bi-unity me-2"></i>Technologies Used</h5>
-                <p>
-                    <span class="badge tech-badge"><i class="devicon-unity-original colored"></i> Unity</span>
-                    <span class="badge tech-badge"><i class="devicon-csharp-plain colored"></i> C#</span>
-                </p>
-              </div>
-              <div class="modal-footer justify-content-between">
-                 <a href="games/Forsaken/index.html" class="btn btn-dark" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-play-circle me-1"></i> Play Web Build
-                </a>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        </div> </section>
-
-<section id="contact" class="py-7">
-     <div class="container">
-        <header class="section-header text-center mb-5" data-aos="fade-up">
-             <h2 class="display-4 fw-bold">Let's Connect</h2>
-             <div class="section-divider-line mt-3"></div>
-        </header>
-
-       <div class="row justify-content-center">
-         <div class="col-lg-8 col-md-10" data-aos="fade-up" data-aos-delay="100">
-             <div class="contact-card text-center shadow-lg">
-                 <div class="contact-card-body">
-                     <p class="contact-intro lead mb-4 px-md-3">
-                         I'm passionate about building innovative solutions, especially in backend development and AI.
-                         Interested in collaborating or have an opportunity to discuss? I'd love to hear from you.
-                         Reach out via your preferred channel below.
-                     </p>
-                     <div class="contact-options d-flex justify-content-center align-items-center flex-wrap gap-4 mb-4">
-                         <a href="mailto:ajangulo8@gmail.com" class="contact-link" title="Send me an Email">
-                             <i class="bi bi-envelope-fill"></i>
-                             <span>Email</span>
-                         </a>
-                         <a href="https://www.linkedin.com/in/andyrew/" target="_blank" rel="noopener noreferrer" class="contact-link" title="Connect on LinkedIn">
-                             <i class="bi bi-linkedin"></i>
-                             <span>LinkedIn</span>
-                         </a>
-                         <a href="https://github.com/andyreww/" target="_blank" rel="noopener noreferrer" class="contact-link" title="View my GitHub">
-                             <i class="bi bi-github"></i>
-                             <span>GitHub</span>
-                         </a>
-                     </div>
-                     <p class="contact-location text-muted small mt-4 mb-0">
-                         <i class="bi bi-geo-alt-fill me-1"></i>Based in Queens, NY – Open to talking to you soon :D
-                     </p>
-                 </div>
+               </div>
              </div>
+           </div>
          </div>
-       </div>
-     </div>
-</section>
 
-<footer class="py-4 mt-5 text-center text-muted small border-top">
-     © <script>document.write(new Date().getFullYear())</script> Andrew. All Rights Reserved.
-</footer>
+         <div class="modal fade" id="musicClassifierModal" tabindex="-1" aria-labelledby="musicClassifierModalLabel" aria-hidden="true">
+           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+             <div class="modal-content project-modal-content">
+               <div class="modal-header">
+                 <h1 class="modal-title fs-5" id="musicClassifierModalLabel"><i class="bi bi-music-note-beamed me-2"></i>Music Classifier & Reccomendor</h1>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                  <div class="video-container position-relative mb-4">
+                    <video src="assets/waveform.mp4" id="musicVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+                    <button type="button" id="musicVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+                  </div>
+                  <h5 class="fw-semibold"><i class="bi bi-gear-fill me-2"></i>How It Works</h5>
+                  <p class="lead">This project analyzes audio features from uploaded .wav files using Librosa and classifies the music genre via a pre-trained Keras neural network. It serves as the analysis core for a potential music recommendation system.</p>
+                  <hr class="my-4">
+                  <div class="row gy-4">
+                      <div class="col-md-6">
+                         <h5 class="fw-semibold"><i class="bi bi-gear-fill me-2"></i>How It Works</h5>
+                         <p>The system processes standard .wav audio files:</p>
+                         <ul>
+                             <li>Loads audio data using Librosa.</li>
+                             <li>Extracts key audio features, primarily Mel-Frequency Cepstral Coefficients (MFCCs), which represent the short-term power spectrum of sound.</li>
+                             <li>Feeds these features into a pre-trained Convolutional Neural Network (CNN) model built with Keras/TensorFlow.</li>
+                             <li>The model predicts the most likely music genre.</li>
+                         </ul>
+                      </div>
+                      <div class="col-md-6">
+                         <h5 class="fw-semibold"><i class="bi bi-diagram-3-fill me-2"></i>Project Role</h5>
+                         <p>This component acts as the front-end analysis tool within a larger pipeline:</p>
+                         <ul>
+                             <li>Users can upload a song (.wav).</li>
+                             <li>Receives a genre prediction and potentially visual feedback (like the waveform/spectrogram shown).</li>
+                             <li>Connects to related notebooks for model training (`music_classifier.ipynb`) and data preprocessing (`music_preprocess.ipynb`).</li>
+                             <li>Provides the basis for recommending similar music.</li>
+                         </ul>
+                      </div>
+                  </div>
+                  <hr class="my-4">
+                  <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>Purpose & Potential</h5>
+                  <blockquote class="blockquote project-blockquote mt-3">
+                      <p>The primary goal is accurate music genre classification from raw audio. This enables applications like automated music library organization, content-based recommendation engines, and music information retrieval systems.</p>
+                  </blockquote>
+                  <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
+                  <p>
+                      <span class="badge tech-badge"><i class="devicon-python-plain"></i> Python</span>
+                      <span class="badge tech-badge">Librosa</span>
+                      <span class="badge tech-badge">NumPy</span>
+                      <span class="badge tech-badge"><i class="devicon-tensorflow-original"></i> TensorFlow/Keras</span>
+                      <span class="badge tech-badge">Matplotlib</span>
+                      <span class="badge tech-badge">JSON</span>
+                      <span class="badge tech-badge">OS</span>
+                  </p>
+               </div>
+               <div class="modal-footer justify-content-between">
+                  <a href="https://github.com/Andyreww/Music-Classifier-Recommender/tree/main" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> <i class="bi bi-github me-1"></i> View on GitHub </a>
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+               </div>
+             </div>
+           </div>
+         </div>
 
-<a href="#page-top" id="backToTopBtn" class="back-to-top d-flex align-items-center justify-content-center" title="Back to Top">
-    <i class="bi bi-arrow-up-short"></i>
-</a>
+         <div class="modal fade" id="networkAIModal" tabindex="-1" aria-labelledby="networkAIModalLabel" aria-hidden="true">
+           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+             <div class="modal-content project-modal-content">
+                <div class="modal-header">
+                 <h1 class="modal-title fs-5" id="networkAIModalLabel"><i class="bi bi-diagram-3-fill me-2"></i>NetworkAI - Smart Job Networking Platform</h1>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+               </div>
+               <div class="modal-body">
+                 <div class="video-container position-relative mb-4">
+                   <video src="assets/NetworkAI_v.mp4" id="networkAIVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+                   <button type="button" id="networkAIVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+                 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+                 <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
+                 <p class="lead">NetworkAI addresses the common job market challenge where college students and early-career professionals face the frustrating cycle of cold applications. Instead of the "apply and pray" method, this platform provides a smarter, more personal way to connect with people behind job listings—hiring managers, alumni, or team members—giving applications context and visibility.</p>
+                 <hr class="my-4">
 
-<script src="script.js"></script>
+                 <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>How It Works</h5>
+                 <p>The platform intelligently enhances the job search process:</p>
+                 <ul>
+                     <li>Pulls job listings from popular sites.</li>
+                     <li>Uses AI and publicly available data to identify key employees at target companies associated with those listings.</li>
+                     <li>Surfaces relevant contact information where available and appropriate.</li>
+                     <li>Provides users with suggested outreach strategies and templates.</li>
+                     <li>Acts as a "LinkedIn power-up" focused on facilitating human connection, without requiring sign-ups from hiring managers.</li>
+                 </ul>
+                 <hr class="my-4">
 
-</body>
-</html>
+                 <h5 class="fw-semibold"><i class="bi bi-graph-up-arrow me-2"></i>Features & Benefits</h5>
+                 <p>NetworkAI aims to make networking less intimidating and more effective:</p>
+                 <ul>
+                     <li>Increases the likelihood of securing interviews by fostering warm connections.</li> 
+                     <li>Helps users develop stronger, lasting professional networks.</li> 
+                     <li>Offers thoughtfully designed templates and personalization tools for outreach.</li> 
+                     <li>Includes outreach timing suggestions to maximize impact.</li> 
+                     <li>Removes guesswork and reduces the feeling of isolation in the job search.</li> 
+                 </ul> 
+                  <hr class="my-4"> 
+
+                 <h5 class="fw-semibold"><i class="bi bi-bullseye me-2"></i>Project Goal</h5> 
+                  <blockquote class="blockquote project-blockquote mt-3"> 
+                   <p>To make the job search less isolating and more human by shifting focus from cold applications to warm connections. NetworkAI empowers job seekers to take control, stand out, and gain a real edge in a competitive market.</p> 
+                 </blockquote> 
+
+                 <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5> 
+                 <p> 
+                     <span class="badge tech-badge"><i class="devicon-python-plain colored"></i> Python</span> 
+                     <span class="badge tech-badge"><i class="devicon-flask-original colored"></i> Flask</span> 
+                     <span class="badge tech-badge"><i class="devicon-html5-plain colored"></i> HTML</span> 
+                     <span class="badge tech-badge"><i class="devicon-css3-plain colored"></i> CSS</span> 
+                     <span class="badge tech-badge"><i class="devicon-javascript-plain colored"></i> JavaScript</span> 
+                     <span class="badge tech-badge"><i class="devicon-bootstrap-plain colored"></i> Bootstrap</span> 
+                     <span class="badge tech-badge"><i class="bi bi-robot"></i> AI/ML</span> </p> 
+               </div> 
+               <div class="modal-footer"> 
+                  <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button> 
+               </div> 
+             </div> 
+           </div> 
+         </div> 
+
+         <div class="modal fade" id="projectThreeModal" tabindex="-1" aria-labelledby="projectThreeModalLabel" aria-hidden="true"> 
+           <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"> 
+             <div class="modal-content project-modal-content"> 
+                <div class="modal-header"> 
+                 <h1 class="modal-title fs-5" id="projectThreeModalLabel"><i class="bi bi-controller me-2"></i>FORSAKEN - Souls-like Game Development</h1> 
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
+               </div> 
+               <div class="modal-body"> 
+                 <p class="text-muted small mb-2 text-center">Web Build Available!</p> 
+                 <div class="video-container position-relative mb-4"> 
+                   <video src="assets/Forsaken_vid.mp4" id="forsakenVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video> 
+                   <button type="button" id="forsakenVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button> 
+                 </div> 
+
+                 <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5> 
+                 <p class="lead">Forsaken is a souls-like game where the player navigates challenging dungeons, defeating bosses that represent the protagonist's internal conflicts from their past life. Built with Unity, the game explores themes of choice, grief, and redemption, offering unique gameplay mechanics and player agency in the final outcome.</p> 
+                 <hr class="my-4"> 
+
+                 <h5 class="fw-semibold"><i class="bi bi-joystick me-2"></i>Key Mechanics</h5> 
+                 <p>Gameplay innovation centers around high-risk, high-reward combat and resource management:</p> 
+                 <ul> 
+                     <li>Revive slain bosses/enemies as temporary allies.</li> 
+                     <li>Steal enemy powers upon defeating them.</li> 
+                     <li>Transform into enemies for a brief period (one-time use per transformation).</li> 
+                     <li>Unique weapons with stats dependent on the player's current HP/Mana levels.</li> 
+                     <li>Killing enemies restores HP/Mana, encouraging aggressive play.</li> 
+                     <li>High-cost spells with cooldowns to ensure strategic use.</li> 
+                 </ul> 
+                 <hr class="my-4"> 
+
+                 <h5 class="fw-semibold"><i class="bi bi-book-half me-2"></i>Narrative & Themes</h5> 
+                 <p>The player character, suffering memory loss after death, is offered a path to resurrection by two opposing gods (Life & Death) in exchange for service. As the player clears levels representing the five stages of grief (Denial, Anger, Bargaining, Depression, Acceptance), conversations with a shadowy figure reveal fragments of their past life and the true nature of the gods' divine wager.</p> 
+                 <blockquote class="blockquote project-blockquote mt-3"> 
+                   <p>The core theme explores the illusion of choice, challenging the player to potentially break free from the gods' predetermined paths and forge their own destiny.</p> 
+                 </blockquote> 
+                  <hr class="my-4"> 
+
+                  <h5 class="fw-semibold"><i class="bi bi-tools me-2"></i>Development & Role</h5> 
+                  <p>This game was developed as a team project using the Unity engine. My specific responsibilities included:</p> 
+                  <ul> 
+                     <li>Wrote modular C# scripts for reusability across different NPCs, bosses, and player abilities.</li> 
+                     <li>Led & Developed implementation of inventory systems, UI, combat animations, movement mechanics, enemy behaviors, and revival mechanic to better enhance player experience.</li> 
+                     <li>Collaborated with a 4-person team to balance difficulty and create an immersive gameplay loop.</li> 
+                  </ul> 
+                 <h5 class="fw-semibold mt-4"><i class="bi bi-unity me-2"></i>Technologies Used</h5> 
+                 <p> 
+                     <span class="badge tech-badge"><i class="devicon-unity-original colored"></i> Unity</span> 
+                     <span class="badge tech-badge"><i class="devicon-csharp-plain colored"></i> C#</span> 
+                 </p> 
+               </div> 
+               <div class="modal-footer justify-content-between"> 
+                  <a href="games/Forsaken/index.html" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> 
+                     <i class="bi bi-play-circle me-1"></i> Play Web Build 
+                 </a> 
+                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button> 
+               </div> 
+             </div> 
+           </div> 
+         </div> 
+         </div> </section> 
+
+ <section id="contact" class="py-7"> 
+      <div class="container"> 
+         <header class="section-header text-center mb-5" data-aos="fade-up"> 
+              <h2 class="display-4 fw-bold">Let's Connect</h2> 
+              <div class="section-divider-line mt-3"></div> 
+         </header> 
+
+        <div class="row justify-content-center"> 
+          <div class="col-lg-8 col-md-10" data-aos="fade-up" data-aos-delay="100"> 
+              <div class="contact-card text-center shadow-lg"> 
+                  <div class="contact-card-body"> 
+                      <p class="contact-intro lead mb-4 px-md-3"> 
+                          I'm passionate about building innovative solutions, especially in backend development and AI. 
+                          Interested in collaborating or have an opportunity to discuss? I'd love to hear from you. 
+                          Reach out via your preferred channel below. 
+                      </p> 
+                      <div class="contact-options d-flex justify-content-center align-items-center flex-wrap gap-4 mb-4"> 
+                          <a href="mailto:ajangulo8@gmail.com" class="contact-link" title="Send me an Email"> 
+                              <i class="bi bi-envelope-fill"></i> 
+                              <span>Email</span> 
+                          </a> 
+                          <a href="https://www.linkedin.com/in/andyrew/" target="_blank" rel="noopener noreferrer" class="contact-link" title="Connect on LinkedIn"> 
+                              <i class="bi bi-linkedin"></i> 
+                              <span>LinkedIn</span> 
+                          </a> 
+                          <a href="https://github.com/andyreww/" target="_blank" rel="noopener noreferrer" class="contact-link" title="View my GitHub"> 
+                              <i class="bi bi-github"></i> 
+                              <span>GitHub</span> 
+                          </a> 
+                      </div> 
+                      <p class="contact-location text-muted small mt-4 mb-0"> 
+                          <i class="bi bi-geo-alt-fill me-1"></i>Based in Queens, NY – Open to talking to you soon :D 
+                      </p> 
+                  </div> 
+              </div> 
+          </div> 
+        </div> 
+      </div> 
+ </section> 
+
+ <footer class="py-4 mt-5 text-center text-muted small border-top"> 
+      © <script>document.write(new Date().getFullYear())</script> Andrew. All Rights Reserved. 
+ </footer> 
+
+ <a href="#page-top" id="backToTopBtn" class="back-to-top d-flex align-items-center justify-content-center" title="Back to Top"> 
+     <i class="bi bi-arrow-up-short"></i> 
+ </a> 
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> 
+ <script src="https://unpkg.com/aos@next/dist/aos.js"></script> 
+
+ <script src="script.js"></script> 
+
+ </body> 
+ </html>
