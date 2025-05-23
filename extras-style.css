@@ -1,25 +1,31 @@
-/* extras-fresh-style.css - Fresh Start + Upcoming Film */
+/* extras-style.css - Updated with Cool Teal Accent Theme */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Nunito:wght@400;600;700&display=swap');
 
 :root {
-    /* Deep, dark, and cool color palette for the background */
-    --bg-color-1: #02040a; 
-    --bg-color-2: #0b121e; 
-    --bg-color-3: #122036; 
-    --bg-color-4: #1a355d; 
+    /* Cool Dark Background Palette */
+    --bg-color-1: #0a0f14; 
+    --bg-color-2: #10161d; 
+    --bg-color-3: #18202b; 
+    --bg-color-4: #202c3b; 
 
-    /* Text and Accent Colors */
-    --text-light: #e8efff;       
-    --text-muted: #8a9db8;      
-    --accent-glow: rgba(52, 152, 219, 0.4); 
+    /* Text and Accent Colors (Cool Teal/Cyan Focus) */
+    --text-light: #f0f4f8;       
+    --text-muted: #7c8a99;      
+    --accent-primary: #00e0e8;  
+    --accent-secondary: #00b8c0; 
+    --accent-border-muted: rgba(0, 130, 140, 0.35); 
+    --accent-glow: rgba(0, 224, 232, 0.25); 
+    --accent-glow-subtle: rgba(0, 184, 192, 0.15); 
 
-    /* Poster-specific hover border colors - UPDATE THESE! */
-    --interstellar-hover-border: #cfeaf1; 
-    --infinity-war-hover-border: hsl(23, 81%, 52%); 
-    --oppenheimer-hover-border: #fca311;  
+    /* Poster-specific hover border colors */
+    --interstellar-hover-border: #505c68;
+    --infinity-war-hover-border: #9c1b1f;
+    --oppenheimer-hover-border: #b34700;
 
-    /* Fonts */
-    --font-heading: 'Archivo Black', sans-serif; 
-    --font-body: 'Nunito', sans-serif;          
+    /* Fonts (Kept) */
+    --font-heading: 'Archivo Black', sans-serif;
+    --font-body: 'Nunito', sans-serif;
 }
 
 html, body {
@@ -28,6 +34,7 @@ html, body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    scroll-behavior: smooth; /* Added for smooth scroll on button click */
 }
 
 body {
@@ -35,14 +42,14 @@ body {
     color: var(--text-light);
     background-color: var(--bg-color-1);
     background-image: linear-gradient(
-        -70deg, 
+        -70deg,
         var(--bg-color-1) 0%,
         var(--bg-color-2) 25%,
         var(--bg-color-3) 50%,
         var(--bg-color-4) 75%,
         var(--bg-color-1) 100%
     );
-    background-size: 500% 500%; 
+    background-size: 500% 500%;
     animation: oilSlickBackground 40s ease-in-out infinite;
     display: flex;
     flex-direction: column;
@@ -60,9 +67,9 @@ body {
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    padding-top: 80px; 
-    width: 100%; 
-    box-sizing: border-box; 
+    padding-top: 80px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .back-to-portfolio-link {
@@ -70,8 +77,8 @@ body {
     top: 25px;
     left: 25px;
     padding: 10px 20px;
-    background-color: rgba(26, 53, 93, 0.5); 
-    backdrop-filter: blur(5px);
+    background-color: rgba(24, 32, 43, 0.65); 
+    backdrop-filter: blur(8px);
     color: var(--text-muted);
     text-decoration: none;
     border-radius: 8px;
@@ -79,14 +86,15 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
     z-index: 1000;
-    border: 1px solid rgba(var(--text-muted), 0.3);
+    border: 1px solid rgba(124, 138, 153, 0.2); 
 }
 
 .back-to-portfolio-link:hover {
-    background-color: rgba(var(--text-light), 0.1);
-    color: var(--text-light);
-    border-color: rgba(var(--text-light), 0.5);
+    background-color: rgba(0, 224, 232, 0.1); 
+    color: var(--accent-primary);
+    border-color: rgba(0, 224, 232, 0.5);
     transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 224, 232, 0.15);
 }
 
 .back-to-portfolio-link i {
@@ -96,88 +104,95 @@ body {
 
 .extras-main-header {
     text-align: center;
-    margin-bottom: 4rem; 
+    margin-bottom: 5rem;
 }
 
 .extras-main-header h1 {
     font-family: var(--font-heading);
-    font-size: clamp(2.8rem, 6vw, 4.5rem); 
-    color: var(--text-light);
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 0 15px var(--accent-glow), 0 0 30px rgba(var(--bg-color-4), 0.7);
+    font-size: clamp(3rem, 7vw, 5rem);
+    letter-spacing: 1.5px; 
+    margin-bottom: 0.75rem;
+    color: var(--text-light); 
+    text-shadow: 
+        0px 2px 3px rgba(0, 0, 0, 0.5), 
+        0px 4px 10px rgba(0, 0, 0, 0.3);  
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale;
+    filter: none; 
 }
 
 .extras-main-header p {
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
     color: var(--text-muted);
     font-weight: 400;
-    max-width: 550px;
+    max-width: 600px;
     margin: 0 auto;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
 }
 
 .extras-content-area {
     flex-grow: 1;
-    width: 100%; 
+    width: 100%;
 }
 
 .movie-grid-section {
-    margin-bottom: 5rem; 
-    width: 100%; 
+    margin-bottom: 6rem;
+    width: 100%;
 }
 
 .section-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-size: clamp(2rem, 4.5vw, 3rem);
     color: var(--text-light);
     text-align: center;
-    margin-bottom: 3rem; 
-    letter-spacing: 0.5px;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--accent-glow);
+    margin-bottom: 3.5rem;
+    letter-spacing: 1px;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--accent-border-muted); 
+    text-shadow: 0 0 6px var(--accent-glow-subtle); 
     display: block;
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
 }
 
-
 .movie-grid {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
-    gap: clamp(1.5rem, 3vw, 3rem); 
-    flex-wrap: wrap; 
-    width: 100%; 
-    padding: 0; 
-    margin: 0 auto; 
+    justify-content: center;
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
 }
 
 .movie-card-item {
-    width: clamp(220px, 20vw, 260px); 
-    aspect-ratio: 2/3; 
-    border-radius: 12px; 
-    overflow: hidden; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+    width: clamp(220px, 20vw, 260px);
+    aspect-ratio: 2/3;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    position: relative; 
+    position: relative;
 }
+
 .movie-card-item:hover {
-    transform: scale(1.05) translateY(-10px); 
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 25px var(--accent-glow);
+    transform: scale(1.05) translateY(-10px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7),
+                0 0 30px var(--accent-glow); 
 }
 
 .movie-poster-img {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover; 
-    border: 4px solid transparent; 
+    object-fit: cover;
+    border: 4px solid transparent;
     box-sizing: border-box;
     transition: border-color 0.3s ease-in-out;
 }
 
-/* Thematic border hover effects */
 .movie-card-item.movie-interstellar:hover .movie-poster-img {
     border-color: var(--interstellar-hover-border);
 }
@@ -188,18 +203,16 @@ body {
     border-color: var(--oppenheimer-hover-border);
 }
 
-/* --- Upcoming Film Styles --- */
 .upcoming-section {
-    border-top: 1px dashed rgba(var(--text-muted), 0.2);
-    padding: 3rem 0;
-    margin: 5rem 0;
-    text-align: center; /* Helps center inline-block children if needed */
+    padding: 4rem 0;
+    margin: 6rem 0;
+    text-align: center;
 }
 
 .upcoming-content {
-    max-width: 1200px; 
-    margin: 0 auto; /* Centers this container */
-    padding: 0 1rem; /* Add some padding if content inside is full width */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
     box-sizing: border-box;
 }
 
@@ -208,25 +221,30 @@ body {
     background-color: transparent;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 224, 232, 0.05); 
     display: block;
     max-width: 960px;
     margin-left: auto;
     margin-right: auto;
     height: 315px;
-    /* Maintain cropping and shape for the banner */
+    border: 1px solid transparent; 
+    transition: box-shadow 0.3s ease; 
+}
+
+.banner-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 224, 232, 0.1); 
 }
 
 .upcoming-banner {
     display: block;
-    width: 100%; /* Makes image responsive to banner-container width */
-    height: 100%; /* Fill the container's height */
-    border-radius: 10px; /* Match container if visible */
-    object-fit: cover; /* Ensure image fills and crops as needed */
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
 }
 
 .trailer-title {
-    font-family: var(--font-titles);
+    font-family: var(--font-heading);
     font-size: clamp(1.5rem, 3vw, 2.2rem);
     color: var(--text-muted);
     font-weight: 700;
@@ -237,17 +255,17 @@ body {
 .trailer-container {
     position: relative;
     width: 100%;
-    max-width: 960px; 
-    margin: 0 auto; /* Center the trailer container */
-    padding-top: 56.25%; 
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 56.25%;
     background-color: var(--bg-color-2);
     border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(var(--text-muted), 0.2);
-    overflow: hidden; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow); 
+    border: 1px solid rgba(0, 224, 232, 0.2); 
+    overflow: hidden;
 }
 
-.trailer-container iframe, 
+.trailer-container iframe,
 .trailer-container .youtube-placeholder {
     position: absolute;
     top: 0;
@@ -267,12 +285,11 @@ body {
 }
 .youtube-placeholder i {
     font-size: 4rem;
-    color: #ff0000; 
+    color: #007bff; 
     margin-bottom: 1rem;
     opacity: 0.7;
 }
 
-/* --- Placeholder Section Styles --- */
 .placeholder-section {
     border-top: 1px dashed rgba(var(--text-muted), 0.2);
     padding: 3rem 0;
@@ -285,19 +302,57 @@ body {
     text-align: center;
 }
 
-
 .extras-main-footer {
     text-align: center;
     padding: 2rem 1rem;
-    margin-top: auto; 
-    background-color: rgba(var(--bg-color-2), 0.5);
-    border-top: 1px solid rgba(var(--text-muted), 0.15);
+    margin-top: auto;
+    background-color: rgba(var(--bg-color-2), 0.7);
+    border-top: 1px solid rgba(0, 224, 232, 0.1); 
     font-weight: 600;
     color: var(--text-muted);
 }
 
+/* --- Back to Top Button --- */
+#backToTopBtn {
+    display: flex; /* MODIFIED: Set to flex by default */
+    align-items: center; /* Added for centering icon */
+    justify-content: center; /* Added for centering icon */
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1001; 
+    border: none;
+    outline: none;
+    background-color: var(--accent-secondary); 
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 12px; 
+    border-radius: 50%; 
+    font-size: 20px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 10px var(--accent-glow-subtle);
+    opacity: 0; /* Initially hidden by opacity */
+    visibility: hidden; /* Initially hidden by visibility */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, background-color 0.3s ease;
+    width: 50px; 
+    height: 50px; 
+    line-height: 1; 
+    text-align: center;
+}
+
+#backToTopBtn:hover {
+    background-color: var(--accent-primary); 
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 15px var(--accent-glow);
+}
+
+#backToTopBtn.show {
+    opacity: 1;
+    visibility: visible;
+    /* display: flex; is already set in the base style */
+}
+
+
 /* Responsive Adjustments */
-@media (max-width: 992px) { 
+@media (max-width: 992px) {
     .movie-grid {
         gap: clamp(1.5rem, 3vw, 2.5rem);
     }
@@ -305,38 +360,51 @@ body {
         width: clamp(220px, 28vw, 280px);
     }
     .upcoming-content {
-        padding: 0 1rem; /* Add some padding for tablet */
+        padding: 0 1rem;
     }
 }
 
 @media (max-width: 768px) {
     .page-wrapper {
         padding: 1.5rem;
-        padding-top: 90px; 
+        padding-top: 90px;
     }
     .extras-main-header h1 {
-        font-size: clamp(2.2rem, 7vw, 3.5rem);
+        font-size: clamp(2.2rem, 7vw, 3.5rem); 
+        text-shadow: 
+            0px 1px 2px rgba(0,0,0,0.6), 
+            0px 2px 5px rgba(0,0,0,0.4);    
     }
     .extras-main-header p {
         font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     }
     .movie-grid {
-        flex-direction: column; 
+        flex-direction: column;
         align-items: center;
         gap: 2.5rem;
     }
     .movie-card-item {
         width: 70%;
-        max-width: 320px; 
+        max-width: 320px;
     }
-    .movie-card-item:hover { 
-        transform: scale(1.03);
+    .movie-card-item:hover {
+        transform: scale(1.03); 
     }
     .section-title {
         font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+        border-bottom-width: 2px; 
+        text-shadow: 0 0 6px var(--accent-glow-subtle);
     }
     .upcoming-content {
-        padding: 0 0.5rem; /* Reduce padding for mobile */
+        padding: 0 0.5rem;
+    }
+    #backToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+        font-size: 18px;
+        width: 45px;
+        height: 45px;
     }
 }
 
@@ -353,5 +421,12 @@ body {
     }
     .extras-main-header h1 {
         font-size: clamp(2rem, 8vw, 3rem);
+        text-shadow: 
+             0px 1px 1px rgba(0,0,0,0.7), 
+             0px 1px 3px rgba(0,0,0,0.5);   
+    }
+    .section-title {
+        font-size: clamp(1.6rem, 4vw, 2rem); 
+        border-bottom-width: 1px; 
     }
 }

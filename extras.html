@@ -33,39 +33,96 @@
         <h2 class="section-title">Top Three Picks</h2>
         <div class="movie-grid">
           <div class="movie-card-item movie-infinity-war">
-            <img src="assets/Infinity_War.jpg" alt="Avengers: Infinity War Poster" class="movie-poster-img">
+            <a href="https://www.youtube.com/watch?v=6ZfuNTqbHE8" target="_blank">
+              <img src="assets/Infinity_War.jpg" alt="Avengers: Infinity War Poster" class="movie-poster-img" onerror="this.onerror=null;this.src='https://placehold.co/260x390/10161d/f0f4f8?text=Infinity+War';">
+            </a>
           </div>
           <div class="movie-card-item movie-interstellar">
-            <img src="assets/Interstellar.jpg" alt="Interstellar Poster" class="movie-poster-img">
+            <a href="https://www.youtube.com/watch?v=zSWdZVtXT7E" target="_blank">
+              <img src="assets/Interstellar.jpg" alt="Interstellar Poster" class="movie-poster-img" onerror="this.onerror=null;this.src='https://placehold.co/260x390/10161d/f0f4f8?text=Interstellar';">
+            </a>
           </div>
           <div class="movie-card-item movie-oppenheimer">
-            <img src="assets/Oppenheimer.jpg" alt="Oppenheimer Poster" class="movie-poster-img">
+            <a href="https://www.youtube.com/watch?v=uYPbbksJxIg" target="_blank">
+              <img src="assets/Oppenheimer.jpg" alt="Oppenheimer Poster" class="movie-poster-img" onerror="this.onerror=null;this.src='https://placehold.co/260x390/10161d/f0f4f8?text=Oppenheimer';">
+            </a>
           </div>
         </div>
       </section>
       
       <section id="upcoming-film" class="upcoming-section">
-        <h2 class="section-title">Most Anticipated Film</h2>
+        <h2 class="section-title">The One I’m Counting Down For</h2>
         <div class="upcoming-content">
             <div class="banner-container">
-                <img src="assets/f1.jpg" alt="Most Anticipated Film Banner" class="upcoming-banner">
+                <img src="assets/f1.jpg" alt="Most Anticipated Film Banner" class="upcoming-banner" onerror="this.onerror=null;this.src='https://placehold.co/960x315/10161d/f0f4f8?text=F1+Banner';">
             </div>
             <div class="trailer-container">
                 <iframe width="560" height="315"
-                  src="https://www.youtube.com/embed/ge_ABjtYx88?rel=0&modestbranding=1&showinfo=0"
+                  src="https://www.youtube.com/embed/ge_ABjtYx88?rel=0&modestbranding=1&showinfo=0" 
                   title="F1 Trailer" frameborder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen></iframe>
+                <div class="youtube-placeholder" style="display: none;"> 
+                    <i class="bi bi-youtube"></i>
+                    <p>Trailer currently unavailable.</p>
+                </div>
             </div>
         </div>
       </section>
 
-    </main>
+      </main>
 
     <footer class="extras-main-footer">
-        <p>&copy; <script>document.write(new Date().getFullYear())</script> Andrew Angulo. All Rights Reserved.</p>
+        <p>© <script>document.write(new Date().getFullYear())</script> Andrew Angulo. All Rights Reserved.</p>
     </footer>
   </div>
+
+  <button id="backToTopBtn" title="Go to top">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <script>
+    // Get the button
+    let mybutton = document.getElementById("backToTopBtn");
+
+    // When the user scrolls down 100px from the top of the document, show the button
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        mybutton.classList.add("show");
+      } else {
+        mybutton.classList.remove("show");
+      }
+    }
+
+    // When the user clicks on the button, scroll to the top of the document
+    mybutton.onclick = function() {
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    }
+
+    // YouTube iframe fallback logic
+    const trailerFrame = document.querySelector('.trailer-container iframe');
+    const trailerPlaceholder = document.querySelector('.trailer-container .youtube-placeholder');
+    
+    function showPlaceholder() {
+        if (trailerFrame) trailerFrame.style.display = 'none';
+        if (trailerPlaceholder) trailerPlaceholder.style.display = 'flex';
+    }
+
+    if (trailerFrame) {
+        trailerFrame.onerror = showPlaceholder;
+        // Check if src is invalid/placeholder
+        if (!trailerFrame.src || trailerFrame.src.includes("googleusercontent.com") || trailerFrame.src.length < 30) { 
+             showPlaceholder();
+        } else if (trailerPlaceholder) {
+            trailerPlaceholder.style.display = 'none';
+        }
+    } else if (trailerPlaceholder) {
+        showPlaceholder();
+    }
+
+  </script>
 
 </body>
 </html>
