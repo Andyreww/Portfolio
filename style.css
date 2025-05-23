@@ -1,4 +1,4 @@
-/* style.css (v6.83 - Resized Graduation Video Button) */
+/* style.css (v6.84 - Styled Popover Secret Link) */
 
 :root {
     /* Color Palette */
@@ -626,11 +626,42 @@
 
   footer.border-top { border-top: 1px solid var(--border-light) !important; background-color: var(--bg-main); }
 
-  .cartoon-popover { --bs-popover-max-width: 200px; --bs-popover-border-color: #333; --bs-popover-border-width: 2px; --bs-popover-bg: var(--popover-bg); --bs-popover-box-shadow: 4px 4px 0px #aaaaaa; --bs-popover-border-radius: var(--popover-border-radius); --bs-popover-header-display: none; --bs-popover-body-padding-x: 1rem; --bs-popover-body-padding-y: 0.75rem; --bs-popover-body-color: var(--text-medium); font-family: var(--font-heading); font-weight: var(--heading-font-weight); text-align: center; }
+  .cartoon-popover { --bs-popover-max-width: 220px; --bs-popover-border-color: #333; --bs-popover-border-width: 2px; --bs-popover-bg: var(--popover-bg); --bs-popover-box-shadow: 4px 4px 0px #aaaaaa; --bs-popover-border-radius: var(--popover-border-radius); --bs-popover-header-display: none; --bs-popover-body-padding-x: 1rem; --bs-popover-body-padding-y: 0.75rem; --bs-popover-body-color: var(--text-medium); font-family: var(--font-heading); font-weight: var(--heading-font-weight); text-align: center; }
   .cartoon-popover > .popover-arrow::before { border-bottom-color: var(--bs-popover-border-color); border-top-color: var(--bs-popover-border-color); }
   .cartoon-popover[data-popper-placement^="left"] > .popover-arrow::before { border-left-color: var(--bs-popover-border-color); }
   .cartoon-popover[data-popper-placement^="right"] > .popover-arrow::before { border-right-color: var(--bs-popover-border-color); }
+
+  /* NEW STYLES for the secret link inside the popover */
+  .popover-secret-link {
+    display: block; /* Make it take its own line if needed, or inline-block */
+    /* margin-top: 0.5rem; /* Add some space above it */
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    color: var(--accent-color); /* Use your accent color for the link */
+    font-size: 0.9em; /* Slightly smaller than main popover text */
+    font-weight: 500;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .popover-secret-link:hover {
+    color: white; /* Or a lighter shade of your accent color */
+    background-color: var(--accent-color); /* Highlight on hover */
+    text-decoration: none;
+  }
+
+  .popover-secret-link i {
+    vertical-align: -0.1em; /* Align icon nicely with text */
+  }
+
+  /* Optional: style for the <hr> in the popover if you want it customized */
+  .popover-body hr {
+      border-top: 1px solid rgba(0,0,0,0.1);
+      margin-top: 0.5rem; /* Added margin-top to the hr */
+      margin-bottom: 0.5rem; /* Added margin-bottom to the hr */
+  }
   /* --- End Shared Styles --- */
+
 
   /* === Back to Top Button START === */
   .back-to-top {
