@@ -13,8 +13,8 @@
     --accent-glow: rgba(52, 152, 219, 0.4); 
 
     /* Poster-specific hover border colors - UPDATE THESE! */
-    --interstellar-hover-border: #61dafb; 
-    --infinity-war-hover-border: #c663fc; 
+    --interstellar-hover-border: #cfeaf1; 
+    --infinity-war-hover-border: hsl(23, 81%, 52%); 
     --oppenheimer-hover-border: #fca311;  
 
     /* Fonts */
@@ -135,10 +135,10 @@ body {
     letter-spacing: 0.5px;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--accent-glow);
-    display: inline-block; 
-    position: relative; 
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 
@@ -205,22 +205,24 @@ body {
 
 .banner-container {
     margin-bottom: 3rem;
-    background-color: #000; 
+    background-color: transparent;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    /* ADDED/MODIFIED for centering the banner */
-    display: block; /* Ensure it's a block element */
-    max-width: 100%; /* It will be constrained by .upcoming-content's 1200px */
-    /* margin-left: auto; /* These will center it if it's narrower than its parent */
-    /* margin-right: auto; /* (which it won't be if image is 100% width) */
+    display: block;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 315px;
+    /* Maintain cropping and shape for the banner */
 }
 
 .upcoming-banner {
     display: block;
     width: 100%; /* Makes image responsive to banner-container width */
-    height: auto; /* Maintain aspect ratio */
+    height: 100%; /* Fill the container's height */
     border-radius: 10px; /* Match container if visible */
+    object-fit: cover; /* Ensure image fills and crops as needed */
 }
 
 .trailer-title {
@@ -229,6 +231,7 @@ body {
     color: var(--text-muted);
     font-weight: 700;
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .trailer-container {
