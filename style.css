@@ -207,7 +207,19 @@
   #about .lead { font-size: 1.15rem; color: var(--text-light); margin-bottom: 1rem; line-height: 1.75; }
   #about p { color: var(--text-medium); line-height: 1.7; }
   #about .fun-facts-text { font-size: 1.05rem; color: #444; }
-  .about-photo-carousel { max-height: 450px; object-fit: cover; border-radius: var(--video-border-radius); }
+
+  /* MODIFIED .about-photo-carousel */
+  .about-photo-carousel {
+    display: block; /* Ensure it behaves as a block */
+    width: 100%;    /* Fill the width of the carousel-item */
+    height: auto;   /* Let height be determined by aspect ratio and width */
+    max-height: 450px; /* Keep the max height constraint, images will scale down to fit */
+    object-fit: contain; /* This is the key change: shows entire image, letterboxes/pillarboxes if needed */
+    border-radius: var(--video-border-radius); /* Maintain rounded corners */
+    margin-left: auto; /* Center the image horizontally if pillarboxed */
+    margin-right: auto; /* Center the image horizontally if pillarboxed */
+  }
+
   #photoCarousel .carousel-control-prev-icon, #photoCarousel .carousel-control-next-icon { background-color: rgba(0, 0, 0, 0.35); border-radius: 50%; padding: 0.9rem; background-size: 55% 55%; }
   #about h2 { margin-top: 0; }
   #about h3, #about h4 { color: #2a2a2a; font-weight: var(--heading-font-weight); }
