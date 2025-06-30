@@ -250,10 +250,6 @@ INFINITE CAROUSEL
     /* REVERTED: Removed pointer-events:none to re-enable hover and parallax effects. The JS will handle the drag logic. */
 }
 
-.movie-card-item a {
-     /* This is the default, so pointer-events rule isn't needed here anymore. */
-}
-
 .movie-card-item .movie-poster-img {
     display: block;
     width: 100%;
