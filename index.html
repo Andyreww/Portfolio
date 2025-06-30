@@ -184,11 +184,9 @@
                             </div>
                         </div>
                         <div class="col-lg-6 project-details-col">
-                            <!-- Added text-center to project-details-content -->
                             <div class="project-details-content text-center">
                                 <h3 class="project-showcase-title">Apple Vision Pro Engagement</h3>
                                 <p class="project-showcase-summary">An analysis using K-Means clustering on Twitter data to identify user interaction patterns and engagement levels surrounding the Apple Vision Pro launch.</p>
-                                <!-- Added justify-content-center to project-showcase-tags -->
                                 <div class="project-showcase-tags mb-4 d-flex flex-wrap justify-content-center">
                                      <span class="badge project-tag">Data Analysis</span>
                                      <span class="badge project-tag">Python</span>
@@ -209,11 +207,9 @@
                 <div class="project-showcase-item" id="project-music">
                     <div class="row g-0 align-items-center">
                         <div class="col-lg-6 project-details-col order-lg-2">
-                            <!-- Added text-center to project-details-content -->
                             <div class="project-details-content text-center">
                                 <h3 class="project-showcase-title">Music Classifier & Recommender</h3>
                                 <p class="project-showcase-summary">Developed a system to analyze .wav audio files, extract MFCC features using Librosa, and classify music genres with a Keras/TensorFlow model, forming the basis for recommendations.</p>
-                                <!-- Added justify-content-center to project-showcase-tags -->
                                 <div class="project-showcase-tags mb-4 d-flex flex-wrap justify-content-center">
                                      <span class="badge project-tag">Machine Learning</span>
                                      <span class="badge project-tag">Audio Processing</span>
@@ -244,11 +240,9 @@
                              </div>
                         </div>
                         <div class="col-lg-6 project-details-col">
-                             <!-- Added text-center to project-details-content -->
                              <div class="project-details-content text-center">
                                 <h3 class="project-showcase-title">FORSAKEN (Game Development)</h3>
                                 <p class="project-showcase-summary">Co-developed a souls-like dungeon crawler in Unity. Explored the aspect of a 2D Dungeon crawler with unique mechanics like enemy revival and responsive mechanics.</p>
-                                 <!-- Added justify-content-center to project-showcase-tags -->
                                  <div class="project-showcase-tags mb-4 d-flex flex-wrap justify-content-center">
                                      <span class="badge project-tag">Game Development</span>
                                      <span class="badge project-tag">Unity</span>
@@ -269,11 +263,9 @@
                  <div class="project-showcase-item" id="project-networkai">
                     <div class="row g-0 align-items-center">
                         <div class="col-lg-6 project-details-col order-lg-2">
-                             <!-- Added text-center to project-details-content -->
                              <div class="project-details-content text-center">
                                 <h3 class="project-showcase-title">NetworkAI</h3>
                                 <p class="project-showcase-summary">Designed a platform concept leveraging AI to bridge the gap between job seekers and company insiders, facilitating meaningful connections beyond traditional cold applications.</p>
-                                 <!-- Added justify-content-center to project-showcase-tags -->
                                  <div class="project-showcase-tags mb-4 d-flex flex-wrap justify-content-center">
                                      <span class="badge project-tag">Web Application</span>
                                      <span class="badge project-tag">AI/ML</span>
@@ -294,6 +286,34 @@
                      </div>
                  </div>
              </div>
+             
+            <!-- Project 5: Manhwa-AI -->
+            <div class="col-12" data-aos="fade-up" data-aos-delay="600">
+                <div class="project-showcase-item" id="project-manhwaai">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-lg-6 project-image-col p-3 p-lg-4">
+                            <div class="project-image-aspect-wrapper shadow-sm">
+                                <img src="assets/manhwa-AI.png" class="project-showcase-image" alt="AI Manhwa Scanlator project thumbnail" onerror="this.onerror=null; this.src='https://placehold.co/600x375/eeeeee/333333?text=Manhwa-AI'">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 project-details-col">
+                            <div class="project-details-content text-center">
+                                <h3 class="project-showcase-title">AI Manhwa Scanlator</h3>
+                                <p class="project-showcase-summary">An end-to-end computer vision pipeline that automates the entire process of "scanlating" raw Korean manhwa (webcomics).</p>
+                                <div class="project-showcase-tags mb-4 d-flex flex-wrap justify-content-center">
+                                    <span class="badge project-tag">Computer Vision</span>
+                                    <span class="badge project-tag">AI/ML</span>
+                                    <span class="badge project-tag">Python</span>
+                                    <span class="badge project-tag">Automation</span>
+                                </div>
+                                <button type="button" class="btn btn-outline-accent project-showcase-button" data-bs-toggle="modal" data-bs-target="#manhwaAIModal">
+                                    Explore Project <i class="bi bi-robot ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
          </div> <!-- End row -->
 
          <!-- Modals -->
@@ -529,6 +549,56 @@
              </div>
            </div>
          </div>
+
+        <div class="modal fade" id="manhwaAIModal" tabindex="-1" aria-labelledby="manhwaAIModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content project-modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="manhwaAIModalLabel"><i class="bi bi-robot me-2"></i>AI Manhwa Scanlator</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="video-container position-relative mb-4">
+                            <video src="assets/manhwa_AI.mov" id="manhwaAIVideo" autoplay loop muted playsinline> Your browser does not support the video tag. </video>
+                            <button type="button" id="manhwaAIVideoPlayPauseBtn" class="btn video-control-btn" aria-label="Play/Pause Video"> <i class="bi bi-pause-fill"></i> </button>
+                        </div>
+                        <h5 class="fw-semibold"><i class="bi bi-card-text me-2"></i>Overview</h5>
+                        <p class="lead">An end-to-end computer vision pipeline that automates the entire process of "scanlating" raw Korean manhwa (webcomics). This tool uses a series of AI models to detect text bubbles, extract the original Korean text, translate it into natural-sounding English, and seamlessly typeset the new text back onto the original artwork, preserving the artistic integrity of the panel.</p>
+                        <hr class="my-4">
+                        <h5 class="fw-semibold"><i class="bi bi-lightbulb-fill me-2"></i>Key Features</h5>
+                        <ul>
+                            <li><strong>Custom Object Detection Model:</strong> Trained a custom Faster R-CNN model from the ground up using PyTorch on a self-annotated dataset of 160+ manhwa panels to accurately detect and isolate speech bubbles of any shape or size.</li>
+                            <li><strong>Generative AI Translation Engine:</strong> Integrated Google's Gemini LLM via its API, leveraging advanced prompt engineering to perform context-aware, emotionally resonant translations that mimic the style of professional scanlators, including handling dialogue and sound effects.</li>
+                            <li><strong>Advanced OCR & Image Processing Pipeline:</strong> Built a multi-stage pipeline using OpenCV that automatically cleans, upscales, and denoises cropped text bubbles. The pipeline then uses a dual-engine OCR approach (Google Vision API & EasyOCR) to maximize text extraction accuracy from stylized fonts.</li>
+                            <li><strong>Automated Inpainting & Typesetting:</strong> The system digitally erases the original Korean text using content-aware inpainting (cv2.INPAINT_TELEA) and then dynamically calculates the optimal font size, color, and wrapping to typeset the translated English text back into the bubble for a seamless final product.</li>
+                        </ul>
+                        <hr class="my-4">
+                        <h5 class="fw-semibold"><i class="bi bi-bullseye me-2"></i>Project Goal</h5>
+                        <blockquote class="blockquote project-blockquote mt-3">
+                            <p>To significantly reduce the manual, time-consuming labor involved in traditional scanlation by creating a fully automated pipeline. The goal was to produce high-quality, natural-sounding English translations in a fraction of the time, making more manhwa accessible to a global audience.</p>
+                        </blockquote>
+                        <h5 class="fw-semibold mt-4"><i class="bi bi-tools me-2"></i>Technologies Used</h5>
+                        <p>
+                            <span class="badge tech-badge"><i class="devicon-python-plain colored"></i> Python</span>
+                            <span class="badge tech-badge"><i class="devicon-pytorch-original colored"></i> PyTorch</span>
+                            <span class="badge tech-badge"><i class="devicon-opencv-original colored"></i> OpenCV</span>
+                            <span class="badge tech-badge"><i class="devicon-scikitlearn-original colored"></i> Scikit-learn</span>
+                            <span class="badge tech-badge"><i class="bi bi-google"></i> Google Gemini API</span>
+                            <span class="badge tech-badge"><i class="bi bi-google"></i> Google Vision API</span>
+                            <span class="badge tech-badge">EasyOCR</span>
+                            <span class="badge tech-badge">Pillow</span>
+                            <span class="badge tech-badge">NumPy</span>
+                            <span class="badge tech-badge">CustomTkinter</span>
+                            <span class="badge tech-badge">PyInstaller</span>
+                        </p>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <a href="https://github.com/Andyreww/Manhwa-AI" class="btn btn-dark" target="_blank" rel="noopener noreferrer"> <i class="bi bi-github me-1"></i> View on GitHub </a>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
      </div> <!-- End container -->
  </section>
 
