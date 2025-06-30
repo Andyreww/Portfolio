@@ -110,76 +110,77 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Countdown Timer Error:", error);
     }
     
-    // --- 5. JS-POWERED INFINITE CAROUSEL (SMOOTHER LOGIC) ---
+    // --- 5. INFINITE CAROUSEL ---
     try {
         const carouselContainer = document.querySelector('.carousel-container');
-        if (carouselContainer && isDesktop) {
+        if (carouselContainer) {
             const movieGrid = carouselContainer.querySelector('.movie-grid');
             if (movieGrid) {
-                // Clone cards for infinite loop
                 const originalCards = movieGrid.innerHTML;
                 movieGrid.innerHTML += originalCards;
 
-                let position = 0;
-                let isPausedByHover = false;
-                let isDragging = false;
-                let startX;
-                let startPosition;
-                const scrollSpeed = 0.4; // Adjust for desired auto-scroll speed
-                const loopPoint = movieGrid.scrollWidth / 2; // The point at which the carousel repeats
+                // **MODIFIED**: Only run JS animation on desktop
+                if (isDesktop) {
+                    let position = 0;
+                    let isPausedByHover = false;
+                    let isDragging = false;
+                    let startX;
+                    let startPosition;
+                    const scrollSpeed = 0.4;
+                    const loopPoint = movieGrid.scrollWidth / 2;
 
-                function animateCarousel() {
-                    if (!isPausedByHover && !isDragging) {
-                        position -= scrollSpeed;
-                    }
-                    
-                    // **FIX**: Use modulo for a truly seamless loop without a visible "teleport"
-                    if (Math.abs(position) >= loopPoint) {
-                        position = position % loopPoint;
-                    }
+                    function animateCarousel() {
+                        if (!isPausedByHover && !isDragging) {
+                            position -= scrollSpeed;
+                        }
+                        
+                        if (Math.abs(position) >= loopPoint) {
+                            position %= loopPoint;
+                        }
 
-                    movieGrid.style.transform = `translateX(${position}px)`;
+                        movieGrid.style.transform = `translateX(${position}px)`;
+                        
+                        requestAnimationFrame(animateCarousel);
+                    }
                     
                     requestAnimationFrame(animateCarousel);
+                    
+                    carouselContainer.addEventListener('mouseenter', () => isPausedByHover = true);
+                    carouselContainer.addEventListener('mouseleave', () => {
+                        if(!isDragging) isPausedByHover = false;
+                    });
+
+                    carouselContainer.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.pageX;
+                        startPosition = position;
+                        e.preventDefault();
+                    });
+
+                    window.addEventListener('mouseup', () => {
+                        if (isDragging) {
+                            isDragging = false;
+                            if (!carouselContainer.matches(':hover')) {
+                                isPausedByHover = false;
+                            }
+                        }
+                    });
+
+                    window.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        const walk = e.pageX - startX;
+                        position = startPosition + walk;
+                    });
+
+                    carouselContainer.addEventListener('click', (e) => {
+                        if(Math.abs(position - startPosition) > 5) {
+                             if (e.target.closest('a')) {
+                                e.preventDefault();
+                            }
+                        }
+                    }, true);
                 }
-                
-                requestAnimationFrame(animateCarousel);
-                
-                carouselContainer.addEventListener('mouseenter', () => isPausedByHover = true);
-                carouselContainer.addEventListener('mouseleave', () => {
-                    if(!isDragging) isPausedByHover = false;
-                });
-
-                carouselContainer.addEventListener('mousedown', (e) => {
-                    isDragging = true;
-                    startX = e.pageX;
-                    startPosition = position; // Save current translated position
-                    e.preventDefault(); // Prevents text selection
-                });
-
-                window.addEventListener('mouseup', () => {
-                    if (isDragging) {
-                        isDragging = false;
-                        if (!carouselContainer.matches(':hover')) {
-                            isPausedByHover = false;
-                        }
-                    }
-                });
-
-                window.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    const walk = e.pageX - startX;
-                    position = startPosition + walk; // Move from last saved position
-                });
-
-                 // Prevent link clicks on drag
-                carouselContainer.addEventListener('click', (e) => {
-                    if(Math.abs(position - startPosition) > 5) { // If dragged more than 5px
-                         if (e.target.closest('a')) {
-                            e.preventDefault();
-                        }
-                    }
-                }, true);
+                // On mobile, the CSS handles the overflow scrolling, so no JS is needed.
             }
         }
     } catch (error) {
