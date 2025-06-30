@@ -181,16 +181,22 @@ HEADER
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding: 0 1rem;
 }
 
 .extras-main-header h1 {
     font-family: var(--font-heading);
     font-weight: 800;
-    font-size: clamp(3rem, 10vw, 8rem);
+    font-size: clamp(2.2rem, 9vw, 8rem); 
     letter-spacing: -0.02em;
     margin-bottom: 1rem;
-    color: var(--text-light);
     line-height: 1.1;
+    overflow-wrap: break-word;
+
+    background: linear-gradient(to bottom, var(--text-light), var(--text-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .extras-main-header p {
@@ -241,10 +247,11 @@ INFINITE CAROUSEL
     user-select: none;
     transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease-out, border-color 0.3s ease-out;
     border: 2px solid transparent;
+    /* REVERTED: Removed pointer-events:none to re-enable hover and parallax effects. The JS will handle the drag logic. */
 }
 
 .movie-card-item a {
-     pointer-events: auto;
+     /* This is the default, so pointer-events rule isn't needed here anymore. */
 }
 
 .movie-card-item .movie-poster-img {
@@ -495,18 +502,5 @@ RESPONSIVE ADJUSTMENTS
     .countdown-timer-block {
         padding: 0.75rem;
         min-width: 70px;
-    }
-    /* **ADDED**: Mobile Carousel Styles */
-    .carousel-container {
-        cursor: default;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none; /* Firefox */
-    }
-    .carousel-container::-webkit-scrollbar {
-        display: none; /* Safari, Chrome */
-    }
-    .movie-grid {
-        transform: none !important; /* Disable JS transform on mobile */
     }
 }

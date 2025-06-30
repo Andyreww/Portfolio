@@ -110,77 +110,95 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Countdown Timer Error:", error);
     }
     
-    // --- 5. INFINITE CAROUSEL ---
+    // --- 5. INFINITE CAROUSEL (REFINED DRAG VS. CLICK LOGIC) ---
     try {
         const carouselContainer = document.querySelector('.carousel-container');
         if (carouselContainer) {
             const movieGrid = carouselContainer.querySelector('.movie-grid');
             if (movieGrid) {
+                // Prevent the browser's default image/link dragging behavior which interferes with our custom drag
+                carouselContainer.addEventListener('dragstart', (e) => e.preventDefault());
+
                 const originalCards = movieGrid.innerHTML;
                 movieGrid.innerHTML += originalCards;
 
-                // **MODIFIED**: Only run JS animation on desktop
-                if (isDesktop) {
-                    let position = 0;
-                    let isPausedByHover = false;
-                    let isDragging = false;
-                    let startX;
-                    let startPosition;
-                    const scrollSpeed = 0.4;
-                    const loopPoint = movieGrid.scrollWidth / 2;
+                let position = 0;
+                let isPointerDown = false; // Is the mouse/finger currently down?
+                let hasDragged = false;    // Did the pointer move enough to be considered a drag?
+                let isHovering = false; 
+                let startX;
+                let startPosition;
+                const scrollSpeed = 0.4;
+                const loopPoint = movieGrid.scrollWidth / 2;
 
-                    function animateCarousel() {
-                        if (!isPausedByHover && !isDragging) {
-                            position -= scrollSpeed;
-                        }
-                        
-                        if (Math.abs(position) >= loopPoint) {
-                            position %= loopPoint;
-                        }
+                function animateCarousel() {
+                    const shouldPause = isPointerDown || (isDesktop && isHovering);
+                    if (!shouldPause) {
+                        position -= scrollSpeed;
+                    }
+                    if (Math.abs(position) >= loopPoint) {
+                        position %= loopPoint;
+                    }
+                    movieGrid.style.transform = `translateX(${position}px)`;
+                    requestAnimationFrame(animateCarousel);
+                }
+                requestAnimationFrame(animateCarousel);
 
-                        movieGrid.style.transform = `translateX(${position}px)`;
-                        
-                        requestAnimationFrame(animateCarousel);
+                function pointerDown(e) {
+                    isPointerDown = true;
+                    hasDragged = false; // Reset the drag flag for this new interaction
+                    startX = e.pageX || e.touches[0].pageX;
+                    startPosition = position;
+                }
+
+                function pointerMove(e) {
+                    if (!isPointerDown) return;
+                    
+                    const currentX = e.pageX || e.touches[0].pageX;
+                    const dragOffset = currentX - startX;
+                    
+                    // If the pointer has moved more than a few pixels, we can confidently call it a drag
+                    if (!hasDragged && Math.abs(dragOffset) > 5) {
+                        hasDragged = true;
                     }
                     
-                    requestAnimationFrame(animateCarousel);
-                    
-                    carouselContainer.addEventListener('mouseenter', () => isPausedByHover = true);
-                    carouselContainer.addEventListener('mouseleave', () => {
-                        if(!isDragging) isPausedByHover = false;
-                    });
-
-                    carouselContainer.addEventListener('mousedown', (e) => {
-                        isDragging = true;
-                        startX = e.pageX;
-                        startPosition = position;
+                    // If it's a touch event and we are dragging, prevent the page from scrolling up/down
+                    if (e.type === 'touchmove' && hasDragged) {
                         e.preventDefault();
-                    });
-
-                    window.addEventListener('mouseup', () => {
-                        if (isDragging) {
-                            isDragging = false;
-                            if (!carouselContainer.matches(':hover')) {
-                                isPausedByHover = false;
-                            }
-                        }
-                    });
-
-                    window.addEventListener('mousemove', (e) => {
-                        if (!isDragging) return;
-                        const walk = e.pageX - startX;
-                        position = startPosition + walk;
-                    });
-
-                    carouselContainer.addEventListener('click', (e) => {
-                        if(Math.abs(position - startPosition) > 5) {
-                             if (e.target.closest('a')) {
-                                e.preventDefault();
-                            }
-                        }
-                    }, true);
+                    }
+                    
+                    position = startPosition + dragOffset;
                 }
-                // On mobile, the CSS handles the overflow scrolling, so no JS is needed.
+
+                function pointerUp() {
+                    isPointerDown = false;
+                }
+                
+                if (isDesktop) {
+                    carouselContainer.addEventListener('mouseenter', () => { isHovering = true; });
+                    carouselContainer.addEventListener('mouseleave', () => { isHovering = false; });
+                }
+                
+                // Mouse Events
+                carouselContainer.addEventListener('mousedown', pointerDown);
+                window.addEventListener('mouseup', pointerUp);
+                window.addEventListener('mousemove', pointerMove);
+
+                // Touch Events
+                // We need passive:false on the start event if we want to call preventDefault() in the move event.
+                carouselContainer.addEventListener('touchstart', pointerDown, { passive: false });
+                window.addEventListener('touchend', pointerUp);
+                window.addEventListener('touchcancel', pointerUp);
+                window.addEventListener('touchmove', pointerMove, { passive: false });
+
+                // The crucial click handler
+                carouselContainer.addEventListener('click', (e) => {
+                    // If the `hasDragged` flag was set, it was a drag, not a click.
+                    // So, we prevent the default action (navigating to the link's href).
+                    if(hasDragged) {
+                         e.preventDefault();
+                    }
+                }, true); // Use capture phase to catch the event before the link can react
             }
         }
     } catch (error) {
