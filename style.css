@@ -1,4 +1,4 @@
-/* style.css (v6.84 - Styled Popover Secret Link) */
+/* style.css (v6.85 - Added PFP Animation) */
 
 :root {
     /* Color Palette */
@@ -63,8 +63,38 @@
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
   /* Navbar Profile Picture */
-  .navbar a.navbar-brand img.navbar-pfp { width: 35px !important; height: 35px !important; min-width: 35px !important; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-subtle); box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: transform var(--transition-fast), box-shadow var(--transition-fast); cursor: pointer; }
-  .navbar a.navbar-brand img.navbar-pfp:hover { transform: scale(1.1); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); }
+  .navbar a.navbar-brand img.navbar-pfp { 
+    width: 35px !important; 
+    height: 35px !important; 
+    min-width: 35px !important; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    flex-shrink: 0; 
+    border: 1px solid var(--border-subtle); 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast); 
+    cursor: pointer; 
+    animation: pulseGlow 2.5s infinite cubic-bezier(0.65, 0, 0.35, 1); /* Subtle pulse to indicate clickability */
+  }
+
+  .navbar a.navbar-brand img.navbar-pfp:hover { 
+    animation: none; /* Stop the pulse on hover for a direct interaction feel */
+    transform: scale(1.1); 
+    box-shadow: 0 0 8px rgba(var(--accent-color-rgb), 0.5), 0 2px 6px rgba(0, 0, 0, 0.15); /* Enhanced static glow on hover */
+  }
+  
+  /* Keyframes for the pulsing glow effect */
+  @keyframes pulseGlow {
+    0% {
+      box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0.4), 0 1px 3px rgba(0,0,0,0.1);
+    }
+    70% {
+      box-shadow: 0 0 0 7px rgba(var(--accent-color-rgb), 0), 0 2px 6px rgba(0,0,0,0.15);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(var(--accent-color-rgb), 0), 0 1px 3px rgba(0,0,0,0.1);
+    }
+  }
 
   /* === Intro Overlay Styles START === */
   #intro-overlay {

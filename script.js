@@ -1,4 +1,4 @@
-// Contents of script.js (v7.05 - Autoplay on Intro End)
+// Contents of script.js (v7.06 - Responsive Popover Placement)
 
 // --- Initialization Guard ---
 let typedJsInitialized = false;
@@ -405,6 +405,58 @@ function initializeAudioPlayer() {
 // === Currently Listening Feature END ===
 
 
+// === Popover Logic (Responsive & Click-to-Hide) START ===
+function initializePopover() {
+    const pfpImage = document.getElementById('navbarPfpImage');
+    if (!pfpImage) {
+        console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover.");
+        return;
+    }
+
+    let popoverInstance = bootstrap.Popover.getInstance(pfpImage);
+    if (popoverInstance) {
+        popoverInstance.dispose(); // Remove existing popover to re-initialize
+    }
+
+    // Determine placement based on window width (992px is Bootstrap's 'lg' breakpoint)
+    const placement = window.innerWidth < 992 ? 'right' : 'bottom';
+
+    // Create a new popover instance with the correct placement
+    popoverInstance = new bootstrap.Popover(pfpImage, {
+        placement: placement,
+        customClass: 'cartoon-popover',
+        trigger: 'manual' // We will control show/hide manually
+    });
+
+    let popoverHideTimeout = null;
+
+    pfpImage.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the click from bubbling up
+        if (popoverHideTimeout) {
+            clearTimeout(popoverHideTimeout);
+        }
+        popoverInstance.show();
+        popoverHideTimeout = setTimeout(() => {
+            popoverInstance.hide();
+            popoverHideTimeout = null;
+        }, 3000); // Auto-hide after 3 seconds
+    });
+
+    // Optional: Hide popover if clicking anywhere else on the page
+    document.addEventListener('click', (e) => {
+        // Hide if the click is outside the popover and not on the pfpImage itself
+        if (popoverHideTimeout && !pfpImage.contains(e.target) && !document.querySelector('.popover')?.contains(e.target)) {
+            clearTimeout(popoverHideTimeout);
+            popoverInstance.hide();
+            popoverHideTimeout = null;
+        }
+    });
+    
+    console.log(`Popover logic initialized with placement: '${placement}'.`);
+}
+// === Popover Logic END ===
+
+
 // --- Main Setup on DOM Load ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Loaded. Setting up Intro, AOS, Popovers, Videos, Countdown, BackToTop.");
@@ -425,6 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initializeCountdown();
         initializeBackToTopButton();
         initAos();
+        initializePopover(); // Initialize popover here
     }
 
     if (hasIntroPlayed) {
@@ -532,21 +585,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } // End else (Intro Will Play)
 
 
-    // === Popover Logic (Click & Auto-Hide) ===
-    // ... (Keep this logic as it was) ...
-    const pfpImage = document.getElementById('navbarPfpImage');
-    let popoverHideTimeout = null;
-    if (pfpImage) {
-        try {
-            if (typeof bootstrap !== 'undefined' && bootstrap.Popover) {
-                const popover = new bootstrap.Popover(pfpImage, { placement: 'bottom', customClass: 'cartoon-popover', trigger: 'manual' });
-                pfpImage.addEventListener('click', () => { if (popoverHideTimeout) { clearTimeout(popoverHideTimeout); } popover.show(); popoverHideTimeout = setTimeout(() => { popover.hide(); popoverHideTimeout = null; }, 3000); });
-                console.log("Popover logic initialized (Click trigger, Auto-Hide).");
-            } else { console.warn("Bootstrap Popover component not found."); }
-        } catch (e) { console.error("Error during popover setup:", e); }
-    } else { console.warn("Navbar profile picture element (#navbarPfpImage) not found for popover."); }
-
-
     // === Generic Video Control Function for Modals ===
     // This function sets up play/pause controls for videos within Bootstrap modals.
     function setupVideoControls(videoId, buttonId, modalId) {
@@ -632,6 +670,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setupVideoControls('forsakenVideo', 'forsakenVideoPlayPauseBtn', 'projectThreeModal');
     // Setup controls for NetworkAI modal video
     setupVideoControls('networkAIVideo', 'networkAIVideoPlayPauseBtn', 'networkAIModal');
+    // Setup controls for Manhwa-AI modal video
+    setupVideoControls('manhwaAIVideo', 'manhwaAIVideoPlayPauseBtn', 'manhwaAIModal');
     // --- End Video Setup ---
+
+    // Add a resize listener to re-initialize the popover with the correct placement
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            initializePopover();
+        }, 250); // Debounce to avoid rapid re-initialization
+    });
 
 }); // --- End DOMContentLoaded ---
