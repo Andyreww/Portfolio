@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build output (GitHub Actions will build this automatically)
+dist/
+
+# OS files
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vite
+.vite/
+
