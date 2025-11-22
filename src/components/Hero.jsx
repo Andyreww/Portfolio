@@ -200,7 +200,7 @@ export default function Hero({ showDock, isMobile, isCompact }) {
                   layoutId="shared-dock" 
                   animateIn={!hasAnimatedDock}
                   isMobile={isCompact}
-                  className={`relative w-full flex justify-center pointer-events-none max-w-[min(720px,95vw)] ${isCompact ? '-translate-y-8' : ''}`}
+                  className={`relative w-full flex justify-center pointer-events-none max-w-[min(720px,95vw)] ${isCompact ? 'translate-y-2' : ''}`}
                 />
              ) : (
                 <div className="h-[64px] w-full" />

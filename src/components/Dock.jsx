@@ -43,7 +43,8 @@ function DockIcon({
   index, 
   animateIcons,
   iconDelayOffset = 0.3,
-  iconDelayStep = 0.07
+  iconDelayStep = 0.07,
+  disablePageScroll = false
 }) {
   let ref = useRef(null);
 
@@ -98,22 +99,55 @@ function DockIcon({
         rel="noopener noreferrer"
         className="w-full h-full flex items-center justify-center"
         onClick={(e) => {
-            if (onClick) {
-                e.preventDefault();
-                onClick(e);
-                return;
-            }
+            // Always handle scrolling first if href is a hash link
             if (href && href.startsWith('#')) {
                 e.preventDefault();
+
+                // If page scrolling is disabled, just run the onClick handler immediately
+                if (disablePageScroll) {
+                    if (onClick) onClick(e);
+                    return;
+                }
+
                 const isHome = href === '#' || href === '#home';
                 if (isHome) {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Still call onClick if provided (for any additional behavior)
+                    if (onClick) {
+                        onClick(e);
+                    }
                     return;
                 }
                 const targetEl = document.querySelector(href);
                 if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Calculate scroll position
+                    // For projects and about content, scroll down a bit more (negative offset adds to Y position)
+                    // For others, keep a small buffer above (positive offset subtracts from Y position)
+                    const offset = (href === '#projects-content' || href === '#about-content') ? -50 : 20;
+                    
+                    const elementTop = targetEl.getBoundingClientRect().top + window.scrollY;
+                    const targetPosition = Math.max(0, elementTop - offset);
+                    
+                    // Scroll to the target section
+                    window.scrollTo({ 
+                        top: targetPosition, 
+                        behavior: 'smooth' 
+                    });
+                    
+                    // Then call onClick if provided (e.g., to open app windows)
+                    if (onClick) {
+                        // Small delay to ensure scroll starts, then execute onClick
+                        setTimeout(() => {
+                            onClick(e);
+                        }, 100);
                 }
+                    return;
+                }
+            }
+            // For non-hash links, just call onClick if provided
+            if (onClick) {
+                e.preventDefault();
+                onClick(e);
             }
         }}
       >
@@ -144,11 +178,13 @@ export default function Dock({
   onLinkedinClick, 
   onPopcornClick, 
   onMonitorClick, 
+  onHomeClick,
   animateIn = false, 
   animateIcons: animateIconsProp,
   iconDelayOffset = 0.3,
   iconDelayStep = 0.07,
-  isMobile: isMobileProp 
+  isMobile: isMobileProp,
+  disablePageScroll = false
 }) {
   let mouseX = useMotionValue(Infinity);
   const hookIsMobile = useIsMobile();
@@ -159,23 +195,28 @@ export default function Dock({
     : (isMobile && animateIn);
 
   const icons = [
-    { icon: Home, label: 'Home', href: '#' },
+    { 
+        icon: Home, 
+        label: 'Home', 
+        href: '#',
+        onClick: onHomeClick ? onHomeClick : null
+    },
     { 
         icon: Monitor, 
         label: 'System', 
-        href: '#projects',
+        href: '#projects-content',
         onClick: onMonitorClick ? onMonitorClick : null
     },
     { 
         icon: User, 
         label: 'About', 
-        href: '#about', 
+        href: '#about-content',
         onClick: onAboutClick ? onAboutClick : null 
     },
     { 
         icon: Popcorn, 
         label: 'Extras', 
-        href: '#extras',
+        href: '#extras-content',
         onClick: onPopcornClick ? onPopcornClick : null
     }, 
     { 
@@ -213,13 +254,14 @@ export default function Dock({
       animateIcons={shouldAnimateIcons}
       iconDelayOffset={iconDelayOffset}
       iconDelayStep={iconDelayStep}
+      disablePageScroll={disablePageScroll}
       {...item} 
     />
   ));
 
   return (
-    // FIXED: Changed bottom-8 to bottom-6 to align with the audio player
-    <div className={className || "fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 perspective-1000 w-full flex justify-center pointer-events-none"}>
+    // FIXED: Increased bottom spacing on mobile (bottom-8) to better clear the iOS home indicator area
+    <div className={className || "fixed bottom-8 md:bottom-6 left-1/2 -translate-x-1/2 z-50 perspective-1000 w-full flex justify-center pointer-events-none"}>
       <motion.div
         layoutId={layoutId}
         onMouseMove={(e) => !isMobile && mouseX.set(e.pageX)}
@@ -234,7 +276,7 @@ export default function Dock({
         className="pointer-events-auto"
       >
         {isMobile ? (
-          <div className="flex items-center justify-between gap-1 px-2.5 py-2 md:pb-3 md:pt-3 rounded-full border border-black/5 bg-white/80 backdrop-blur-xl dark:bg-black/20 w-full max-w-md">
+          <div className="flex items-center justify-between gap-1 px-2.5 py-2 md:pb-3 md:pt-3 rounded-full border border-black/5 bg-white/80 backdrop-blur-xl dark:bg-black/20 w-full max-w-md shadow-lg touch-none">
             {iconRow}
           </div>
         ) : (

@@ -32,6 +32,8 @@ export const subscribeGlobalAudioControls = (listener) => {
   };
 };
 
+export const getGlobalAudioControls = () => currentControls;
+
 /**
  * Convenience helper to clear controls.
  */

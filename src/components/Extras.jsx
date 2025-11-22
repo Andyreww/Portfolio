@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, useInView, useMotionValue, useSpring } from 'framer-motion';
-import { Film, Plus, FolderOpen, ChevronRight, Radio, Target, Gamepad2, ArrowUpRight } from 'lucide-react';
+import { Film, Plus, FolderOpen, ChevronRight, Radio, Target, Gamepad2, ArrowUpRight, ArrowUp } from 'lucide-react';
 
 // --- DATA ---
 const movies = [
@@ -193,7 +193,7 @@ export default function Extras() {
     <section id="extras" className="py-12 md:py-24 bg-[#f4f4f0] relative overflow-hidden">
       
       {/* --- THE BRIDGE: Directory Bar --- */}
-      <div className="w-full border-b border-black/10 mb-12 md:mb-16">
+      <div id="extras-content" className="w-full border-b border-black/10 mb-12 md:mb-16">
         {/* MOBILE FIX: Overflow-x-auto allows scrolling on small screens */}
         <div className="max-w-[1600px] mx-auto px-4 md:px-12 py-2 overflow-x-auto no-scrollbar">
             <div className="flex items-center gap-2 font-mono text-[10px] md:text-xs text-black/40 uppercase tracking-widest whitespace-nowrap">
@@ -225,6 +225,16 @@ export default function Extras() {
         <div className="max-w-md text-sm md:text-base font-medium text-black/70 leading-relaxed">
           <span className="font-bold text-black">Honestly? I just love good visuals.</span><br/>
           These films define my taste and help me understand style, atmosphere, and pacing. Stuff I try to bring into my own work.
+          <div className="mt-6">
+            <a 
+              href="https://boxd.it/oYUOo" 
+              target="_blank" 
+              rel="noreferrer"
+              className="inline-flex items-center px-3 py-1.5 border-2 border-black bg-white text-black font-bold uppercase text-xs tracking-widest hover:bg-black hover:text-white transition-all duration-200 cursor-pointer"
+            >
+              View Full Letterboxd List
+            </a>
+          </div>
         </div>
       </div>
 
@@ -255,8 +265,8 @@ export default function Extras() {
                       Personal Note:
                    </p>
                    <p className="text-base md:text-lg font-medium leading-relaxed opacity-80 max-w-md">
-                      Honestly? No deep technical analysis needed here. <br/>
-                      This game defined my childhood imagination. I'm just here for the nostalgia, the visuals, and seeing a masterpiece brought to life on the big screen. <span className="underline"> I can't wait.</span>
+                      No deep technical analysis needed here. <br/>
+                      This game defined my childhood imagination. I'm just here for the nostalgia, the visuals, and seeing a masterpiece brought to life on the biggest screen possible. <span className="underline"> I can't wait.</span>
                    </p>
                 </div>
              </div>
@@ -384,14 +394,6 @@ export default function Extras() {
                   className="flex items-center justify-center gap-2 px-6 py-3 border-2 border-black bg-white text-black font-bold uppercase text-sm tracking-wider hover:bg-black hover:text-white transition-all duration-200 group"
                 >
                   Steam Profile <ArrowUpRight size={14} />
-                </a>
-                <a 
-                  href="https://store.steampowered.com/wishlist/id/NovusTM/" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 px-6 py-3 border-2 border-black bg-black text-white font-bold uppercase text-sm tracking-wider hover:bg-white hover:text-black transition-all duration-200 group"
-                >
-                  Wishlist <ArrowUpRight size={14} />
                 </a>
               </div>
             </div>

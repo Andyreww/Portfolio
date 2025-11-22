@@ -79,17 +79,94 @@ export default function About() {
         </div>
       </div>
 
-      <div className="px-4 md:px-12 max-w-[1600px] mx-auto">
+      <div id="about-content" className="px-4 md:px-12 max-w-[1600px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
             
-            {/* Massive 'ABOUT' Text - Tuned for Mobile */}
-            <div className="md:col-span-4 flex items-center justify-center md:justify-start mb-4 md:mb-0 px-6 md:px-0">
-                <h2 className="max-w-full text-[clamp(1.8rem,14vw,7.5rem)] md:text-[8vw] leading-[0.95] font-display font-black uppercase rotate-0 md:-rotate-90 origin-center text-center md:text-left text-transparent stroke-text" style={{ WebkitTextStroke: '1px black', textWrap: 'balance', letterSpacing: '-0.03em' }}>
-                    About
-                </h2>
+            {/* Left Column - About Text + Photos (Desktop) */}
+            <div className="md:col-span-4 flex flex-col items-center justify-center md:items-end md:justify-start mb-4 md:mb-0 px-6 md:px-0 md:relative">
+                {/* Massive 'ABOUT' Text - Tuned for Mobile */}
+                <div className="flex items-center justify-center md:justify-center mb-6 md:mb-0 md:absolute md:inset-0 md:pointer-events-none">
+                    <h2 className="max-w-full text-[clamp(1.8rem,14vw,7.5rem)] md:text-[8vw] leading-[0.95] font-display font-black uppercase rotate-0 md:-rotate-90 origin-center text-center text-transparent stroke-text md:mt-56 md:mr-24" style={{ WebkitTextStroke: '1px black', textWrap: 'balance', letterSpacing: '-0.03em' }}>
+                        About
+                    </h2>
+                </div>
+                
+                {/* Photos - Desktop: left side in column, Mobile: hidden (shown below) */}
+                <div className="hidden md:flex md:flex-col gap-2 md:gap-3 md:mt-0">
+                    <div className="border-2 border-black overflow-hidden bg-white w-fit">
+                        <img 
+                            src="/assets/Andrew1.png" 
+                            alt="Andrew" 
+                            className="w-24 h-24 md:w-40 md:h-auto object-cover block"
+                            onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                        />
+                    </div>
+                    <div className="border-2 border-black overflow-hidden bg-white w-fit">
+                        <img 
+                            src="/assets/Andrew2.png" 
+                            alt="Andrew" 
+                            className="w-24 h-24 md:w-40 md:h-auto object-cover block"
+                            onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                        />
+                    </div>
+                    <div className="border-2 border-black overflow-hidden bg-white w-fit">
+                        <img 
+                            src="/assets/Andrew6.png" 
+                            alt="Andrew" 
+                            className="w-24 h-24 md:w-40 md:h-auto object-cover block"
+                            onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                        />
+                    </div>
+                    <div className="border-2 border-black overflow-hidden bg-white w-fit">
+                        <img 
+                            src="/assets/Andrew7.png" 
+                            alt="Andrew" 
+                            className="w-24 h-24 md:w-40 md:h-40 object-cover block"
+                            onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                {/* Photos - Mobile: above Biography, centered */}
+                <div className="md:hidden flex justify-center mb-4">
+                    <div className="flex gap-3">
+                        <div className="border-2 border-black overflow-hidden bg-white">
+                            <img 
+                                src="/assets/Andrew1.png" 
+                                alt="Andrew" 
+                                className="w-24 h-24 object-cover"
+                                onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                            />
+                        </div>
+                        <div className="border-2 border-black overflow-hidden bg-white">
+                            <img 
+                                src="/assets/Andrew2.png" 
+                                alt="Andrew" 
+                                className="w-24 h-24 object-cover"
+                                onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                            />
+                        </div>
+                        <div className="border-2 border-black overflow-hidden bg-white">
+                            <img 
+                                src="/assets/Andrew6.png" 
+                                alt="Andrew" 
+                                className="w-24 h-24 object-cover"
+                                onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                            />
+                        </div>
+                        <div className="border-2 border-black overflow-hidden bg-white">
+                            <img 
+                                src="/assets/Andrew7.png" 
+                                alt="Andrew" 
+                                className="w-24 h-24 object-cover"
+                                onError={(e) => e.target.src = 'https://placehold.co/128x128?text=Photo'}
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Bio */}
                 <BrutalCard className="md:col-span-2 aspect-auto" title="Biography">
                     <div className="space-y-4">
