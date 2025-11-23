@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, GraduationCap, FolderOpen, ChevronRight, ChevronLeft, Calendar, BookOpen } from 'lucide-react';
+import { MapPin, GraduationCap, FolderOpen, ChevronRight, ChevronLeft, Calendar, BookOpen, Award } from 'lucide-react';
 
 // Calculate age that updates on May 30th at 12:00 AM EST
 const calculateAge = () => {
@@ -187,6 +187,9 @@ export default function About() {
                         </div>
                         <div className="flex items-center gap-2 text-xs md:text-sm font-mono uppercase border border-black px-3 py-1 rounded-full hover:bg-black hover:text-white transition-colors cursor-default">
                             <GraduationCap size={14} /> Denison Univ.
+                        </div>
+                        <div className="flex items-center gap-2 text-xs md:text-sm font-mono uppercase border border-black px-3 py-1 rounded-full hover:bg-black hover:text-white transition-colors cursor-default">
+                            <Award size={14} /> B.A.
                         </div>
                         <div className="flex items-center gap-2 text-xs md:text-sm font-mono uppercase border border-black px-3 py-1 rounded-full hover:bg-black hover:text-white transition-colors cursor-default">
                             <BookOpen size={14} /> Computer Science

@@ -4,16 +4,17 @@ import { Film, Plus, FolderOpen, ChevronRight, Radio, Target, Gamepad2, ArrowUpR
 
 // --- DATA ---
 const movies = [
-  { title: "Infinity War", img: "/assets/Infinity_War.jpg" },
-  { title: "Interstellar", img: "/assets/Interstellar.jpg" },
-  { title: "Oppenheimer", img: "/assets/Oppenheimer.jpg" },
-  { title: "EEAAO", img: "/assets/EEAAO.jpg" },
-  { title: "Civil War", img: "/assets/CACV.jpg" },
-  { title: "Spider-Verse", img: "/assets/ATSV.jpg" },
-  { title: "Magazine Dreams", img: "/assets/MD.jpg" },
-  { title: "No Way Home", img: "/assets/NWH.jpg" },
-  { title: "Smile 2", img: "/assets/S2.jpg" },
-  { title: "Avengers", img: "/assets/A1.jpg" },
+  { title: "Infinity War", img: "/assets/Infinity_War.jpg", trailer: "https://www.youtube.com/watch?v=6ZfuNTqbHE8" },
+  { title: "Interstellar", img: "/assets/Interstellar.jpg", trailer: "https://www.youtube.com/watch?v=zSWdZVtXT7E" },
+  { title: "Oppenheimer", img: "/assets/Oppenheimer.jpg", trailer: "https://www.youtube.com/watch?v=uYPbbksJxIg" },
+  { title: "EEAAO", img: "/assets/EEAAO.jpg", trailer: "https://www.youtube.com/watch?v=wxN1T1uxQ2g" },
+  { title: "Civil War", img: "/assets/CACV.jpg", trailer: "https://www.youtube.com/watch?v=43NWzay3W4s" },
+  { title: "Spider-Verse", img: "/assets/ATSV.jpg", trailer: "https://www.youtube.com/watch?v=cqGjhVJWtEg" },
+  { title: "Magazine Dreams", img: "/assets/MD.jpg", trailer: "https://www.youtube.com/watch?v=imqmeRe46iE" },
+  { title: "No Way Home", img: "/assets/NWH.jpg", trailer: "https://www.youtube.com/watch?v=JfVOs4VSpmA" },
+  { title: "Smile 2", img: "/assets/S2.jpg", trailer: "https://www.youtube.com/watch?v=0HY6QFlBzUY" },
+  { title: "Avengers", img: "/assets/A1.jpg", trailer: "https://www.youtube.com/watch?v=eOrNdBpGMv8" },
+  { title: "Weapons", img: "/assets/WEAPONS.png", trailer: "https://www.youtube.com/watch?v=QKHySfXqN0I" },
 ];
 
 // --- COMPONENTS ---
@@ -38,9 +39,12 @@ const MovieMarquee = () => {
 };
 
 const MovieCard = ({ movie }) => (
-  <motion.div 
+  <motion.a
+    href={movie.trailer}
+    target="_blank"
+    rel="noopener noreferrer"
     // MOBILE FIX: Smaller width (120px) on mobile, 240px on desktop
-    className="relative group w-[120px] md:w-[240px] aspect-[2/3] bg-black rounded-sm overflow-hidden cursor-pointer shrink-0 mr-4 md:mr-12"
+    className="relative group w-[120px] md:w-[240px] aspect-[2/3] bg-black rounded-sm overflow-hidden cursor-pointer shrink-0 mr-4 md:mr-12 block"
     whileHover={{ scale: 1.02, y: -5 }}
   >
     <img 
@@ -53,7 +57,7 @@ const MovieCard = ({ movie }) => (
     <span className="absolute bottom-4 left-4 text-white text-xs font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
       {movie.title}
     </span>
-  </motion.div>
+  </motion.a>
 );
 
 // CountUp Component

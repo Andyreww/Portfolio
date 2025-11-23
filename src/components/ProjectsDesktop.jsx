@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useInView, useScroll, useTransform, useMotionValueEvent, useDragControls, useMotionValue } from 'framer-motion';
-import { X, Home, ExternalLink, Github, Plus, Terminal, FolderOpen, ChevronRight, Play, Pause, SkipBack, SkipForward, Shuffle, Airplay, Volume2, VolumeX, Disc, FileText, Mail, Send, User, Cpu, MapPin, Calendar, Briefcase, Linkedin, Popcorn, Monitor, AlertTriangle, Ticket, Signal, Wifi, Battery, Phone, Globe, ArrowDown, QrCode } from 'lucide-react';
+import { X, Home, ExternalLink, Github, Plus, Terminal, FolderOpen, ChevronRight, Play, Pause, SkipBack, SkipForward, Shuffle, Airplay, Volume2, VolumeX, Disc, FileText, Mail, Send, User, Cpu, MapPin, Calendar, Briefcase, Linkedin, Popcorn, Monitor, AlertTriangle, Ticket, Signal, Wifi, Battery, Globe, ArrowDown, QrCode } from 'lucide-react';
 import Dock from './Dock';
 import { setGlobalAudioControls, subscribeGlobalAudioControls, getGlobalAudioControls } from '../lib/audioControls';
 
@@ -157,7 +157,6 @@ const projects = [
 const LINKEDIN_CONTACT_DETAILS = [
   { label: 'Your Profile', value: 'linkedin.com/in/andyrew', link: 'https://www.linkedin.com/in/andyrew', icon: Linkedin },
   { label: 'Website', value: 'andrewanguloportfolio.com', link: 'https://andrewanguloportfolio.com', icon: Globe, note: 'Portfolio' },
-  { label: 'Phone', value: '+1 (347) 942-7494', icon: Phone, note: 'Mobile' },
   { label: 'Address', value: 'Queens, NY', icon: MapPin },
   { label: 'Email', value: 'ajangulo8@gmail.com', link: 'mailto:ajangulo8@gmail.com', icon: Mail },
   { label: 'Birthday', value: 'May 30', icon: Calendar }
@@ -210,6 +209,7 @@ const DESKTOP_DOCK_TRANSITION = {
   damping: 24,
   mass: 0.6
 };
+const DESKTOP_DOCK_SYNC_DELAY_MS = 200;
 
 // =========================================
 // ========= 1. DESKTOP DYNAMIC NOTCH ======
@@ -3555,8 +3555,16 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
   const [isPhoneDockVisible, setIsPhoneDockVisible] = useState(false);
   const [dockHasSettled, setDockHasSettled] = useState(false);
   const [desktopDockHasSettled, setDesktopDockHasSettled] = useState(false);
+  const [allowDesktopDockMerge, setAllowDesktopDockMerge] = useState(false);
   const latestProgressRef = useRef(0);
   const dockOpacityValue = useRef(0);
+  const desktopDockSyncTimeoutRef = useRef(null);
+  const clearDesktopDockSyncTimeout = useCallback(() => {
+    if (desktopDockSyncTimeoutRef.current) {
+      clearTimeout(desktopDockSyncTimeoutRef.current);
+      desktopDockSyncTimeoutRef.current = null;
+    }
+  }, []);
 
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     latestProgressRef.current = latest;
@@ -3576,7 +3584,7 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
   
   // Show desktop dock hint only after dock animation completes
   useEffect(() => {
-    if (isInView && !isMobile && !desktopDockHasSettled) {
+    if (allowDesktopDockMerge && !isMobile && !desktopDockHasSettled) {
       // Wait for dock animation to complete (DESKTOP_DOCK_TRANSITION duration)
       const timer = setTimeout(() => {
         setDesktopDockHasSettled(true);
@@ -3584,17 +3592,44 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
       }, 500); // Wait for animation to settle
       return () => clearTimeout(timer);
     }
-    // Reset settled state when section is out of view
-    if (!isInView && !isMobile) {
+    // Reset settled state and hide hint when section is out of view or merge is disabled
+    if ((!allowDesktopDockMerge || !isInView) && !isMobile) {
       setDesktopDockHasSettled(false);
+      setShowDockHint(false);
     }
-  }, [isInView, isMobile, desktopDockHasSettled]);
+  }, [allowDesktopDockMerge, isInView, isMobile, desktopDockHasSettled]);
   
+  // Desktop dock sync: delay hiding the global dock until the section is truly in view
+  useEffect(() => {
+    if (isMobile) {
+      clearDesktopDockSyncTimeout();
+      setAllowDesktopDockMerge(false);
+      return undefined;
+    }
+
+      setIsPhoneDockVisible(false);
+    clearDesktopDockSyncTimeout();
+
+    if (isInView) {
+      desktopDockSyncTimeoutRef.current = window.setTimeout(() => {
+        setDockHidden(true);
+        setAllowDesktopDockMerge(true);
+        desktopDockSyncTimeoutRef.current = null;
+      }, DESKTOP_DOCK_SYNC_DELAY_MS);
+    } else {
+      setAllowDesktopDockMerge(false);
+      setDockHidden(false);
+    }
+
+    return () => {
+      clearDesktopDockSyncTimeout();
+    };
+  }, [isMobile, isInView, setDockHidden, clearDesktopDockSyncTimeout]);
+
+  // Mobile dock sync logic (unchanged)
   useEffect(() => {
     if (!isMobile) {
-      setDockHidden(isInView);
-      setIsPhoneDockVisible(false);
-      return;
+      return undefined;
     }
 
     const updatePhoneDockState = () => {
@@ -3644,7 +3679,7 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
       setIsPhoneDockVisible(false);
       setDockHidden(false);
     };
-  }, [isMobile, isInView, scrollYProgress, setDockHidden]);
+  }, [isMobile, scrollYProgress, setDockHidden]);
 
   const openProject = (project) => {
       if(isMobile) { setActiveMobileApp(project); return; }
@@ -3853,7 +3888,7 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
         <DynamicNotch isWindowDragging={isWindowDragging} />
         <AnimatePresence>
           {openProjects.length === 0 && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute top-4 right-8 text-right font-mono z-0 pointer-events-none max-w-xs">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute top-2 right-8 text-right font-mono z-0 pointer-events-none max-w-xs">
               <div className="text-[10px] text-white/60 font-mono tracking-wide mb-2 leading-tight">Hover over the notch to control music</div>
               <div className="text-[10px] text-white/80 mb-1">SYSTEM_STATUS: ONLINE</div>
               <div className="flex items-center justify-end gap-2"><span className="text-xs text-white font-bold tracking-wider shadow-sm">{">"} CLICK ICON TO OPEN</span><motion.div animate={{ opacity: [1, 1, 0, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "linear" }} className="w-2 h-4 bg-white" /></div>
@@ -3897,7 +3932,7 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
         </AnimatePresence>
         {/* Dock Hint */}
         <AnimatePresence>
-          {showDockHint && !isMobile && (
+          {showDockHint && !isMobile && allowDesktopDockMerge && (
             <motion.div
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
@@ -3914,7 +3949,7 @@ export default function ProjectsDesktop({ setDockHidden, isDockHidden }) {
         </AnimatePresence>
         
         <AnimatePresence mode="wait">
-          {isInView && (
+          {allowDesktopDockMerge && (
             <motion.div
               key="desktop-dock"
               initial={{ y: 140, opacity: 0, scale: 0.92 }}
