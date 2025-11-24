@@ -399,6 +399,14 @@ export default function Extras() {
                 >
                   Steam Profile <ArrowUpRight size={14} />
                 </a>
+                <a 
+                  href="https://s.team/y24/ccnmmmjp?l=english" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 px-6 py-3 border-2 border-black bg-white text-black font-bold uppercase text-sm tracking-wider hover:bg-black hover:text-white transition-all duration-200 group"
+                >
+                  Steam Replay 2024 <ArrowUpRight size={14} />
+                </a>
               </div>
             </div>
             
