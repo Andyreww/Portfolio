@@ -147,7 +147,7 @@ export default function Hero({ showDock, isMobile, isCompact }) {
             {buildLetters.map((letter, idx) => (
               <span 
                 key={`${letter}-${idx}`}
-                className="relative inline-block leading-none overflow-hidden"
+                className="relative inline-block leading-none overflow-visible px-[2px]"
               >
                 <motion.span
                   custom={idx}
