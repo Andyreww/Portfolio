@@ -34,6 +34,18 @@ jobs:
       - name: Build
         run: npm run build
       
+      - name: Verify build output
+        run: |
+          if ! grep -q '/assets/index-' dist/index.html; then
+            echo "ERROR: Built index.html does not contain compiled assets!"
+            exit 1
+          fi
+          if grep -q '/src/main.jsx' dist/index.html; then
+            echo "ERROR: Built index.html still contains source file references!"
+            exit 1
+          fi
+          echo "Build verification passed"
+      
       - name: Copy CNAME to dist
         run: |
           if [ -f CNAME ]; then
