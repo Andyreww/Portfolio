@@ -55,6 +55,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
+      - name: List dist contents for verification
+        run: |
+          echo "=== Contents of dist/ ==="
+          ls -la dist/
+          echo ""
+          echo "=== First 10 lines of dist/index.html ==="
+          head -40 dist/index.html
+          echo ""
+          echo "=== Checking for script tags in dist/index.html ==="
+          grep -E "(script|src=)" dist/index.html || echo "No script tags found"
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
