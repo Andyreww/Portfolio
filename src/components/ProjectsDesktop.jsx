@@ -2265,8 +2265,8 @@ const MobileWindow = ({ app, onClose }) => {
                     {/* Cinema/Ticket - Full desktop version with iOS styling */}
                     {app.type === 'cinema' && (
                         <div className="pt-0 -mx-6 -mt-6">
-                            {/* Red ticket header */}
-                            <div className="h-40 bg-[#dc2626] relative overflow-hidden flex items-end p-6">
+                            {/* Dark green ticket header */}
+                            <div className="h-40 bg-[#2d5a27] relative overflow-hidden flex items-end p-6">
                                 {/* Noise texture overlay */}
                                 <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%20200%20200%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cfilter%20id%3D%27noiseFilter%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.65%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url(%23noiseFilter)%27%2F%3E%3C%2Fsvg%3E')] mix-blend-multiply" />
                                 
@@ -2276,7 +2276,7 @@ const MobileWindow = ({ app, onClose }) => {
                                 {/* Content */}
                                 <div className="relative z-10">
                                     <div className="text-[10px] font-bold opacity-70 uppercase tracking-widest mb-2 text-white/80">Admit One</div>
-                                    <h2 className="text-3xl font-black leading-tight text-white">SUPER MARIO<br/>GALAXY</h2>
+                                    <h2 className="text-3xl font-black leading-tight text-white">AVENGERS:<br/>DOOMSDAY</h2>
                                 </div>
                             </div>
                             
@@ -2290,7 +2290,7 @@ const MobileWindow = ({ app, onClose }) => {
                                 <div className="flex justify-between items-end mb-6">
                                     <div>
                                         <div className="text-[10px] text-white/40 uppercase mb-1">Date</div>
-                                        <div className="text-base font-medium text-white">April 3, 2026</div>
+                                        <div className="text-base font-medium text-white">December 18, 2026</div>
                                     </div>
                                     <div className="text-right">
                                         <div className="text-[10px] text-white/40 uppercase mb-1">Time</div>
@@ -2303,7 +2303,7 @@ const MobileWindow = ({ app, onClose }) => {
                                 
                                 {/* Watch Trailer button */}
                                 <a 
-                                    href="https://www.youtube.com/watch?v=GuCejewteF8" 
+                                    href="https://www.youtube.com/watch?v=UiMg566PREA" 
                                     target="_blank" 
                                     rel="noreferrer" 
                                     className="block w-full bg-white text-black text-center py-4 rounded-xl font-bold text-base hover:bg-gray-200 transition-colors active:scale-95"
@@ -2876,11 +2876,11 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
         minHeight={400}
       >
         <div className="bg-[#222] border border-white/10 overflow-hidden flex flex-col font-sans text-white h-full">
-          <div className="h-32 bg-[#dc2626] relative overflow-hidden flex items-end p-4 shrink-0">
+          <div className="h-32 bg-[#2d5a27] relative overflow-hidden flex items-end p-4 shrink-0">
             <div className="absolute inset-0 opacity-30 bg-[url('data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%20200%20200%27%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cfilter%20id%3D%27noiseFilter%27%3E%3CfeTurbulence%20type%3D%27fractalNoise%27%20baseFrequency%3D%270.65%27%20numOctaves%3D%273%27%20stitchTiles%3D%27stitch%27%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20filter%3D%27url(%23noiseFilter)%27%2F%3E%3C%2Fsvg%3E')] mix-blend-multiply" />
             <div className="relative z-10">
               <div className="text-[10px] font-bold opacity-70 uppercase tracking-widest mb-1">Admit One</div>
-              <h2 className="text-2xl font-black leading-none">SUPER MARIO<br/>GALAXY</h2>
+              <h2 className="text-2xl font-black leading-none">AVENGERS:<br/>DOOMSDAY</h2>
             </div>
             <Ticket className="absolute top-4 right-4 text-white/20 rotate-12" size={48} />
           </div>
@@ -2888,7 +2888,7 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
             <div className="flex justify-between items-end mb-4">
               <div>
                 <div className="text-[10px] text-white/40 uppercase">Date</div>
-                <div className="text-sm font-medium">April 3, 2026</div>
+                <div className="text-sm font-medium">December 18, 2026</div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] text-white/40 uppercase">Time</div>
@@ -2896,7 +2896,7 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
               </div>
             </div>
             <ScratchOffBarcode />
-            <a href="https://www.youtube.com/watch?v=GuCejewteF8" target="_blank" rel="noreferrer" className="block w-full bg-white text-black text-center py-3 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors">
+            <a href="https://www.youtube.com/watch?v=UiMg566PREA" target="_blank" rel="noreferrer" className="block w-full bg-white text-black text-center py-3 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors">
               Watch Trailer
             </a>
             <div className="absolute -top-3 -left-3 w-6 h-6 bg-black rounded-full" />

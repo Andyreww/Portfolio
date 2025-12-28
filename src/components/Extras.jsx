@@ -155,7 +155,7 @@ const Countdown = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const targetDate = new Date("Apr 3, 2026 00:00:00").getTime();
+    const targetDate = new Date("Dec 18, 2026 00:00:00").getTime();
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -254,23 +254,23 @@ export default function Extras() {
           {/* Left: Info & Countdown */}
           <div className="lg:col-span-5 flex flex-col justify-between order-2 lg:order-1">
              <div>
-                <div className="flex items-center gap-2 mb-4 text-red-600 font-mono text-xs uppercase tracking-widest font-bold animate-pulse">
-                    <Target size={12} className="text-red-600" />
+                <div className="flex items-center gap-2 mb-4 text-[#2d5a27] font-mono text-xs uppercase tracking-widest font-bold animate-pulse">
+                    <Target size={12} className="text-[#2d5a27]" />
                     <span>COUNTDOWN TO PEAK CINEMA</span>
                 </div>
                 
                 <h3 className="text-3xl md:text-5xl font-display font-black uppercase mb-6 leading-tight">
-                    The Super Mario Galaxy Movie
+                    Avengers: Doomsday
                 </h3>
 
                 {/* HUMAN CONTEXT BLOCK */}
-                <div className="border-l-2 border-red-600 pl-4 mb-8">
-                   <p className="text-[10px] font-mono uppercase text-red-600 mb-1 font-bold">
+                <div className="border-l-2 border-[#2d5a27] pl-4 mb-8">
+                   <p className="text-[10px] font-mono uppercase text-[#2d5a27] mb-1 font-bold">
                       Personal Note:
                    </p>
                    <p className="text-base md:text-lg font-medium leading-relaxed opacity-80 max-w-md">
                       No deep technical analysis needed here. <br/>
-                      This game defined my childhood imagination. I'm just here for the nostalgia, the visuals, and seeing a masterpiece brought to life on the biggest screen possible. <span className="underline"> I can't wait.</span>
+                      The Avengers films shaped my love for epic storytelling and visual spectacle. I'm just here for the action, the scale, and seeing this universe's next chapter unfold on the biggest screen possible. <span className="underline"> I can't wait.</span>
                    </p>
                 </div>
              </div>
@@ -294,9 +294,10 @@ export default function Extras() {
 
                  <iframe 
                     className="w-full h-full opacity-90 hover:opacity-100 transition-opacity"
-                    src="https://www.youtube.com/embed/GuCejewteF8?si=-ryr7aYpggQCqdRU&autoplay=0&controls=1&modestbranding=1&rel=0" 
-                    title="Super Mario Galaxy Trailer" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    src="https://www.youtube.com/embed/UiMg566PREA?si=zJI9PM1gp2WSw0b4" 
+                    title="YouTube video player" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    referrerPolicy="strict-origin-when-cross-origin"
                     allowFullScreen
                  />
              </div>
@@ -355,29 +356,29 @@ export default function Extras() {
               <div className="mb-6 pb-6 border-b border-black/10">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-xs font-mono uppercase text-black/50 tracking-wider">Recent Activity</div>
-                  <div className="text-xs font-mono text-black/60">19.6 hrs past 2 weeks</div>
+                  <div className="text-xs font-mono text-black/60">1.4 hours past 2 weeks</div>
                 </div>
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <div className="text-sm font-bold">The Last of Us™ Part II Remastered</div>
+                      <div className="text-sm font-bold">Wallpaper Engine</div>
+                      <div className="text-xs text-black/60">10.1 hrs</div>
+                    </div>
+                    <div className="text-xs text-black/50">5 of 17 achievements</div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="text-sm font-bold">PEAK</div>
                       <div className="text-xs text-black/60">25 hrs</div>
                     </div>
-                    <div className="text-xs text-black/50">14 of 45 achievements</div>
+                    <div className="text-xs text-black/50">22 of 54 achievements</div>
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <div className="text-sm font-bold">Cult of the Lamb</div>
-                      <div className="text-xs text-black/60">15.3 hrs</div>
+                      <div className="text-sm font-bold">Marvel Rivals</div>
+                      <div className="text-xs text-black/60">18.6 hrs</div>
                     </div>
-                    <div className="text-xs text-black/50">20 of 48 achievements</div>
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="text-sm font-bold">Cronos: The New Dawn - Demo</div>
-                      <div className="text-xs text-black/60">0.4 hrs</div>
-                    </div>
-                    <div className="text-xs text-black/50">Recently played</div>
+                    <div className="text-xs text-black/50">8 of 49 achievements</div>
                   </div>
                 </div>
               </div>
