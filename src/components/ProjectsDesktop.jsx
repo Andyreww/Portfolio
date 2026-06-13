@@ -639,25 +639,7 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
     };
 
     return (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-[350]">
-            <AnimatePresence>
-                {showMusicHint && !isExpanded && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 4 }}
-                        transition={{ duration: 0.4 }}
-                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap pointer-events-none"
-                    >
-                        <div className="bg-black/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" style={{ backgroundColor: song.color }} />
-                            <span className="text-white/70 font-mono text-[10px] uppercase tracking-widest">Hover for controls</span>
-                        </div>
-                        <div className="mx-auto w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20" />
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
+        <div className="absolute top-0 inset-x-0 z-[350] flex justify-center pointer-events-none">
             <motion.div
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -675,10 +657,28 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
                     damping: 30
                 }} 
                 style={{ transformOrigin: 'top center' }}
-                className="bg-black flex flex-col items-stretch justify-start overflow-hidden cursor-pointer border-b border-white/5 shrink-0"
+                className="relative pointer-events-auto bg-black flex flex-col items-stretch justify-start overflow-visible cursor-pointer border-b border-white/5 shrink-0"
             >
-            <audio ref={audioRef} src={song.src} autoPlay muted={isMuted} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong()} onError={(e) => console.error("Audio error", e)} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
-            <div className="w-full h-full relative flex flex-col">
+            <AnimatePresence>
+                {showMusicHint && !isExpanded && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 4 }}
+                        transition={{ duration: 0.4 }}
+                        className="absolute bottom-full left-0 right-0 flex justify-center mb-2 pointer-events-none z-10"
+                    >
+                        <div className="whitespace-nowrap">
+                            <div className="bg-black/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" style={{ backgroundColor: song.color }} />
+                                <span className="text-white/70 font-mono text-[10px] uppercase tracking-widest">Hover for controls</span>
+                            </div>
+                            <div className="mx-auto w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20" />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <div className="w-full h-full relative flex flex-col overflow-hidden rounded-[inherit]">
                 {!isExpanded && (
                     <>
                         {/* Top section - artwork and waveform (always visible) */}
@@ -749,6 +749,7 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
                     )}
                 </AnimatePresence>
             </div>
+            <audio ref={audioRef} src={song.src} autoPlay muted={isMuted} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong()} onError={(e) => console.error("Audio error", e)} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
             </motion.div>
         </div>
     );

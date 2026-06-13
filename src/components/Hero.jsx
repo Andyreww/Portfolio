@@ -117,10 +117,10 @@ export default function Hero({ showDock, isMobile, isCompact }) {
       </div>
       
       {/* Top Bar */}
-      <div className="flex justify-between items-start uppercase text-xs md:text-sm font-medium tracking-wide border-b-2 border-black pb-4 z-10">
+      <div className="flex justify-between md:grid md:grid-cols-[1fr_auto_1fr] items-start uppercase text-xs md:text-sm font-medium tracking-wide border-b-2 border-black pb-4 z-10">
         <span>Andrew Angulo</span>
-        <span>Based in NY</span>
-        <span className="hidden md:inline">Solutions Engineer @ Astrata</span>
+        <span className="md:text-center md:px-4">Based in NY</span>
+        <span className="hidden md:block md:text-right">Solutions Engineer @ Astrata</span>
       </div>
 
       {/* Center Content: Title */}
