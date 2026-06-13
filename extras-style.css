@@ -1,0 +1,502 @@
+/*
+========================================
+CSS RESET & ROOT VARIABLES
+========================================
+*/
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&display=swap');
+
+:root {
+    /* Main Palette */
+    --bg-color: #030507;
+    --bg-color-light: #10161d; 
+    --text-light: #e1e8ef;       
+    --text-muted: #8492a6;      
+    --accent-primary: #00e0e8;  
+    --accent-secondary: #00b8c0; 
+    --accent-glow: rgba(0, 224, 232, 0.2); 
+    --accent-glow-strong: rgba(0, 224, 232, 0.4); 
+
+    /* Fonts */
+    --font-heading: 'Syne', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Movie Accent Glow Colors */
+    --glow-infinity-war: #5c00e8;
+    --accent-infinity-war: #12002f;
+
+    --glow-interstellar: #d5cfca;
+    --accent-interstellar: #3d2e1e;
+
+    --glow-oppenheimer: #ff5733;
+    --accent-oppenheimer: #2c0a02;
+
+    --glow-eeao: #e53935;
+    --accent-eeao: #1a0000;
+
+    --glow-civil-war: #0277bd;
+    --accent-civil-war: #01121a;
+
+    --glow-spider-verse: #ff4081;
+    --accent-spider-verse: #0a0014;
+
+    --glow-magazine-dreams: #ffeb3b;
+    --accent-magazine-dreams: #221f00;
+
+    --glow-no-way-home: #a8a6a0;
+    --accent-no-way-home: #1e1e00;
+
+    --glow-smile-2: #ec4040;
+    --accent-smile-2: #1a0010;
+
+    --glow-avengers: #42a5f5;
+    --accent-avengers: #0a1a2f;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-light);
+    background-color: var(--bg-color);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+========================================
+SPOTLIGHT CURSOR EFFECT
+========================================
+*/
+.spotlight {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    background: radial-gradient(circle 500px at var(--cursorX) var(--cursorY), rgba(225, 232, 239, 0.05), transparent 80%);
+}
+
+/*
+========================================
+MAIN LAYOUT & HELPERS
+========================================
+*/
+.page-wrapper {
+    width: 100%;
+    padding: 0 clamp(1rem, 5vw, 4rem);
+}
+
+.scroll-section {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10rem 0;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.scroll-section.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 5rem;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px var(--accent-glow);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    font-weight: 400;
+    max-width: 600px;
+    line-height: 1.6;
+    margin: -4rem auto 4rem;
+}
+
+
+/*
+========================================
+BACK TO PORTFOLIO LINK
+========================================
+*/
+.back-to-portfolio-link {
+    position: fixed;
+    top: 2rem;
+    left: clamp(1rem, 5vw, 4rem);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background-color: rgba(16, 22, 29, 0.5); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 1001;
+    border: 1px solid rgba(132, 146, 166, 0.2); 
+}
+
+.back-to-portfolio-link:hover {
+    color: var(--text-light);
+    border-color: rgba(225, 232, 239, 0.4);
+    background-color: rgba(30, 40, 50, 0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(225, 232, 239, 0.05);
+}
+
+/*
+========================================
+HEADER
+========================================
+*/
+.extras-main-header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.extras-main-header h1 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 9vw, 8rem); 
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    overflow-wrap: break-word;
+
+    background: linear-gradient(to bottom, var(--text-light), var(--text-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.extras-main-header p {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--text-muted);
+    font-weight: 400;
+    max-width: 650px;
+    line-height: 1.6;
+}
+
+/*
+========================================
+INFINITE CAROUSEL
+========================================
+*/
+#favorite-movies-showcase {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.carousel-container {
+    --gap: clamp(2rem, 4vw, 4rem);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 0;
+    cursor: grab;
+    margin: 0 calc(clamp(1rem, 5vw, 4rem) * -1);
+}
+
+.carousel-container:active {
+    cursor: grabbing;
+}
+
+.movie-grid {
+    display: flex;
+    gap: var(--gap);
+    width: max-content;
+}
+
+.movie-card-item {
+    width: clamp(280px, 22vw, 350px);
+    aspect-ratio: 2 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    transform-style: preserve-3d;
+    user-select: none;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s ease-out, border-color 0.3s ease-out;
+    border: 2px solid transparent;
+    /* REVERTED: Removed pointer-events:none to re-enable hover and parallax effects. The JS will handle the drag logic. */
+}
+
+.movie-card-item .movie-poster-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+    pointer-events: none;
+}
+
+.movie-card-item:hover .movie-poster-img {
+    transform: none; 
+}
+
+.movie-card-item:hover {
+    border-color: rgba(225, 232, 239, 0.5);
+    box-shadow: 0 0 25px rgba(225, 232, 239, 0.5); 
+}
+
+.movie-card-item.movie-infinity-war:hover { border-color: var(--glow-infinity-war); box-shadow: 0 0 25px var(--glow-infinity-war); }
+.movie-card-item.movie-interstellar:hover { border-color: var(--glow-interstellar); box-shadow: 0 0 25px var(--glow-interstellar); }
+.movie-card-item.movie-oppenheimer:hover { border-color: var(--glow-oppenheimer); box-shadow: 0 0 25px var(--glow-oppenheimer); }
+.movie-card-item.movie-Everything_Everywhere_All_at_Once:hover { border-color: var(--glow-eeao); box-shadow: 0 0 25px var(--glow-eeao); }
+.movie-card-item.movie-Captain_America_Civil_War:hover { border-color: var(--glow-civil-war); box-shadow: 0 0 25px var(--glow-civil-war); }
+.movie-card-item.movie-Beyond_the_Spider-Verse:hover { border-color: var(--glow-spider-verse); box-shadow: 0 0 25px var(--glow-spider-verse); }
+.movie-card-item.movie-Magazine_Dreams:hover { border-color: var(--glow-magazine-dreams); box-shadow: 0 0 25px var(--glow-magazine-dreams); }
+.movie-card-item.movie-No_Way_Home:hover { border-color: var(--glow-no-way-home); box-shadow: 0 0 25px var(--glow-no-way-home); }
+.movie-card-item.movie-Smile_2:hover { border-color: var(--glow-smile-2); box-shadow: 0 0 25px var(--glow-smile-2); }
+.movie-card-item.movie-Avengers:hover { border-color: var(--glow-avengers); box-shadow: 0 0 25px var(--glow-avengers); }
+
+
+.carousel-container::before,
+.carousel-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100px;
+    z-index: 2;
+    pointer-events: none;
+}
+.carousel-container::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-color), transparent);
+}
+.carousel-container::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-color), transparent);
+}
+
+/*
+========================================
+UPCOMING FILM & COUNTDOWN (HORROR THEME)
+========================================
+*/
+#upcoming-film {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+#countdown-timer {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.countdown-timer-block {
+    background: rgba(255, 17, 17, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 17, 17, 0.2);
+    min-width: 100px;
+    box-shadow: 0 0 15px rgba(255, 17, 17, 0.1);
+}
+
+.countdown-timer-value {
+    font-family: 'Chakra Petch', monospace;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #ff1111;
+    line-height: 1;
+    animation: flicker 2s infinite steps(1);
+    text-shadow: 
+        0 0 5px rgba(255, 17, 17, 0.8),
+        0 0 10px rgba(255, 17, 17, 0.6),
+        0 0 20px rgba(255, 17, 17, 0.4);
+}
+
+.countdown-timer-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    display: block;
+    opacity: 0.7;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+  52% { opacity: 1; }
+  54% { opacity: 0.5; }
+  56% { opacity: 1; }
+}
+
+.upcoming-content {
+    width: 100%;
+    max-width: 960px;
+}
+
+.banner-container {
+    margin-bottom: 4rem;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16 / 7;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(132, 146, 166, 0.1);
+    transition: all 0.3s ease;
+}
+
+.banner-container:hover {
+    border-color: rgba(255, 17, 17, 0.3);
+    box-shadow: 0 0 30px rgba(255, 17, 17, 0.15), 0 25px 50px rgba(0,0,0,0.6);
+}
+
+.upcoming-banner {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.trailer-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background-color: #000;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); 
+    border: 1px solid rgba(255, 17, 17, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.trailer-container:hover {
+     transform: scale(1.02);
+     box-shadow: 0 0 40px rgba(255, 17, 17, 0.3), 0 25px 50px rgba(0,0,0,0.7);
+}
+
+.trailer-container iframe,
+.trailer-container .youtube-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.youtube-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+}
+
+.youtube-placeholder i {
+    font-size: 5rem;
+    color: var(--accent-secondary);
+    margin-bottom: 1rem;
+}
+
+/*
+========================================
+FOOTER & BACK TO TOP BUTTON
+========================================
+*/
+.extras-main-footer {
+    text-align: center;
+    padding: 4rem 1rem 2rem;
+    margin-top: 5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(132, 146, 166, 0.1);
+}
+
+#backToTopBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 2rem;
+    right: clamp(1rem, 5vw, 4rem);
+    z-index: 1001; 
+    border: 1px solid rgba(132, 146, 166, 0.2);
+    outline: none;
+    background-color: rgba(16, 22, 29, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 50%; 
+    font-size: 1.25rem;
+    width: 50px; 
+    height: 50px; 
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+#backToTopBtn.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#backToTopBtn:hover {
+    color: var(--text-light);
+    border-color: rgba(225, 232, 239, 0.4);
+    background-color: rgba(30, 40, 50, 0.6);
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(225, 232, 239, 0.05);
+}
+
+/*
+========================================
+RESPONSIVE ADJUSTMENTS
+========================================
+*/
+@media (max-width: 768px) {
+    .spotlight {
+        display: none;
+    }
+    #countdown-timer {
+        gap: 0.5rem;
+    }
+    .countdown-timer-block {
+        padding: 0.75rem;
+        min-width: 70px;
+    }
+}
