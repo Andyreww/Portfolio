@@ -6,8 +6,9 @@ export default defineConfig({
   plugins: [react()],
   base: '/', // Use root path for custom domain
   server: {
-    host: '0.0.0.0', // Allow access from network devices
-    port: 5173
+    host: 'localhost',
+    port: 5173,
+    strictPort: true,
   }
 })
 

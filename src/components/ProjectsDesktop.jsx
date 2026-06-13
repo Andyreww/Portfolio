@@ -130,11 +130,28 @@ const projects = [
     tech: ['React', 'TypeScript', 'CSS', 'Node.js'], 
     link: 'https://nooksii.com/', 
     video: '/assets/Nooksii_Showcase.mp4',
-    overview: 'A student-built tool to help track spending and visualize meal plan usage. This was inspired by my own struggle managing expenses during finals week.',
-    projectRole: 'Creating a website that solves a problem I faced when I was in university and that was expense management. I frankly didn\'t know how much of a balance I had left when it came to finals week. This project aims to not fix this issue but give users a clear visual and help them manage their expenses better.',
+    overview: 'A student-built tool to help track spending and visualize meal plan usage. Inspired by my own struggle managing expenses during finals week when I had no idea what my balance actually was.',
+    projectRole: 'Built a website to solve a problem I faced in university — expense management when meal plan balances get hard to track during busy weeks. The goal was to give users a clear visual and help them manage spending better.',
+    startDate: 'Jun 2025 – Feb 2026',
+    reflection: 'I started this because finals week hit and I had no idea how much meal plan money I had left. Super stressful. I figured other students probably deal with the same thing. Building in React and TypeScript improved my frontend skills a lot. I paused active development in Feb 2026 to focus on Dropima, but the core idea still holds — good code only matters if it solves a real problem people have.'
+  },
+  { 
+    id: 'dropima', 
+    title: 'Dropima', 
+    icon: '/assets/Dropima.jpg', 
+    iconType: 'image',
+    color: 'bg-black', 
+    description: 'A seat drop radar for movie fans who hate refreshing theater sites.',
+    tech: ['React', 'TypeScript', 'Node.js', 'REST APIs', 'SMS', 'PostgreSQL'], 
+    link: 'https://dropima.netlify.app/',
+    video: '/assets/Dropima_Showcase.mp4',
+    overview: 'Dropima keeps an eye on local theaters so you don\'t have to. I built it after missing one too many opening nights and 70mm showings because I was stuck manually refreshing the same pages. It monitors listings around the clock and alerts you the moment tickets actually drop, with extra support for premium formats like true IMAX and 70mm.',
+    projectRole: 'I built the whole thing myself, from the polling that checks theaters every minute to the SMS alerts and the logic that flags real IMAX and 70mm screenings instead of digital upscales.',
+    keyFeatures: 'When someone refunds a sold out seat, Dropima catches it right away so you can grab it before the waitlist even updates.\n\nTheater data gets polled every minute. Most sites make you wait around twenty minutes between refreshes, so this keeps you ahead of the crowd.\n\nAlerts go straight to your phone via SMS. You can add up to three friends and everyone gets pinged at the same time.\n\nYou can queue up films that have not been announced yet and Dropima will start tracking them automatically once listings show up.\n\nPick the window you care about, whether that is opening night, opening weekend, the first week, or anytime during the run.\n\nTrack up to ten theaters at once within your area instead of checking them one by one.\n\nThe format checker looks for true IMAX and 70mm master prints so you are not stuck with a regular digital screening.',
+    goal: 'The whole point is simple: get the best seats before everyone else even knows they exist. Dropima handles the watching so you only have to show up when it counts.',
+    startDate: 'Feb 2026 to Present',
     isWorkInProgress: true,
-    startDate: 'Jun 2025 to Present',
-    reflection: 'I started this because I got to finals week and had no idea how much meal plan money I had left. Super stressful and honestly kind of embarrassing that I didn\'t know. So I figured other students probably deal with the same thing. Building this in React and TypeScript has been great for improving my frontend skills, state management was confusing at first but now I actually get it. The project isn\'t done yet but working on it bit by bit has taught me a lot about actually shipping features instead of overthinking them. Getting feedback from friends who actually use it has been way more helpful than I thought. Working on real problems while also doing schoolwork showed me how to balance long-term projects with immediate deadlines. It\'s made me realize that good code doesn\'t matter if the thing doesn\'t solve a real problem people have.'
+    reflection: 'This one started because I kept missing the showings I actually wanted to see. Refreshing theater pages over and over got old fast. Building Dropima pushed me to think about real time systems, reliable alerts, and what it takes to make something feel instant when every minute matters. It\'s probably the most product focused project I have shipped, and it ties together the technical work with something I genuinely care about as a movie fan.'
   },
   { 
     id: 'portfolio', 
@@ -594,56 +611,74 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
         }
     }, [isWindowDragging, isExpanded]);
 
+    const leaveTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (leaveTimeoutRef.current) {
+                clearTimeout(leaveTimeoutRef.current);
+            }
+        };
+    }, []);
+
     const handleMouseEnter = () => {
         if (isWindowDragging) return;
+        if (leaveTimeoutRef.current) {
+            clearTimeout(leaveTimeoutRef.current);
+            leaveTimeoutRef.current = null;
+        }
         setIsExpanded(true);
     };
 
     const handleMouseLeave = () => {
         if (isWindowDragging) return;
-        setIsExpanded(false);
+        leaveTimeoutRef.current = setTimeout(() => {
+            setIsExpanded(false);
+            leaveTimeoutRef.current = null;
+        }, 120);
     };
 
     return (
-        <motion.div 
-            layout 
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            initial={{ width: 160, height: 32, borderRadius: 16, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} 
-            animate={{ 
-                width: isExpanded ? 400 : 160, 
-                height: isExpanded ? 200 : (isExtendedForSongSwitch ? 60 : 32), 
-                borderRadius: isExpanded ? 32 : 16, 
-                borderTopLeftRadius: 0, 
-                borderTopRightRadius: 0
-            }} 
-            transition={{ 
-                type: "spring", 
-                stiffness: 350, 
-                damping: 30
-            }} 
-            className="absolute top-0 left-1/2 -translate-x-1/2 bg-black z-[350] flex flex-col items-center justify-start overflow-visible cursor-pointer border-b border-white/5"
-        >
-            {/* Hint text */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-[350]">
             <AnimatePresence>
                 {showMusicHint && !isExpanded && (
                     <motion.div
-                        initial={{ opacity: 0, y: -5 }}
+                        initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
+                        exit={{ opacity: 0, y: 4 }}
                         transition={{ duration: 0.4 }}
-                        className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap pointer-events-none z-[355]"
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap pointer-events-none"
                     >
                         <div className="bg-black/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" style={{ backgroundColor: song.color }} />
                             <span className="text-white/70 font-mono text-[10px] uppercase tracking-widest">Hover for controls</span>
                         </div>
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20" />
+                        <div className="mx-auto w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20" />
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <motion.div
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                initial={{ width: 160, height: 32, borderRadius: 16, borderTopLeftRadius: 0, borderTopRightRadius: 0 }} 
+                animate={{ 
+                    width: isExpanded ? 400 : 160, 
+                    height: isExpanded ? 200 : (isExtendedForSongSwitch ? 60 : 32), 
+                    borderRadius: isExpanded ? 32 : 16, 
+                    borderTopLeftRadius: 0, 
+                    borderTopRightRadius: 0
+                }} 
+                transition={{ 
+                    type: "spring", 
+                    stiffness: 350, 
+                    damping: 30
+                }} 
+                style={{ transformOrigin: 'top center' }}
+                className="bg-black flex flex-col items-stretch justify-start overflow-hidden cursor-pointer border-b border-white/5 shrink-0"
+            >
             <audio ref={audioRef} src={song.src} autoPlay muted={isMuted} onTimeUpdate={handleTimeUpdate} onEnded={() => nextSong()} onError={(e) => console.error("Audio error", e)} onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)} />
-            <motion.div layout className="w-full h-full relative flex flex-col">
+            <div className="w-full h-full relative flex flex-col">
                 {!isExpanded && (
                     <>
                         {/* Top section - artwork and waveform (always visible) */}
@@ -688,7 +723,12 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
                 )}
                 <AnimatePresence>
                     {isExpanded && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1, transition: { delay: 0.1 } }} exit={{ opacity: 0, transition: { duration: 0.1 } }} className="absolute inset-0 p-6 flex flex-col justify-between">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: { delay: 0.08 } }}
+                            exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                            className="flex flex-col justify-between flex-1 w-full h-full p-6 box-border"
+                        >
                             <div className="flex gap-4 w-full">
                                 <div className="w-14 h-14 bg-neutral-800 rounded-xl shrink-0 overflow-hidden shadow-lg border border-white/10 perspective-1000">
                                      <AnimatePresence mode='popLayout' custom={direction}><motion.img key={currentSongIndex} src={song.art} alt={song.title} custom={direction} variants={artVariants} initial="enter" animate="center" exit="exit" className="w-full h-full object-cover block" /></AnimatePresence>
@@ -697,19 +737,20 @@ const DynamicNotch = ({ isWindowDragging = false }) => {
                                 <div className="flex gap-[3px] items-center h-full pt-2">{[1,2,3,4].map(i => ( <motion.div key={i} animate={isPlaying ? { height: [8, 20, 10, 24, 12] } : { height: 4 }} transition={{ duration: 1.2, repeat: Infinity, repeatType: "mirror", delay: i * 0.15, ease: "easeInOut" }} className="w-[3px] rounded-full" style={{ backgroundColor: song.color }} /> ))}</div>
                             </div>
                             <div className="w-full flex items-center gap-3 mt-1"><span className="text-[10px] text-white/40 font-mono font-medium w-[30px] text-left">{formatTime(currentTime)}</span><div className="h-[4px] flex-1 bg-white/10 rounded-full overflow-hidden relative"><motion.div className="absolute top-0 left-0 h-full rounded-full pointer-events-none" style={{ width: `${progress}%`, backgroundColor: song.color }} /><input type="range" min="0" max="100" step="0.1" value={progress} onChange={handleSeek} aria-label="Seek through track" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" /></div><span className="text-[10px] text-white/40 font-mono font-medium w-[30px] text-right">{formatRemainingTime(currentTime, duration)}</span></div>
-                            <div className="relative flex items-center justify-center mt-2 w-full h-10">
-                                <div className="absolute left-0 flex items-center group h-full z-20" onMouseEnter={() => setIsHoveringVolume(true)} onMouseLeave={() => setIsHoveringVolume(false)}>
+                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 mt-2 w-full h-10">
+                                <div className="flex items-center group h-full" onMouseEnter={() => setIsHoveringVolume(true)} onMouseLeave={() => setIsHoveringVolume(false)}>
                                     <button onClick={toggleMute} className="focus:outline-none">{isMuted || volume === 0 ? ( <VolumeX size={18} className="text-white/50 group-hover:text-white transition-colors cursor-pointer" /> ) : ( <Volume2 size={18} className="text-white/50 group-hover:text-white transition-colors cursor-pointer" /> )}</button>
                                     <motion.div animate={{ width: isHoveringVolume ? 80 : 0, opacity: isHoveringVolume ? 1 : 0 }} className="h-full flex items-center ml-2 overflow-hidden"><div className="relative w-20 h-1.5 bg-white/20 rounded-full"><div className="absolute top-0 left-0 h-full bg-white rounded-full pointer-events-none" style={{ width: `${volume * 100}%` }} /><input type="range" min="0" max="1" step="0.05" value={volume} onChange={handleVolumeChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" /></div></motion.div>
                                 </div>
-                                <div className="flex items-center gap-6 z-10"><button onClick={prevSong} className="text-white/70 hover:text-white transition-colors active:scale-95"><SkipBack size={24} className="fill-current" /></button><button onClick={togglePlay} className="text-white hover:scale-105 transition-transform active:scale-95">{isPlaying ? ( <Pause size={36} className="fill-current" /> ) : ( <Play size={36} className="fill-current" /> )}</button><button onClick={nextSong} className="text-white/70 hover:text-white transition-colors active:scale-95"><SkipForward size={24} className="fill-current" /></button></div>
-                                <div className="absolute right-0 flex items-center"><button onClick={toggleShuffle} className="focus:outline-none"><Shuffle size={18} className={`transition-colors cursor-pointer ${isShuffled ? "text-white" : "text-white/30 hover:text-white"}`} /></button></div>
+                                <div className="flex items-center justify-center gap-6"><button onClick={prevSong} className="text-white/70 hover:text-white transition-colors active:scale-95"><SkipBack size={24} className="fill-current" /></button><button onClick={togglePlay} className="text-white hover:scale-105 transition-transform active:scale-95">{isPlaying ? ( <Pause size={36} className="fill-current" /> ) : ( <Play size={36} className="fill-current" /> )}</button><button onClick={nextSong} className="text-white/70 hover:text-white transition-colors active:scale-95"><SkipForward size={24} className="fill-current" /></button></div>
+                                <div className="flex items-center justify-end"><button onClick={toggleShuffle} className="focus:outline-none"><Shuffle size={18} className={`transition-colors cursor-pointer ${isShuffled ? "text-white" : "text-white/30 hover:text-white"}`} /></button></div>
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
+            </div>
             </motion.div>
-        </motion.div>
+        </div>
     );
 };
 
@@ -1594,6 +1635,7 @@ const MobileWindow = ({ app, onClose }) => {
             'network': '/assets/NetworkAI.png',
             'manhwa': '/assets/manhwa-AI.png',
             'nooksii': '/assets/Nooksii.png',
+            'dropima': '/assets/Dropima.jpg',
             'portfolio': '/assets/MetaTagPic.png'
         };
         return imageMap[appId] || null;
@@ -1849,7 +1891,7 @@ const MobileWindow = ({ app, onClose }) => {
 
                             {/* Action Buttons */}
                             <div className="flex flex-col gap-3 pt-2">
-                                {app.link && app.link !== '#' && (app.id === 'portfolio' || app.id === 'nooksii' || app.id === 'forsaken') && (
+                                {app.link && app.link !== '#' && (app.id === 'portfolio' || app.id === 'nooksii' || app.id === 'dropima' || app.id === 'forsaken') && (
                                 app.id === 'forsaken' && app.isGame ? (
                                     <div className="block w-full py-4 bg-gray-600/50 text-white text-center rounded-xl font-semibold text-lg cursor-not-allowed opacity-75 border border-white/10">
                                         Desktop/Laptop Only
@@ -1891,10 +1933,10 @@ const MobileWindow = ({ app, onClose }) => {
                             </div>
                             <div className="flex flex-col gap-4 mb-6">
                                 <div>
-                                    <div><span className="text-green-400 font-bold">andyreww</span>@<span className="text-green-400">denison</span></div>
+                                    <div><span className="text-green-400 font-bold">andyreww</span>@<span className="text-green-400">astrata</span></div>
                                     <div className="text-gray-500">------------------</div>
                                     <div><span className="text-yellow-300">OS</span>: PortfolioOS v2.0</div>
-                                    <div><span className="text-yellow-300">Role</span>: CS Graduate</div>
+                                    <div><span className="text-yellow-300">Role</span>: Solutions Engineer</div>
                                     <div><span className="text-yellow-300">Uptime</span>: 4 Years (Degree)</div>
                                     <div><span className="text-yellow-300">Packages</span>: 21 (Repos)</div>
                                     <div><span className="text-yellow-300">Shell</span>: zsh 5.8</div>
@@ -1986,7 +2028,7 @@ const MobileWindow = ({ app, onClose }) => {
                                 <img src="/assets/pfp.png" alt="Andrew" className="w-full h-full object-cover" onError={(e) => e.target.src='https://placehold.co/100x100?text=User'}/>
                             </div>
                             <h2 className="text-3xl font-bold mb-1 text-white">Andrew Angulo</h2>
-                            <p className="text-gray-400 mb-6 text-base">Full Stack Engineer • Version 2.0.25</p>
+                            <p className="text-gray-400 mb-6 text-base">Solutions Engineer @ Astrata • v2.0.25</p>
                             
                             <div className="bg-white/10 backdrop-blur-sm rounded-2xl border border-white/10 w-full p-5 text-left mb-6">
                                 <div className="flex justify-between py-2 border-b border-white/10">
@@ -1998,16 +2040,20 @@ const MobileWindow = ({ app, onClose }) => {
                                     <span className="text-white font-medium text-sm">Denison Univ.</span>
                                 </div>
                                 <div className="flex justify-between py-2 border-b border-white/10">
-                                    <span className="text-gray-400 text-sm">Status</span>
-                                    <span className="text-green-400 font-medium text-sm">● Available for Work</span>
+                                    <span className="text-gray-400 text-sm">Role</span>
+                                    <span className="text-green-400 font-medium text-sm">Solutions Engineer</span>
+                                </div>
+                                <div className="flex justify-between py-2 border-b border-white/10">
+                                    <span className="text-gray-400 text-sm">Company</span>
+                                    <span className="text-white font-medium text-sm">Astrata</span>
                                 </div>
                                 <div className="flex justify-between py-2">
                                     <span className="text-gray-400 text-sm">Focus</span>
-                                    <span className="text-white font-medium text-sm">React, Python, Unity</span>
+                                    <span className="text-white font-medium text-sm">Solutions, React, Python</span>
                                 </div>
                             </div>
                             
-                            <p className="text-[10px] text-gray-500">Serial Number: PLS-HIRE-ME</p>
+                            <p className="text-[10px] text-gray-500">Serial Number: ASTR-002025</p>
                         </div>
                     )}
 
@@ -2024,7 +2070,7 @@ const MobileWindow = ({ app, onClose }) => {
                             
                             <div className="pt-4">
                                 <h2 className="text-2xl font-bold mb-1">Andrew Angulo</h2>
-                                <p className="text-gray-300 text-sm mb-3 leading-relaxed">Aspiring Tech Professional | Python & Data Projects | Exploring Product, Engineering, and Innovation</p>
+                                <p className="text-gray-300 text-sm mb-3 leading-relaxed">Associate Solutions Engineer @ Astrata · CS Grad · Python, React & Data Projects</p>
                                 <div className="flex items-center gap-1 text-xs text-gray-400 mb-4 flex-wrap">
                                     <MapPin size={12}/>
                                     <span>New York City Metropolitan Area</span>
@@ -2066,6 +2112,23 @@ const MobileWindow = ({ app, onClose }) => {
                                 <div className="bg-white/5 rounded-xl border border-white/10 p-4 mb-4">
                                     <h3 className="text-sm font-bold mb-4">Experience</h3>
                                     <div className="space-y-5">
+                                        {/* Astrata */}
+                                        <div className="flex gap-3">
+                                            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">A</div>
+                                            <div className="flex-1">
+                                                <div className="text-sm font-semibold mb-0.5">Associate Solutions Engineer</div>
+                                                <div className="text-xs text-gray-400 mb-0.5">Astrata · Full-time</div>
+                                                <div className="text-xs text-gray-400 mb-1">New York City Metropolitan Area · Hybrid</div>
+                                                <div className="text-xs text-gray-500 mb-2">Jun 2025 - Present</div>
+                                                <ul className="text-xs text-gray-300 space-y-1 mb-2 list-disc list-inside">
+                                                    <li>Partner with clients to scope technical needs and deliver tailored solutions.</li>
+                                                    <li>Build demos and integrations that make complex product capabilities easy to understand.</li>
+                                                    <li>Collaborate with engineering teams to troubleshoot and ship customer workflows.</li>
+                                                </ul>
+                                                <div className="text-xs text-gray-400">Solutions Engineering, Technical Consulting and +2 skills</div>
+                                            </div>
+                                        </div>
+
                                         {/* RedTech Event Lead */}
                                         <div className="flex gap-3">
                                             <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">RT</div>
@@ -2303,7 +2366,7 @@ const MobileWindow = ({ app, onClose }) => {
                                 
                                 {/* Watch Trailer button */}
                                 <a 
-                                    href="https://www.youtube.com/watch?v=UiMg566PREA" 
+                                    href="https://www.youtube.com/watch?v=kH1XlwHQv9o" 
                                     target="_blank" 
                                     rel="noreferrer" 
                                     className="block w-full bg-white text-black text-center py-4 rounded-xl font-bold text-base hover:bg-gray-200 transition-colors active:scale-95"
@@ -2896,7 +2959,7 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
               </div>
             </div>
             <ScratchOffBarcode />
-            <a href="https://www.youtube.com/watch?v=UiMg566PREA" target="_blank" rel="noreferrer" className="block w-full bg-white text-black text-center py-3 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors">
+            <a href="https://www.youtube.com/watch?v=kH1XlwHQv9o" target="_blank" rel="noreferrer" className="block w-full bg-white text-black text-center py-3 rounded-lg font-bold text-sm hover:bg-gray-200 transition-colors">
               Watch Trailer
             </a>
             <div className="absolute -top-3 -left-3 w-6 h-6 bg-black rounded-full" />
@@ -2933,7 +2996,7 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
         
         <div className="pt-12 px-6 pb-6 flex-1 overflow-y-auto pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <h2 className="text-xl font-bold leading-tight">Andrew Angulo</h2>
-          <p className="text-sm text-white/80 mt-0.5 leading-snug">Aspiring Tech Professional | Python & Data Projects | Exploring Product, Engineering, and Innovation</p>
+          <p className="text-sm text-white/80 mt-0.5 leading-snug">Associate Solutions Engineer @ Astrata · CS Grad · Python, React & Data Projects</p>
           <div className="flex items-center gap-1 text-xs text-white/50 mt-1 flex-wrap">
             <MapPin size={12}/> 
             <span>New York City Metropolitan Area</span>
@@ -2968,6 +3031,23 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
           <div className="mt-6 p-4 bg-[#24292e] rounded-lg border border-white/5">
             <h3 className="text-sm font-bold mb-4">Experience</h3>
             <div className="space-y-5">
+              {/* Astrata */}
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">A</div>
+                <div className="flex-1">
+                  <div className="text-sm font-semibold mb-0.5">Associate Solutions Engineer</div>
+                  <div className="text-xs text-white/60 mb-0.5">Astrata · Full-time</div>
+                  <div className="text-xs text-white/60 mb-1">New York City Metropolitan Area · Hybrid</div>
+                  <div className="text-xs text-white/40 mb-2">Jun 2025 - Present</div>
+                  <ul className="text-xs text-white/70 space-y-1 mb-2 list-disc list-inside">
+                    <li>Partner with clients to scope technical needs and deliver tailored solutions.</li>
+                    <li>Build demos and integrations that make complex product capabilities easy to understand.</li>
+                    <li>Collaborate with engineering teams to troubleshoot and ship customer workflows.</li>
+                  </ul>
+                  <div className="text-xs text-white/50">Solutions Engineering, Technical Consulting and +2 skills</div>
+                </div>
+              </div>
+
               {/* RedTech Event Lead */}
               <div className="flex gap-3">
                 <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shrink-0">RT</div>
@@ -3140,10 +3220,10 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
             <div className="flex gap-6">
               <div className="text-purple-500 font-bold select-none hidden md:block">{`      /\\\n     /  \\\n    /    \\\n   /      \\\n  /________\\\n  |   __   |\n  |  |  |  |\n  |__|__|__|`}</div>
               <div>
-                <div><span className="text-green-400 font-bold">andyreww</span>@<span className="text-green-400">denison</span></div>
+                <div><span className="text-green-400 font-bold">andyreww</span>@<span className="text-green-400">astrata</span></div>
                 <div>------------------</div>
                 <div><span className="text-yellow-300">OS</span>: PortfolioOS v2.0</div>
-                <div><span className="text-yellow-300">Role</span>: CS Graduate</div>
+                <div><span className="text-yellow-300">Role</span>: Solutions Engineer</div>
                 <div><span className="text-yellow-300">Uptime</span>: 4 Years (Degree)</div>
                 <div><span className="text-yellow-300">Packages</span>: 21 (Repos)</div>
                 <div><span className="text-yellow-300">Shell</span>: zsh 5.8</div>
@@ -3188,14 +3268,15 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
               <img src="/assets/pfp.png" alt="Andrew" className="w-full h-full object-cover" onError={(e) => e.target.src = 'https://placehold.co/100x100?text=User'}/>
             </div>
             <h2 className="text-2xl font-bold mb-1">Andrew Angulo</h2>
-            <p className="text-sm text-gray-500 mb-4">Full Stack Engineer • Version 2.0.25</p>
+            <p className="text-sm text-gray-500 mb-4">Solutions Engineer @ Astrata • v2.0.25</p>
             <div className="bg-white rounded-lg border border-gray-200 w-full p-3 text-left text-sm space-y-2 shadow-sm">
               <div className="flex justify-between"><span className="text-gray-500">Location</span><span className="font-medium">Queens, NY</span></div>
               <div className="flex justify-between"><span className="text-gray-500">Education</span><span className="font-medium">Denison Univ.</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Status</span><span className="font-medium text-green-600">● Available for Work</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Focus</span><span className="font-medium">React, Python, Unity</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Role</span><span className="font-medium text-green-600">Solutions Engineer</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Company</span><span className="font-medium">Astrata</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Focus</span><span className="font-medium">Solutions, React, Python</span></div>
             </div>
-            <div className="mt-6 text-[10px] text-gray-400">Serial Number: PLS-HIRE-ME</div>
+            <div className="mt-6 text-[10px] text-gray-400">Serial Number: ASTR-002025</div>
           </div>
         </div>
       </WindowWrapper>
@@ -3469,7 +3550,7 @@ const DesktopWindow = ({ project, onClose, zIndex, onFocus, containerRef, index,
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
-              {project.link && project.link !== '#' && (project.id === 'portfolio' || project.id === 'nooksii' || project.id === 'forsaken') && (
+              {project.link && project.link !== '#' && (project.id === 'portfolio' || project.id === 'nooksii' || project.id === 'dropima' || project.id === 'forsaken') && (
                 <a 
                   href={project.link} 
                   target={project.isGame ? "_self" : "_blank"}

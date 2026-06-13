@@ -28,4 +28,5 @@ yarn-error.log*
 
 # Vite
 .vite/
+vite.config.js.timestamp-*.mjs
 

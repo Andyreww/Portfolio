@@ -294,7 +294,7 @@ export default function Extras() {
 
                  <iframe 
                     className="w-full h-full opacity-90 hover:opacity-100 transition-opacity"
-                    src="https://www.youtube.com/embed/UiMg566PREA?si=zJI9PM1gp2WSw0b4" 
+                    src="https://www.youtube.com/embed/kH1XlwHQv9o?si=D-ptK9elfmCxS_sf" 
                     title="YouTube video player" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
                     referrerPolicy="strict-origin-when-cross-origin"

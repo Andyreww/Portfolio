@@ -120,7 +120,7 @@ export default function Hero({ showDock, isMobile, isCompact }) {
       <div className="flex justify-between items-start uppercase text-xs md:text-sm font-medium tracking-wide border-b-2 border-black pb-4 z-10">
         <span>Andrew Angulo</span>
         <span>Based in NY</span>
-        <span className="hidden md:inline">Available for Work</span>
+        <span className="hidden md:inline">Solutions Engineer @ Astrata</span>
       </div>
 
       {/* Center Content: Title */}

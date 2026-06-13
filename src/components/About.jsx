@@ -171,10 +171,10 @@ export default function About() {
                 <BrutalCard className="md:col-span-2 aspect-auto" title="Biography">
                     <div className="space-y-4">
                         <p className="text-lg md:text-2xl font-medium leading-snug md:leading-tight">
-                            Born and raised in Queens, NY. Just graduated from Denison University with a B.A. in Computer Science. My interest in tech started when I was a kid watching <span className="italic">Iron Man</span> and wanting to build cool stuff like that.
+                            Born and raised in Queens, NY. CS grad from Denison University with a B.A. in Computer Science. My interest in tech started when I was a kid watching <span className="italic">Iron Man</span> and wanting to build cool stuff like that.
                         </p>
                         <p className="text-base md:text-lg font-medium leading-relaxed text-black/80">
-                            Right now I'm focused on building projects that actually help people, while keeping an eye out for a tech job where I can keep learning and creating. Beyond coding, I'm into gaming, 80s music, and sci-fi movies. Always up for a good challenge.
+                            I recently joined Astrata as an Associate Solutions Engineer, helping teams turn complex technical problems into practical solutions. I still love building side projects on the side, plus gaming, 80s music, and sci-fi movies. Always up for a good challenge.
                         </p>
                     </div>
                     

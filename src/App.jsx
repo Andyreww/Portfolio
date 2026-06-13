@@ -37,7 +37,7 @@ const DESKTOP_DOCK_ANIMATION_DURATION_MS = 2000;
 const DESKTOP_DOCK_LAYOUT_ID = 'shared-desktop-dock';
 const TAB_SECTION_IDS = ['hero', 'projects', 'about', 'extras', 'footer'];
 const PRIMARY_MARQUEE_ITEMS = ['Developer', 'Designer', 'Creator', 'Engineer', 'Problem Solver'];
-const SECONDARY_MARQUEE_ITEMS = ['Available for Work', 'Based in NYC', "Open to Collab", "Let's Talk"];
+const SECONDARY_MARQUEE_ITEMS = ['Astrata', 'Based in NYC', 'Solutions Engineer', "Let's Talk"];
 const MARQUEE_DURATION = 90;
 
 const normalizePathname = (pathname) => {
