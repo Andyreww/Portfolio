@@ -5,7 +5,14 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'docs/**'
+      - 'assets/**'
+      - 'games/**'
+      - 'index.html'
+      - '.nojekyll'
+      - '404.html'
+      - 'extras.html'
+      - 'extras-style.css'
+      - 'extra-script.js'
   workflow_dispatch:
 
 permissions:
@@ -46,20 +53,27 @@ jobs:
           fi
           echo "Build verification passed"
 
-      - name: Publish built site to docs/
+      - name: Publish built site to repository root
         run: |
-          rm -rf docs
-          cp -r dist docs
-          touch docs/.nojekyll
-          if [ -f CNAME ]; then
-            cp CNAME docs/CNAME
+          cp dist/index.html index.html
+          mkdir -p assets
+          rsync -a --delete dist/assets/ assets/
+          if [ -d dist/games ]; then
+            mkdir -p games
+            rsync -a --delete dist/games/ games/
           fi
+          for file in 404.html extras.html extras-style.css extra-script.js; do
+            if [ -f "dist/$file" ]; then
+              cp "dist/$file" .
+            fi
+          done
+          touch .nojekyll
 
-      - name: Commit and push docs/
+      - name: Commit and push deployment artifacts
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/
-          git diff --staged --quiet && echo "No docs changes to commit" && exit 0
-          git commit -m "Deploy built site to docs [skip ci]"
+          git add index.html assets/ games/ .nojekyll 404.html extras.html extras-style.css extra-script.js
+          git diff --staged --quiet && echo "No deployment changes to commit" && exit 0
+          git commit -m "Deploy built site [skip ci]"
           git push
